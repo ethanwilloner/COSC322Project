@@ -11,6 +11,10 @@ import javax.swing.JPanel;
 
 public class myTile extends JPanel {
 	
+	public static final int WQ = 1;
+	public static final int BQ = 2;
+	public static final int ARROW = 3;
+	public static final int EMPTY = 0;
 	
 	public boolean colored;
 	public int x; //x coordinate
@@ -19,9 +23,11 @@ public class myTile extends JPanel {
 	private boolean highlighted;
 	private int state; //0 for empty, 1 for white queen, 2 for black queen, 3 for arrow
 	
-	private ImageIcon blackqueen;
-	private ImageIcon whitequeen;
-	private myTile thisTile = this;
+	public boolean whiteTurn = true; //will keep track of whose turn it is
+	
+	private myTile thisTile = this; //stored for use in addMouse()
+	
+	
 	public myTile(int x, int y, int width, int height, boolean colored){
 		super();
 		this.x = x/40;
@@ -45,29 +51,32 @@ public class myTile extends JPanel {
 		        System.out.println("x:"+x+" y:"+y);
 		        
 		        if(AmazonsGUI.highlighted!=null){
-		        	AmazonsGUI.highlighted.toggleHighlight();
-		        	 
-			        if(AmazonsGUI.highlighted==thisTile){
-			        	AmazonsGUI.highlighted=null;
-			        }	
+		        	 if(AmazonsGUI.highlighted==thisTile){
+				        	AmazonsGUI.highlighted=null;
+				        	thisTile.toggleHighlight();
+				        }
+		        	 else{
+		        		 AmazonsGUI.highlighted.toggleHighlight();
+		        		 AmazonsGUI.highlighted=thisTile;
+		        		 thisTile.toggleHighlight();
+		        	 }
+		        	
+			       
 		        }
 		        else{
 		        	
 		        	AmazonsGUI.highlighted=thisTile;
+		        	thisTile.toggleHighlight();
 		        }
 		       
-		        else{
-		        	AmazonsGUI.highlighted=thisTile;
-		        }
-		        thisTile.toggleHighlight();
-		        }
+		    }
 		        
 		    
 		});
 	}
 	
 	@Override
-	  protected void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) {
 
 	    super.paintComponent(g);
 	        g.drawImage(getImage(), 0, 0, null);
@@ -98,11 +107,15 @@ public class myTile extends JPanel {
 
 	public void toggleHighlight(){
 		if(!highlighted){
-			this.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+			this.setBorder(BorderFactory.createLineBorder(Color.PINK, 3));
 		}
 		else{
 			this.setBorder(null);
 		}
 		highlighted = !highlighted;
+	}
+	
+	public void setState(int newState){
+		state = newState;
 	}
 }

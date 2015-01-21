@@ -2,12 +2,17 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
+import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+
+import ai.singleplayer.Timer;
 
 
 public class AmazonsGUI extends JFrame {
@@ -16,12 +21,15 @@ public class AmazonsGUI extends JFrame {
 	private int tileWidth;
 	private int tileCount;
 	private JPanel gridPanel;
-	private ArrayList<myTile> gridTiles;
+	private HashMap<Point,myTile> gridTiles;
+	private Timer timer;
 	
 	public static Image blackqueen;
 	public static Image whitequeen;
 	public static Image arrow;
 	public static myTile highlighted;
+	private JLabel lblTimer;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -58,16 +66,30 @@ public class AmazonsGUI extends JFrame {
 		tileWidth = gridWidth/tileCount;
 		contentPane.add(gridPanel);
 		gridPanel.setLayout(null);
-		createGrid();
 		
+		JLabel lblTurn = new JLabel("White's Turn");
+		lblTurn.setBounds(40, 15, 88, 14);
+		contentPane.add(lblTurn);
+		
+		timer = new Timer();
+		timer.setBounds(365, 15, 46, 14);
+		contentPane.add(timer);
+		
+		
+		createGrid();
 		setImages();
+		addQueens();
 	}
 	
+	
+	/**
+	 * Stores the images to be used for queens and arrows in static variables (load once)
+	 */
 	private void setImages() {
 		try{
 			whitequeen = ImageIO.read(this.getClass().getResourceAsStream("/rsz_wq.png"));
 			blackqueen = ImageIO.read(this.getClass().getResourceAsStream("/rsz_bq.png"));
-			arrow = ImageIO.read(this.getClass().getResourceAsStream("/rsz_arrow.jpg"));
+			arrow = ImageIO.read(this.getClass().getResourceAsStream("/rsz_arrow.png"));
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -75,19 +97,38 @@ public class AmazonsGUI extends JFrame {
 		
 	}
 
+	/**
+	 * Creates the gameboard, a 10x10 grid of myTiles
+	 */
 	private void createGrid(){
-		gridTiles = new ArrayList<myTile>();
+		gridTiles = new HashMap<Point,myTile>();
 		
 		boolean colored = true;
 		for(int i = 0;i<tileCount;i++){
 			for(int j = 0;j<tileCount;j++){
 				myTile grid = new myTile(i*40, j*40, tileWidth, tileWidth,colored);
 				colored = !colored;
-				gridTiles.add(grid);
-				
+				gridTiles.put(new Point(i,j),grid);
 				gridPanel.add(grid);
 			}
 			colored = !colored;
 		}
 	}
+	
+	/**
+	 * Adds the queens to the initial gameboard
+	 */
+	private void addQueens(){
+		gridTiles.get(new Point(3,0)).setState(myTile.BQ);
+		gridTiles.get(new Point(6,0)).setState(myTile.BQ);
+		gridTiles.get(new Point(0,3)).setState(myTile.BQ);
+		gridTiles.get(new Point(9,3)).setState(myTile.BQ);
+		
+		gridTiles.get(new Point(0,6)).setState(myTile.WQ);
+		gridTiles.get(new Point(3,9)).setState(myTile.WQ);
+		gridTiles.get(new Point(6,9)).setState(myTile.WQ);
+		gridTiles.get(new Point(9,6)).setState(myTile.WQ);
+	}
+	
+	
 }
