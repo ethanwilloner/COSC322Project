@@ -5,9 +5,6 @@ import ubco.ai.connection.ServerMessage;
 import ubco.ai.games.GameClient;
 import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
-import net.n3.nanoxml.*;                             
-
-import java.io.*;
 /**
  * 
  * Our version of the Simple Player class
@@ -29,11 +26,11 @@ public class Player implements GamePlayer {
 		
 		//Three arguments: user name (any), passwd (any), this (delegate)   
 	    gameClient = new GameClient(name, passwd, this);
-	    getRooms();
+	    this.getOurRooms();
 	}
 	
 	//Prints the id, name, and user count of all available game rooms in the game client
-	private void getRooms() {
+	private void getOurRooms() {
 		ArrayList<GameRoom> roomList = gameClient.getRoomLists();
 		System.out.println("Available Game Rooms:");
 		for(GameRoom room : roomList)
