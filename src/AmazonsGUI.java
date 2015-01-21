@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -15,10 +16,12 @@ public class AmazonsGUI extends JFrame {
 	private int tileWidth;
 	private int tileCount;
 	private JPanel gridPanel;
+	private ArrayList<myTile> gridTiles;
 	
 	public static Image blackqueen;
 	public static Image whitequeen;
 	public static Image arrow;
+	public static myTile highlighted;
 	/**
 	 * Launch the application.
 	 */
@@ -73,11 +76,15 @@ public class AmazonsGUI extends JFrame {
 	}
 
 	private void createGrid(){
+		gridTiles = new ArrayList<myTile>();
+		
 		boolean colored = true;
 		for(int i = 0;i<tileCount;i++){
 			for(int j = 0;j<tileCount;j++){
 				myTile grid = new myTile(i*40, j*40, tileWidth, tileWidth,colored);
 				colored = !colored;
+				gridTiles.add(grid);
+				
 				gridPanel.add(grid);
 			}
 			colored = !colored;

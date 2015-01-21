@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -15,16 +16,17 @@ public class myTile extends JPanel {
 	public int x; //x coordinate
 	public int y; //y coordinate
 	
+	private boolean highlighted;
 	private int state; //0 for empty, 1 for white queen, 2 for black queen, 3 for arrow
 	
 	private ImageIcon blackqueen;
 	private ImageIcon whitequeen;
-	
+	private myTile thisTile = this;
 	public myTile(int x, int y, int width, int height, boolean colored){
 		super();
 		this.x = x/40;
 		this.y = y/40;
-		
+		this.highlighted=false;
 		this.setBounds(x, y, width, height);
 		this.colored = colored;
 		if(colored){
@@ -41,9 +43,26 @@ public class myTile extends JPanel {
 		    @Override
 		    public void mouseClicked(MouseEvent e) {
 		        System.out.println("x:"+x+" y:"+y);
-		        state = 2;
-		        repaint();
-		    }
+		        
+		        if(AmazonsGUI.highlighted!=null){
+		        	AmazonsGUI.highlighted.toggleHighlight();
+		        	 
+			        if(AmazonsGUI.highlighted==thisTile){
+			        	AmazonsGUI.highlighted=null;
+			        }	
+		        }
+		        else{
+		        	
+		        	AmazonsGUI.highlighted=thisTile;
+		        }
+		       
+		        else{
+		        	AmazonsGUI.highlighted=thisTile;
+		        }
+		        thisTile.toggleHighlight();
+		        }
+		        
+		    
 		});
 	}
 	
@@ -77,4 +96,13 @@ public class myTile extends JPanel {
 		
 	}
 
+	public void toggleHighlight(){
+		if(!highlighted){
+			this.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+		}
+		else{
+			this.setBorder(null);
+		}
+		highlighted = !highlighted;
+	}
 }
