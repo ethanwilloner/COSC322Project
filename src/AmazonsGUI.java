@@ -1,7 +1,9 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Image;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,6 +14,11 @@ public class AmazonsGUI extends JFrame {
 	private JPanel contentPane;
 	private int tileWidth;
 	private int tileCount;
+	private JPanel gridPanel;
+	
+	public static Image blackqueen;
+	public static Image whitequeen;
+	public static Image arrow;
 	/**
 	 * Launch the application.
 	 */
@@ -40,35 +47,40 @@ public class AmazonsGUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(Color.GREEN);
-		panel_1.setBounds(42, 42, 62, 52);
-		contentPane.add(panel_1);
+		gridPanel = new JPanel();
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(40, 40, 400, 400);
-		tileWidth = panel.WIDTH/10;
+		int gridWidth = 400;
+		gridPanel.setBounds(40, 40, gridWidth, gridWidth);
 		tileCount = 10;
-		//contentPane.add(panel);
+		tileWidth = gridWidth/tileCount;
+		contentPane.add(gridPanel);
+		gridPanel.setLayout(null);
 		createGrid();
+		
+		setImages();
 	}
 	
+	private void setImages() {
+		try{
+			whitequeen = ImageIO.read(this.getClass().getResourceAsStream("/rsz_wq.png"));
+			blackqueen = ImageIO.read(this.getClass().getResourceAsStream("/rsz_bq.png"));
+			arrow = ImageIO.read(this.getClass().getResourceAsStream("/rsz_arrow.jpg"));
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+
 	private void createGrid(){
 		boolean colored = true;
 		for(int i = 0;i<tileCount;i++){
 			for(int j = 0;j<tileCount;j++){
-				JPanel grid = new JPanel();
-				grid.setBounds(40+i*40, 40+j*40, tileWidth, tileWidth);
-				if(colored){
-					
-					grid.setBackground(Color.black);
-				}
-				else{
-					grid.setBackground(Color.BLUE);
-				}
+				myTile grid = new myTile(i*40, j*40, tileWidth, tileWidth,colored);
 				colored = !colored;
-				contentPane.add(grid);
+				gridPanel.add(grid);
 			}
+			colored = !colored;
 		}
 	}
 }
