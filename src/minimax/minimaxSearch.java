@@ -1,5 +1,9 @@
 package minimax;
 
-public class minimaxSearch {
+public class minimaxSearch 
+{
+	
+	
 
+	
 }
