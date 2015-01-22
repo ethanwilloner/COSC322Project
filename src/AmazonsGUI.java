@@ -3,16 +3,18 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 
-import ai.singleplayer.Timer;
 
 
 public class AmazonsGUI extends JFrame {
@@ -23,6 +25,7 @@ public class AmazonsGUI extends JFrame {
 	private JPanel gridPanel;
 	private HashMap<Point,myTile> gridTiles;
 	private Timer timer;
+	private int seconds=0;
 	
 	public static Image blackqueen;
 	public static Image whitequeen;
@@ -71,9 +74,19 @@ public class AmazonsGUI extends JFrame {
 		lblTurn.setBounds(40, 15, 88, 14);
 		contentPane.add(lblTurn);
 		
-		timer = new Timer();
-		timer.setBounds(365, 15, 46, 14);
-		contentPane.add(timer);
+		final JLabel lblTimer = new JLabel("0:00");
+		lblTimer.setBounds(410, 15, 88, 14);
+		contentPane.add(lblTimer);
+		
+		timer = new Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				seconds++;
+				lblTimer.setText((seconds/60)+":"+String.format("%02d",seconds%60));
+				
+			}
+        }); 
+		timer.start();
 		
 		
 		createGrid();
@@ -129,6 +142,7 @@ public class AmazonsGUI extends JFrame {
 		gridTiles.get(new Point(6,9)).setState(myTile.WQ);
 		gridTiles.get(new Point(9,6)).setState(myTile.WQ);
 	}
+	
 	
 	
 }
