@@ -142,6 +142,13 @@ public class AmazonsGUI extends JFrame {
 		gridTiles.get(new Point(6,9)).setState(myTile.WQ);
 		gridTiles.get(new Point(9,6)).setState(myTile.WQ);
 	}
+
+	public static void moveQueen(myTile sourceTile, myTile targetTile) {
+		targetTile.setState(sourceTile.getState());
+		sourceTile.setState(0);
+		sourceTile.toggleHighlight();
+		AmazonsGUI.highlighted=null;
+	}
 	
 	
 	

@@ -56,9 +56,27 @@ public class myTile extends JPanel {
 				        	thisTile.toggleHighlight();
 				        }
 		        	 else{
-		        		 AmazonsGUI.highlighted.toggleHighlight();
-		        		 AmazonsGUI.highlighted=thisTile;
-		        		 thisTile.toggleHighlight();
+		        		 
+		        		 switch(AmazonsGUI.highlighted.state) {
+		        		 case 0:
+		        			 AmazonsGUI.highlighted.toggleHighlight();
+			        		 AmazonsGUI.highlighted=thisTile;
+			        		 thisTile.toggleHighlight();
+			        		 break;
+		        		 case 1:
+		        			 AmazonsGUI.moveQueen(AmazonsGUI.highlighted, thisTile);
+		        			 repaint();
+		        			 break;
+		        		 case 2:
+		        			 AmazonsGUI.moveQueen(AmazonsGUI.highlighted, thisTile);
+		        			 repaint();
+		        			 break;
+		        		 case 3:
+		        			 break;
+		        		 default:
+		        			 System.out.println("ERROR: Something went wrong...");
+		        		 }
+		        		 
 		        	 }
 		        	
 			       
@@ -117,5 +135,9 @@ public class myTile extends JPanel {
 	
 	public void setState(int newState){
 		state = newState;
+	}
+
+	public int getState() {
+		return state;
 	}
 }
