@@ -1,24 +1,32 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
+
+import utils.Move;
+import ai.OurBoard;
+import ai.OurPair;
 
 
 
 public class AmazonsGUI extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private OurBoard board;
+	
 	private JPanel contentPane;
 	private int tileWidth;
 	private int tileCount;
@@ -30,7 +38,9 @@ public class AmazonsGUI extends JFrame {
 	public static Image blackqueen;
 	public static Image whitequeen;
 	public static Image arrow;
-	public static myTile highlighted;
+	public myTile highlightedInitialQueen;
+	public myTile highlightedFinalQueen;
+
 	private JLabel lblTimer;
 	
 	/**
@@ -40,7 +50,9 @@ public class AmazonsGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AmazonsGUI frame = new AmazonsGUI();
+					AmazonsGUI frame = new AmazonsGUI(new OurBoard());
+					
+					
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -52,7 +64,12 @@ public class AmazonsGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AmazonsGUI() {
+	public AmazonsGUI(OurBoard b) {
+		
+		board = b;
+		highlightedInitialQueen = null;
+		highlightedFinalQueen = null;
+		
 		setTitle("Game of Amazons");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 500);
@@ -119,7 +136,7 @@ public class AmazonsGUI extends JFrame {
 		boolean colored = true;
 		for(int i = 0;i<tileCount;i++){
 			for(int j = 0;j<tileCount;j++){
-				myTile grid = new myTile(i*40, j*40, tileWidth, tileWidth,colored);
+				myTile grid = new myTile(i*40, j*40, tileWidth, tileWidth,colored, this);
 				colored = !colored;
 				gridTiles.put(new Point(i,j),grid);
 				gridPanel.add(grid);
@@ -143,12 +160,71 @@ public class AmazonsGUI extends JFrame {
 		gridTiles.get(new Point(9,6)).setState(myTile.WQ);
 	}
 
-	public static void moveQueen(myTile sourceTile, myTile targetTile) {
-		targetTile.setState(sourceTile.getState());
-		sourceTile.setState(0);
-		sourceTile.toggleHighlight();
-		AmazonsGUI.highlighted=null;
+	public void moveQueen(myTile sourceTile, myTile targetTile, myTile arrowTile) {
+		Move move = new Move(sourceTile.getPosition(), targetTile.getPosition(), arrowTile.getPosition());
+		if (board.makeMove(move))
+		{
+			System.out.println("This is a legal move.");
+			targetTile.setState(sourceTile.getState());
+			sourceTile.setState(0);
+			sourceTile.toggleHighlight();
+			
+			arrowTile.setState(myTile.ARROW);
+		}
+		else
+			System.out.println("This is not a legal move.");
+		
+		
+		
 	}
+	
+	/**
+	 * check if the tile clicked is a queen and highlight it as such
+	 * @param queenTile tile clicked
+	 */
+	public void queenClick(myTile queenTile)
+	{
+		
+		if (
+				board.isQueen(queenTile.getPosition().getLeft(), queenTile.getPosition().getRight()))
+		{
+			highlightedInitialQueen = queenTile;
+			queenTile.toggleHighlight();
+			System.out.println("This tile became a potential queen to be moved.");
+			
+		}
+		else
+			highlightedInitialQueen = null;
+	}
+	
+	public void potentialMoveClick(myTile thisTile)
+	{
+		//check if the space is empty
+		if (board.isFree(thisTile.getPosition().getLeft(), thisTile.getPosition().getRight()))
+		{
+			highlightedFinalQueen = thisTile;
+			thisTile.toggleHighlight();
+			
+			System.out.println("This tile became a potential place for the queen to move.");
+		}
+	}
+	
+	public void potentialArrowClick(myTile thisTile)
+	{
+		//check if the space is empty
+		if (board.isFree(thisTile.getPosition().getLeft(), thisTile.getPosition().getRight()))
+		{
+			
+			//try move
+			moveQueen(highlightedInitialQueen, highlightedFinalQueen, thisTile);
+			highlightedInitialQueen.toggleHighlight();
+			highlightedInitialQueen = null;
+			
+			highlightedFinalQueen.toggleHighlight();
+			highlightedFinalQueen = null;
+		}
+	}
+	
 	
 	
 	

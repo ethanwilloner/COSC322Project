@@ -1,6 +1,7 @@
 package ai;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Stack;
 
 import net.n3.nanoxml.IXMLElement;
@@ -107,7 +108,7 @@ public class OurPlayer implements GamePlayer {
 		//connect to client
 		client = new GameClient(userName, password, this);
 		//initialize board
-		board = new OurBoard(ROWS, COLS);
+		board = new OurBoard();
 		//initialize gui
 		gui = new GUI(board, ROWS, COLS);
 		//initialize xml parser
@@ -221,8 +222,8 @@ public class OurPlayer implements GamePlayer {
 	private boolean isFinished() {
 
 		//get positions
-		ArrayList<OurPair<Integer, Integer>> wPositions = board.getWhitePositions();
-		ArrayList<OurPair<Integer, Integer>> bPositions = board.getBlackPositions();
+		HashSet<OurPair<Integer, Integer>> wPositions = board.getWhitePositions();
+		HashSet<OurPair<Integer, Integer>> bPositions = board.getBlackPositions();
 
 		//tiles checked
 		int[][] hasChecked = new int[ROWS][COLS];

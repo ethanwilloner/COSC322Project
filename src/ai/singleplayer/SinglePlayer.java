@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Stack;
 
 import javax.swing.BorderFactory;
@@ -351,8 +351,8 @@ public class SinglePlayer implements GamePlayer {
 	 */
 	private boolean isFinished() {	
 
-		ArrayList<OurPair<Integer, Integer> > wPositions = board.getWhitePositions();
-		ArrayList<OurPair<Integer, Integer> > bPositions = board.getBlackPositions();
+		HashSet<OurPair<Integer, Integer> > wPositions = board.getWhitePositions();
+		HashSet<OurPair<Integer, Integer> > bPositions = board.getBlackPositions();
 
 		int[][] hasChecked = new int[rows][columns];
 	

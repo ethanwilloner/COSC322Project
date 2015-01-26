@@ -5,8 +5,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
+import utils.Move;
+import ai.OurPair;
 
 
 public class myTile extends JPanel {
@@ -17,8 +19,9 @@ public class myTile extends JPanel {
 	public static final int EMPTY = 0;
 	
 	public boolean colored;
-	public int x; //x coordinate
-	public int y; //y coordinate
+
+	private OurPair<Integer, Integer> position;
+	private AmazonsGUI gui;
 	
 	private boolean highlighted;
 	private int state; //0 for empty, 1 for white queen, 2 for black queen, 3 for arrow
@@ -28,10 +31,14 @@ public class myTile extends JPanel {
 	private myTile thisTile = this; //stored for use in addMouse()
 	
 	
-	public myTile(int x, int y, int width, int height, boolean colored){
+	public myTile(int x, int y, int width, int height, boolean colored, AmazonsGUI g){
 		super();
-		this.x = x/40;
-		this.y = y/40;
+		//set gui
+		gui = g;
+		
+		
+		this.position = new OurPair<Integer, Integer>(x/40, y/40);
+		
 		this.highlighted=false;
 		this.setBounds(x, y, width, height);
 		this.colored = colored;
@@ -44,48 +51,81 @@ public class myTile extends JPanel {
 		addMouse();
 	}
 	
+	/**
+	 * @return the position
+	 */
+	public OurPair<Integer, Integer> getPosition() {
+		return position;
+	}
+
+	/**
+	 * @param position the position to set
+	 */
+	public void setPosition(OurPair<Integer, Integer> position) {
+		this.position = position;
+	}
+
 	public void addMouse(){
 		addMouseListener(new MouseAdapter() {
 		    @Override
 		    public void mouseClicked(MouseEvent e) {
-		        System.out.println("x:"+x+" y:"+y);
+		        System.out.println("x:"+position.getLeft()+" y:"+position.getRight());
 		        
-		        if(AmazonsGUI.highlighted!=null){
-		        	 if(AmazonsGUI.highlighted==thisTile){
-				        	AmazonsGUI.highlighted=null;
-				        	thisTile.toggleHighlight();
-				        }
-		        	 else{
-		        		 
-		        		 switch(AmazonsGUI.highlighted.state) {
-		        		 case 0:
-		        			 AmazonsGUI.highlighted.toggleHighlight();
-			        		 AmazonsGUI.highlighted=thisTile;
-			        		 thisTile.toggleHighlight();
-			        		 break;
-		        		 case 1:
-		        			 AmazonsGUI.moveQueen(AmazonsGUI.highlighted, thisTile);
-		        			 repaint();
-		        			 break;
-		        		 case 2:
-		        			 AmazonsGUI.moveQueen(AmazonsGUI.highlighted, thisTile);
-		        			 repaint();
-		        			 break;
-		        		 case 3:
-		        			 break;
-		        		 default:
-		        			 System.out.println("ERROR: Something went wrong...");
-		        		 }
-		        		 
-		        	 }
-		        	
-			       
+		        if(gui.highlightedInitialQueen == null)
+		        {
+		        	gui.queenClick(thisTile);
 		        }
-		        else{
-		        	
-		        	AmazonsGUI.highlighted=thisTile;
-		        	thisTile.toggleHighlight();
+		        else
+		        {
+		        	if (gui.highlightedFinalQueen == null)
+		        	{
+		        		gui.potentialMoveClick(thisTile);
+		        	}
+		        	else
+		        		gui.potentialArrowClick(thisTile);
 		        }
+		        
+		        	
+//		        	 if(gui.highlighted==thisTile){
+//				        	gui.highlighted=null;
+//				        	thisTile.toggleHighlight();
+//				        }
+//		        	 else{
+//		        		 
+//		        		 switch(gui.highlighted.state) {
+//		        		 case 0:
+//		        			 gui.highlighted.toggleHighlight();
+//		        			 gui.highlighted=thisTile;
+//			        		 thisTile.toggleHighlight();
+//			        		 break;
+//		        		 case 1:
+//		        			 AmazonsGUI.moveQueen(gui.highlighted, thisTile);
+//		        			 repaint();
+//		        			 break;
+//		        		 case 2:
+//		        			 AmazonsGUI.moveQueen(gui.highlighted, thisTile);
+//		        			 repaint();
+//		        			 break;
+//		        		 case 3:
+//		        			 break;
+//		        		 default:
+//		        			 System.out.println("ERROR: Something went wrong...");
+//		        		 }
+//		        		 
+//		        	 }
+//		        	
+//		        }
+//		        else
+//		        {
+//		        	//un-highlight this tile if it was clicked before and got clicked again
+//		        	if (gui.highlighted == thisTile)
+//		        	{
+//		        		gui.highlighted=null;
+//			        	thisTile.toggleHighlight();
+//		        	}
+//		        	//check if the second tile clicked is a legal move
+//		        	Move move = new Move();
+//		        }
 		       
 		    }
 		        

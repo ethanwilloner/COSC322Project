@@ -1,6 +1,9 @@
 package ai;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+
+import utils.GameRules;
+import utils.Move;
 
 /**
  * Board class that contains the instance of the board
@@ -19,6 +22,34 @@ public class OurBoard {
 	 */
 	private int rows;
 	
+	/**
+	 * @return the rows
+	 */
+	public int getRows() {
+		return rows;
+	}
+
+	/**
+	 * @param rows the rows to set
+	 */
+	public void setRows(int rows) {
+		this.rows = rows;
+	}
+
+	/**
+	 * @return the columns
+	 */
+	public int getColumns() {
+		return columns;
+	}
+
+	/**
+	 * @param columns the columns to set
+	 */
+	public void setColumns(int columns) {
+		this.columns = columns;
+	}
+
 	/**
 	 * number of columns on the board
 	 */
@@ -41,22 +72,22 @@ public class OurBoard {
 	 */
 	public final int FREE = -1;
 	
-	ArrayList<OurPair<Integer, Integer> > whitePositions;
-	ArrayList<OurPair<Integer, Integer> > blackPositions;
+	HashSet<OurPair<Integer, Integer> > whitePositions;
+	HashSet<OurPair<Integer, Integer> > blackPositions;
 	
 	/**
 	 * constructor to initialize our board
 	 * @param rows the number of rows on the board
 	 * @param columns the number of columns on the board
 	 */
-	public OurBoard(int rows, int columns) {
+	public OurBoard() {
 		//set rows and columns
-		this.rows = rows;
-		this.columns = columns;
+		this.rows = 10;
+		this.columns = 10;
 		//instantiate 2D array
 		board = new int[rows][columns];
-		whitePositions = new ArrayList<>();
-		blackPositions = new ArrayList<>();
+		whitePositions = new HashSet<OurPair<Integer, Integer>>();
+		blackPositions = new HashSet<OurPair<Integer, Integer>>();
 		
 		initialize();		
 	}
@@ -104,6 +135,10 @@ public class OurBoard {
 		board[x][y] = FREE;
 	}
 	
+	public boolean isFree(int x, int y){
+		return (board[x][y] == FREE);
+	}
+	
 	/**
 	 * set a specific piece at a specific location
 	 * @param x x-coordinate of location
@@ -139,7 +174,7 @@ public class OurBoard {
 
 	public void updateQueenPosition(int oldX, int oldY, int newX, int newY, int queenCode){
 		
-		ArrayList<OurPair<Integer, Integer>> positions;
+		HashSet<OurPair<Integer, Integer>> positions;
 		
 		if (queenCode == WQUEEN)
 			positions = whitePositions;
@@ -160,7 +195,7 @@ public class OurBoard {
 	 * return the ArrayList of black positions
 	 * @return black positions
 	 */
-	public ArrayList<OurPair<Integer, Integer> > getBlackPositions(){
+	public HashSet<OurPair<Integer, Integer> > getBlackPositions(){
 		return blackPositions;
 	}
 	
@@ -168,7 +203,56 @@ public class OurBoard {
 	 * return the ArrayList of white positions
 	 * @return
 	 */
-	public ArrayList<OurPair<Integer, Integer> > getWhitePositions(){
+	public HashSet<OurPair<Integer, Integer> > getWhitePositions(){
 		return whitePositions;
+	}
+	
+	/**
+	 * make given move to the board
+	 * @param move move to be made
+	 * @param side which side is making the move
+	 * @return
+	 */
+	public boolean makeMove(Move move)
+	{
+		//get code of queen
+		int side = board[move.getInitialQ().getLeft()][move.getInitialQ().getRight()];
+		
+		
+		//check if this move is legal
+		if (GameRules.isLegalMove(this, move, side))
+		{	
+			//free old queen position
+			placeMarker(move.getInitialQ().getLeft(), move.getInitialQ().getRight(), FREE);
+			
+			//place new queen
+			placeMarker(move.getFinalQ().getLeft(), move.getFinalQ().getRight(), side);
+			
+			//place arrow
+			placeMarker(move.getArrow().getLeft(), move.getArrow().getRight(), ARROW);
+			
+			
+			//update queen in hashset
+			updateQueenPosition(move.getInitialQ().getLeft(), move.getInitialQ().getRight(), move.getFinalQ().getLeft(), move.getFinalQ().getRight(), side);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * returns true if designated position is a queen
+	 * @param x x value
+	 * @param y y value
+	 * @return true if queen is at the given position
+	 */
+	public boolean isQueen(int x, int y)
+	{
+		OurPair<Integer, Integer> thisSpace = new OurPair<Integer, Integer>(x, y);
+		
+		if (blackPositions.contains(thisSpace) || whitePositions.contains(thisSpace))
+			return true;
+		else 
+			return false;
 	}
 }
