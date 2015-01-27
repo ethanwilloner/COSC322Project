@@ -173,6 +173,25 @@ public class myTile extends JPanel {
 		highlighted = !highlighted;
 	}
 	
+	public void flashHighlight(){
+		for(int i = 0;i<2;i++){
+			try {
+				System.out.println("flashing");
+				this.setBorder(BorderFactory.createLineBorder(Color.RED, 4));
+				repaint();
+				Thread.sleep(500);
+				this.setBorder(null);
+				repaint();
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		this.setBorder(BorderFactory.createLineBorder(Color.PINK, 3));
+		repaint();
+	}
+	
 	public void setState(int newState){
 		state = newState;
 	}

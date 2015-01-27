@@ -160,22 +160,19 @@ public class AmazonsGUI extends JFrame {
 		gridTiles.get(new Point(9,6)).setState(myTile.WQ);
 	}
 
-	public void moveQueen(myTile sourceTile, myTile targetTile, myTile arrowTile) {
-		Move move = new Move(sourceTile.getPosition(), targetTile.getPosition(), arrowTile.getPosition());
-		if (board.makeMove(move))
-		{
-			System.out.println("This is a legal move.");
+	public static void moveQueen(myTile sourceTile, myTile targetTile) {
+		if(Math.abs(targetTile.x-sourceTile.x) == Math.abs(targetTile.y-sourceTile.y)){
 			targetTile.setState(sourceTile.getState());
 			sourceTile.setState(0);
 			sourceTile.toggleHighlight();
-			
-			arrowTile.setState(myTile.ARROW);
+			AmazonsGUI.highlighted=null;
 		}
 		else
-			System.out.println("This is not a legal move.");
-		
-		
-		
+			showIllegal();
+	}
+
+	private static void showIllegal() {
+		AmazonsGUI.highlighted.flashHighlight();
 	}
 	
 	/**
