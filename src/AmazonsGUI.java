@@ -35,9 +35,9 @@ public class AmazonsGUI extends JFrame {
 	private Timer timer;
 	private int seconds=0;
 	
-	public static Image blackqueen;
-	public static Image whitequeen;
-	public static Image arrow;
+	public Image blackqueen;
+	public Image whitequeen;
+	public Image arrow;
 	public myTile highlightedInitialQueen;
 	public myTile highlightedFinalQueen;
 
@@ -166,10 +166,10 @@ public class AmazonsGUI extends JFrame {
 		{
 			System.out.println("This is a legal move.");
 			targetTile.setState(sourceTile.getState());
-			sourceTile.setState(0);
-			sourceTile.toggleHighlight();
 			
-			arrowTile.setState(myTile.ARROW);
+			sourceTile.setState(0);
+			
+			arrowTile.setState(3);
 		}
 		else
 			System.out.println("This is not a legal move.");
@@ -189,12 +189,16 @@ public class AmazonsGUI extends JFrame {
 				board.isQueen(queenTile.getPosition().getLeft(), queenTile.getPosition().getRight()))
 		{
 			highlightedInitialQueen = queenTile;
+			highlightedFinalQueen = null;
 			queenTile.toggleHighlight();
 			System.out.println("This tile became a potential queen to be moved.");
 			
 		}
 		else
+		{
 			highlightedInitialQueen = null;
+			highlightedFinalQueen = null;
+		}
 	}
 	
 	public void potentialMoveClick(myTile thisTile)
@@ -207,6 +211,13 @@ public class AmazonsGUI extends JFrame {
 			
 			System.out.println("This tile became a potential place for the queen to move.");
 		}
+		else
+		{
+			highlightedFinalQueen = null;
+			thisTile.toggleHighlight();
+			highlightedInitialQueen = null;
+			highlightedInitialQueen.toggleHighlight();
+		}
 	}
 	
 	public void potentialArrowClick(myTile thisTile)
@@ -214,9 +225,18 @@ public class AmazonsGUI extends JFrame {
 		//check if the space is empty
 		if (board.isFree(thisTile.getPosition().getLeft(), thisTile.getPosition().getRight()))
 		{
-			
+			System.out.println("Trying to drop an arrow at this tile.");
 			//try move
 			moveQueen(highlightedInitialQueen, highlightedFinalQueen, thisTile);
+			highlightedInitialQueen.toggleHighlight();
+			highlightedInitialQueen = null;
+			
+			highlightedFinalQueen.toggleHighlight();
+			highlightedFinalQueen = null;
+			
+		}
+		else
+		{
 			highlightedInitialQueen.toggleHighlight();
 			highlightedInitialQueen = null;
 			

@@ -22,8 +22,21 @@ public class GameRules
 	public static boolean isLegalMove(OurBoard board, Move move, int side)
 	{
 		//check if initial queen is indeed a queen
-		if (!board.getBlackPositions().contains(move.getInitialQ()) && !board.getWhitePositions().contains(move.getInitialQ()))
-			return false;
+		if (side == 1)
+		{
+			if (board.getWhitePositions().contains(move))
+			{
+				return false;
+			}
+		}	
+		else
+		{
+			if (board.getBlackPositions().contains(move))
+			{
+				return false;
+			}
+		}
+		
 		HashSet<Move> moves = getLegalMoves(board, side);
 		return (moves.contains(move));
 			

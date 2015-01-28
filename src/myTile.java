@@ -7,12 +7,15 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import utils.Move;
 import ai.OurPair;
 
 
 public class myTile extends JPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final int WQ = 1;
 	public static final int BQ = 2;
 	public static final int ARROW = 3;
@@ -70,6 +73,13 @@ public class myTile extends JPanel {
 		    @Override
 		    public void mouseClicked(MouseEvent e) {
 		        System.out.println("x:"+position.getLeft()+" y:"+position.getRight());
+		        
+		        if (gui.highlightedInitialQueen != null)
+		        {
+		        	System.out.println("Highlighted Initial Queen: " + gui.highlightedInitialQueen.getPosition().getLeft() + ", " + gui.highlightedInitialQueen.getPosition().getRight());
+		        }
+		        if (gui.highlightedFinalQueen != null)
+		        	System.out.println("Highlighted Final Queen: " + gui.highlightedFinalQueen.getPosition().getLeft() + ", " + gui.highlightedFinalQueen.getPosition().getRight());
 		        
 		        if(gui.highlightedInitialQueen == null)
 		        {
@@ -146,14 +156,14 @@ public class myTile extends JPanel {
 		case 0:
 			return null;
 		case 1:
-			return AmazonsGUI.whitequeen;
+			return gui.whitequeen;
 		case 2:
 			
-			return AmazonsGUI.blackqueen;
+			return gui.blackqueen;
 			
 		case 3:
 			
-			return AmazonsGUI.arrow;
+			return gui.arrow;
 		default:
 			
 			return null;

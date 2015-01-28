@@ -114,7 +114,7 @@ public class SinglePlayer implements GamePlayer {
 	public boolean handleMessage(GameMessage arg0) throws Exception {return false;}
 
 	public static void main(String[] args){
-		SinglePlayer sp = new SinglePlayer(10,10);
+		SinglePlayer sp = new SinglePlayer();
 		sp.init();	
 	}
 
@@ -124,11 +124,12 @@ public class SinglePlayer implements GamePlayer {
 	
 	// TODO: Get rid of cells class, put functionality into board somehow to reduce redundancy
 	
-	public SinglePlayer(int row, int col){
-		board = new OurBoard(row,col);
-		guiBoard = new Cells[row][col];		
-		rows = row;
-		columns = col;
+	public SinglePlayer(){
+		rows = 10;
+		columns = 10;
+		board = new OurBoard();
+		guiBoard = new Cells[rows][columns];		
+
 	}
 
 	public void init(){
