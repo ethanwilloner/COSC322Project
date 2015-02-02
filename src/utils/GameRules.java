@@ -222,5 +222,22 @@ public class GameRules
 		return toReturn;
 		
 	}
+	/**
+	 * end game check
+	 * @param board the game board
+	 * @return 0 if game still continues, 1 if white wins, 2 if black winss
+	 */
+	public static int checkEndGame(OurBoard board){
+		int rtn = 0;
+		
+		if(getLegalMoves(board,1).size()==0){
+			rtn = 2; //black wins
+		}
+		else if(getLegalMoves(board,2).size()==0){
+			rtn = 1; //white wins
+		}
+		
+		return rtn;
+	}
 
 }
