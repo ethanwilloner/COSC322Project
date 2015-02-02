@@ -239,5 +239,18 @@ public class GameRules
 		
 		return rtn;
 	}
+	
+	/**
+	 * get a set of legal moves for the given queen (no arrow shot) with the given board
+	 * @param board game board instance
+	 * @param side 1 for white queen, 2 for black queen
+	 * @return a set of legal moves
+	 */
+	public static HashSet<OurPair<Integer, Integer>> getLegalQueenMoves(OurBoard board, OurPair<Integer, Integer> queen, int side)
+	{
+		//get where the queen can move
+		return getMoveCross(board, queen);
+		
+	}
 
 }
