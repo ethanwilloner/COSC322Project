@@ -95,8 +95,8 @@ public class GameRules
 	{
 		HashSet<OurPair<Integer, Integer>> toReturn = new HashSet<OurPair<Integer, Integer>>();
 		
-		int x = tileToMove.getLeft();
-		int y = tileToMove.getRight();
+		int x = tileToMove.getX();
+		int y = tileToMove.getY();
 		
 		//first check all the forward moves on x
 		for (int tempX = x+1; tempX < board.getColumns(); tempX++)
@@ -225,7 +225,7 @@ public class GameRules
 	/**
 	 * end game check
 	 * @param board the game board
-	 * @return 0 if game still continues, 1 if white wins, 2 if black winss
+	 * @return 0 if game still continues, 1 if white wins, 2 if black wins
 	 */
 	public static int checkEndGame(OurBoard board){
 		int rtn = 0;

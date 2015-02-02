@@ -183,9 +183,9 @@ public class OurBoard {
 			
 		for (OurPair<Integer, Integer> p : positions){
 			
-			if (p.getLeft() == oldX && p.getRight() == oldY){
-				p.setLeft(newX);
-				p.setRight(newY);
+			if (p.getX() == oldX && p.getY() == oldY){
+				p.setX(newX);
+				p.setY(newY);
 				return;
 			}	
 		}
@@ -216,24 +216,24 @@ public class OurBoard {
 	public boolean makeMove(Move move)
 	{
 		//get code of queen
-		int side = board[move.getInitialQ().getLeft()][move.getInitialQ().getRight()];
+		int side = board[move.getInitialQ().getX()][move.getInitialQ().getY()];
 		
 		
 		//check if this move is legal
 		if (GameRules.isLegalMove(this, move, side))
 		{	
 			//free old queen position
-			placeMarker(move.getInitialQ().getLeft(), move.getInitialQ().getRight(), FREE);
+			placeMarker(move.getInitialQ().getX(), move.getInitialQ().getY(), FREE);
 			
 			//place new queen
-			placeMarker(move.getFinalQ().getLeft(), move.getFinalQ().getRight(), side);
+			placeMarker(move.getFinalQ().getX(), move.getFinalQ().getY(), side);
 			
 			//place arrow
-			placeMarker(move.getArrow().getLeft(), move.getArrow().getRight(), ARROW);
+			placeMarker(move.getArrow().getX(), move.getArrow().getY(), ARROW);
 			
 			
 			//update queen in hashset
-			updateQueenPosition(move.getInitialQ().getLeft(), move.getInitialQ().getRight(), move.getFinalQ().getLeft(), move.getFinalQ().getRight(), side);
+			updateQueenPosition(move.getInitialQ().getX(), move.getInitialQ().getY(), move.getFinalQ().getX(), move.getFinalQ().getY(), side);
 			return true;
 		}
 		

@@ -72,14 +72,14 @@ public class myTile extends JPanel {
 		addMouseListener(new MouseAdapter() {
 		    @Override
 		    public void mouseClicked(MouseEvent e) {
-		        System.out.println("x:"+position.getLeft()+" y:"+position.getRight());
+		        System.out.println("x:"+position.getX()+" y:"+position.getY());
 		        
 		        if (gui.highlightedInitialQueen != null)
 		        {
-		        	System.out.println("Highlighted Initial Queen: " + gui.highlightedInitialQueen.getPosition().getLeft() + ", " + gui.highlightedInitialQueen.getPosition().getRight());
+		        	System.out.println("Highlighted Initial Queen: " + gui.highlightedInitialQueen.getPosition().getX() + ", " + gui.highlightedInitialQueen.getPosition().getY());
 		        }
 		        if (gui.highlightedFinalQueen != null)
-		        	System.out.println("Highlighted Final Queen: " + gui.highlightedFinalQueen.getPosition().getLeft() + ", " + gui.highlightedFinalQueen.getPosition().getRight());
+		        	System.out.println("Highlighted Final Queen: " + gui.highlightedFinalQueen.getPosition().getX() + ", " + gui.highlightedFinalQueen.getPosition().getY());
 		        
 		        if(gui.highlightedInitialQueen == null)
 		        {

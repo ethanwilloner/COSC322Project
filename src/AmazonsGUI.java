@@ -186,7 +186,7 @@ public class AmazonsGUI extends JFrame {
 	{
 		
 		if (
-				board.isQueen(queenTile.getPosition().getLeft(), queenTile.getPosition().getRight()))
+				board.isQueen(queenTile.getPosition().getX(), queenTile.getPosition().getY()))
 		{
 			highlightedInitialQueen = queenTile;
 			highlightedFinalQueen = null;
@@ -204,7 +204,7 @@ public class AmazonsGUI extends JFrame {
 	public void potentialMoveClick(myTile thisTile)
 	{
 		//check if the space is empty
-		if (board.isFree(thisTile.getPosition().getLeft(), thisTile.getPosition().getRight()))
+		if (board.isFree(thisTile.getPosition().getX(), thisTile.getPosition().getY()))
 		{
 			highlightedFinalQueen = thisTile;
 			thisTile.toggleHighlight();
@@ -223,7 +223,7 @@ public class AmazonsGUI extends JFrame {
 	public void potentialArrowClick(myTile thisTile)
 	{
 		//check if the space is empty
-		if (board.isFree(thisTile.getPosition().getLeft(), thisTile.getPosition().getRight()))
+		if (board.isFree(thisTile.getPosition().getX(), thisTile.getPosition().getY()))
 		{
 			System.out.println("Trying to drop an arrow at this tile.");
 			//try move

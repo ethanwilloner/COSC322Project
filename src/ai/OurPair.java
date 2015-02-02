@@ -11,41 +11,41 @@ package ai;
  */
 public class OurPair<L, R>{
 
-	L left;
+	L x;
 	/**
 	 * @param l the left to set
 	 */
-	public void setLeft(L l) {
-		this.left = l;
+	public void setX(L l) {
+		this.x = l;
 	}
 	/**
 	 * @param r the right to set
 	 */
-	public void setRight(R r) {
-		this.right = r;
+	public void setY(R r) {
+		this.y = r;
 	}
 
 
-	R right;
+	R y;
 	
 	public OurPair(L l, R r){
-		this.left = l;
-		this.right = r;
+		this.x = l;
+		this.y = r;
 	}
 	/**
 	 * Left pair, for this it is the x value
 	 * @return X-coordinate
 	 */
-	public L getLeft(){
-		return left;
+	public L getX(){
+		return x;
 	}
 
 	/**
 	 * Right pair, for this it is the y value
 	 * @return Y-coordinate
 	 */
-	public R getRight(){
-		return right;
+	public R getY(){
+		return y;
 	}
 	
 	
@@ -57,8 +57,8 @@ public class OurPair<L, R>{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((left == null) ? 0 : left.hashCode());
-		result = prime * result + ((right == null) ? 0 : right.hashCode());
+		result = prime * result + ((x == null) ? 0 : x.hashCode());
+		result = prime * result + ((y == null) ? 0 : y.hashCode());
 		return result;
 	}
 	/* (non-Javadoc)
@@ -73,15 +73,15 @@ public class OurPair<L, R>{
 		if (getClass() != obj.getClass())
 			return false;
 		OurPair other = (OurPair) obj;
-		if (left == null) {
-			if (other.left != null)
+		if (x == null) {
+			if (other.x != null)
 				return false;
-		} else if (!left.equals(other.left))
+		} else if (!x.equals(other.x))
 			return false;
-		if (right == null) {
-			if (other.right != null)
+		if (y == null) {
+			if (other.y != null)
 				return false;
-		} else if (!right.equals(other.right))
+		} else if (!y.equals(other.y))
 			return false;
 		return true;
 	}
