@@ -171,8 +171,9 @@ public class AmazonsGUI extends JFrame {
 			targetTile.setState(sourceTile.getState());
 			
 			sourceTile.setState(0);
-			
+
 			arrowTile.setState(3);
+			arrowTile.repaint();
 		}
 		else
 			System.out.println("This is not a legal move.");
