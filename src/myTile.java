@@ -185,6 +185,7 @@ public class myTile extends JPanel {
 	
 	public void setState(int newState){
 		state = newState;
+		repaint();
 	}
 
 	public int getState() {

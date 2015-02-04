@@ -189,8 +189,8 @@ public class AmazonsGUI extends JFrame {
 	public void queenClick(myTile queenTile)
 	{
 		
-		if (
-				board.isQueen(queenTile.getPosition().getX(), queenTile.getPosition().getY()))
+		//queen position not being updated
+		if (board.isQueen(queenTile.getPosition().getX(), queenTile.getPosition().getY()))
 		{
 			highlightedInitialQueen = queenTile;
 			highlightedFinalQueen = null;

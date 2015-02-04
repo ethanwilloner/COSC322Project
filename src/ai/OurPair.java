@@ -12,6 +12,10 @@ package ai;
 public class OurPair<L, R>{
 
 	L x;
+	@Override
+	public String toString() {
+		return "OurPair [x=" + x + ", y=" + y + "]";
+	}
 	/**
 	 * @param l the left to set
 	 */

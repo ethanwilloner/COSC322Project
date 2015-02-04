@@ -22,6 +22,11 @@ public class Move
 				+ ((initialQ == null) ? 0 : initialQ.hashCode());
 		return result;
 	}
+	@Override
+	public String toString() {
+		return "Move [initialQ=" + initialQ + ", FinalQ=" + FinalQ + ", arrow="
+				+ arrow + "]";
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

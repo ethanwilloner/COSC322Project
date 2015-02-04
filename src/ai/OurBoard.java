@@ -175,7 +175,7 @@ public class OurBoard {
 	public void updateQueenPosition(int oldX, int oldY, int newX, int newY, int queenCode){
 		
 		HashSet<OurPair<Integer, Integer>> positions;
-		
+		System.out.println(blackPositions+"\n"+whitePositions);
 		if (queenCode == WQUEEN)
 			positions = whitePositions;
 		else
@@ -186,9 +186,14 @@ public class OurBoard {
 			if (p.getX() == oldX && p.getY() == oldY){
 				p.setX(newX);
 				p.setY(newY);
-				return;
+				
 			}	
 		}
+		if (queenCode == WQUEEN)
+			whitePositions=positions;
+		else
+			blackPositions = positions;
+		System.out.println(blackPositions+"\n"+whitePositions);
 	}
 	
 	/**
