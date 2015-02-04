@@ -55,13 +55,13 @@ public class OurEvaluation
 				blackTemp = tempBoard[x][y][1];
 				
 				if (whiteTemp == 0 || blackTemp == 0)
-				{
 					continue;
-				}
 				
-				if (whiteTemp > blackTemp)
+				//if white's value is greater than black's or blacks never reached this tile, 
+				if (whiteTemp > blackTemp || blackTemp == Integer.MAX_VALUE)
 					white++;
-				else if (blackTemp > whiteTemp)
+				//if blacks got there quicker or white never got there
+				else if (blackTemp > whiteTemp || whiteTemp == Integer.MAX_VALUE)
 					black++;
 			}
 		}

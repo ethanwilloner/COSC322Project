@@ -82,6 +82,9 @@ public class GameRules
 			}
 		}
 		
+		System.out.println("Number of legal moves: " + toReturn.size());
+		System.out.println("Our evaluation: " + OurEvaluation.evaluateBoard(board));
+		
 		return toReturn;
 	}
 	
