@@ -24,17 +24,13 @@ public class GameRules
 		//check if initial queen is indeed a queen
 		if (side == 1)
 		{
-			if (board.getWhitePositions().contains(move))
-			{
+			if (!board.getWhitePositions().contains(move.initialQ))
 				return false;
-			}
 		}	
 		else
 		{
-			if (board.getBlackPositions().contains(move))
-			{
+			if (!board.getBlackPositions().contains(move.initialQ))
 				return false;
-			}
 		}
 		
 		HashSet<Move> moves = getLegalMoves(board, side);
@@ -77,13 +73,13 @@ public class GameRules
 				//add to moves
 				for (OurPair<Integer, Integer> arrow : arrowToTiles)
 				{
-					toReturn.add(new Move(queen, newQueen, arrow));
+					toReturn.add(new Move(new OurPair<Integer, Integer>(queen.getX(), queen.getY()), newQueen, arrow));
 				}
 			}
 		}
 		
-		System.out.println("Number of legal moves: " + toReturn.size());
-		System.out.println("Our evaluation: " + OurEvaluation.evaluateBoard(board));
+//		System.out.println("Number of legal moves: " + toReturn.size());
+//		System.out.println("Our evaluation: " + OurEvaluation.evaluateBoard(board));
 		
 		return toReturn;
 	}
