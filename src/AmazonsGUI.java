@@ -55,7 +55,6 @@ public class AmazonsGUI extends JFrame {
 					
 					frame.setVisible(true);
 					
-					System.out.println(OurEvaluation.evaluateBoard(frame.board));
 					
 				} catch (Exception e) {
 					e.printStackTrace();
