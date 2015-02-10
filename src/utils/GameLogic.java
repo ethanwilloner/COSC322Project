@@ -30,15 +30,18 @@ public class GameLogic implements GamePlayer
 	int roomId;
 	static ArrayList<GameRoom> roomList;
 	static Action action;
+	static Action recvAction;
+	static Action sendAction;
 	static JAXBContext jaxbContext;
 
 	public static void main(String[] args) throws JAXBException
 	{
 		jaxbContext = JAXBContext.newInstance(Action.class);
 		action = new Action();
-		//gamelogic gamelogic = new gamelogic("team rocket","password123");
+		//GameLogic gamelogic = new GameLogic("team rocket","password123");
 
-		String msg = "<action type='room-joined'><usrlist ucount='1'><usr name='team rocket' id='1'></usr></usrlist></action>";
+		// Example code for using the JAXB objects to read and create new objects
+/*		String msg = "<action type='room-joined'><usrlist ucount='1'><usr name='team rocket' id='1'></usr></usrlist></action>";
 		String msg2 = "<action type='move'> <queen move='a3-g3'></queen><arrow move='h4'></arrow></action>";
 
 		OurPair<Integer, Integer> InitialQ = new OurPair<Integer, Integer>(0,0);
@@ -55,7 +58,7 @@ public class GameLogic implements GamePlayer
 
 		action = new Action();
 		unmarshal(msg);
-		System.out.println(marshal());
+		System.out.println(marshal());*/
 
 	}
 
