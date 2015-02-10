@@ -8,8 +8,17 @@ import ubco.ai.games.GameClient;
 import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GameLogic implements GamePlayer
@@ -20,16 +29,20 @@ public class GameLogic implements GamePlayer
 	int roomId;
 	static ArrayList<GameRoom> roomList;
 
+	static Action action;
+	static JAXBContext jaxbContext;
+
 	public static void main(String[] args) throws JAXBException
 	{
+		jaxbContext = JAXBContext.newInstance(Action.class);
 		//gamelogic gamelogic = new gamelogic("team rocket","password123");
 
 		String msg = "<action type='room-joined'><usrlist ucount='1'><usr name='team rocket' id='1'></usr></usrlist></action>";
 		String msg2 = "<action type='move'> <queen move='a3-g3'></queen><arrow move='h4'></arrow></action>";
 
-//		Message message = new Message();
-//		message.unmarshal(msg);
-////		message.marshal();
+		Message message = new Message();
+		message.unmarshal(msg);
+		System.out.println(message.marshal());
 //
 //		Message message1 = new Message();
 //		message1.unmarshal(msg2);
@@ -40,6 +53,7 @@ public class GameLogic implements GamePlayer
 //		System.out.println(message1.getArrow());
 //
 //		System.out.println(message1.marshal());
+
 	}
 
 	public GameLogic(String name, String passwd)
@@ -145,6 +159,146 @@ public class GameLogic implements GamePlayer
 			// send move
 			// set to their move
 
+		}
+	}
+
+	/**
+	 *
+	 * @param msg Reads in an XML string from the game server and unmarshalls
+	 *            it into the object mappings
+	 * @throws JAXBException
+	 */
+
+	public static void unmarshal(String msg) throws JAXBException {
+		InputStream is = new ByteArrayInputStream(msg.getBytes());
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		action = (Action) unmarshaller.unmarshal(is);
+	}
+
+	/**
+	 *
+	 * @return String which is the XML formatting for the response message
+	 *              to the server
+	 * @throws JAXBException
+	 */
+	public static String marshal() throws JAXBException {
+		OutputStream os = new ByteArrayOutputStream();
+		Marshaller marshaller = jaxbContext.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+		marshaller.marshal(action, os);
+
+		return os.toString();
+	}
+
+	/**
+	 * Root of the XML string
+	 */
+	@XmlRootElement(name="action")
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static class Action
+	{
+		@XmlAttribute(name="type")
+		String type;
+		@XmlElement(name="usrlist")
+		private UserList userList;
+		@XmlElement(name="queen")
+		private Queen queen;
+		@XmlElement(name="arrow")
+		private Arrow arrow;
+	}
+
+	/**
+	 * List of Users Element
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static class UserList
+	{
+		@XmlAttribute(name="ucount")
+		int ucount;
+		@XmlElement(name="usr")
+		List<User> users;
+	}
+
+	/**
+	 * User element and attributs
+	 * None of the examples in the
+	 * message format guide include anything
+	 * except attributes
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static class User
+	{
+		@XmlAttribute(name="name")
+		String name;
+		@XmlAttribute(name="id")
+		int id;
+		@XmlAttribute(name="role")
+		String role;
+	}
+
+	/**
+	 * Queen, stores a move in a string of the
+	 * format previous-current such as g7-a4.
+	 * Is not stored in our internal game board representation
+	 * See getMove for getter of the newest move
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static class Queen
+	{
+		@XmlAttribute(name="move")
+		static String move;
+		/**
+		 *
+		 * @param InitialQ Where the queen started in our turn
+		 * @param FinalQ Where the queen was moved to in our turn
+		 *
+		 */
+		public void setMove(OurPair<Integer, Integer> InitialQ, OurPair<Integer, Integer> FinalQ)
+		{
+			String s1 = new StringBuilder().append(Character.toChars(InitialQ.getX() + 'a')).append(Character.toChars(InitialQ.getY() + '0')).toString();
+			String s2 = new StringBuilder().append(Character.toChars(FinalQ.getX() + 'a')).append(Character.toChars(FinalQ.getY() + '0')).toString();
+
+			this.move = s1 + "-" + s2;
+		}
+
+		/**
+		 *
+		 * @return The location that the queen moved to
+		 */
+		public OurPair<Integer, Integer> getMove(){
+			String[] str = Queen.move.split("-");
+			return new OurPair<Integer, Integer>(str[1].charAt(0)-'a', str[1].charAt(1)-'0');
+		}
+
+	}
+
+	/**
+	 * Stores location that the arrow was fired after
+	 * the queen made her move
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static class Arrow
+	{
+		@XmlAttribute(name="move")
+		static String arrow;
+
+
+		/**
+		 *
+		 * @return location that the arrow was placed
+		 */
+		public OurPair<Integer, Integer> getArrow()
+		{
+			return new OurPair<Integer, Integer>(this.arrow.charAt(0)-'a', this.arrow.charAt(1)-'0');
+		}
+
+		/**
+		 *
+		 * @param arrow takes OurPair object for location that we placed our arrow
+		 */
+		public void setArrow(OurPair<Integer, Integer> arrow)
+		{
+			this.arrow = new StringBuilder().append(Character.toChars(arrow.getX() + 'a')).append(Character.toChars(arrow.getY() + '0')).toString();
 		}
 	}
 }
