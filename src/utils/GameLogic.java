@@ -1,5 +1,8 @@
 package utils;
 
+import MessageParsing.Action;
+import MessageParsing.Arrow;
+import MessageParsing.Queen;
 import ai.OurBoard;
 import ai.OurPair;
 import ubco.ai.GameRoom;
@@ -12,13 +15,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class GameLogic implements GamePlayer
@@ -28,9 +29,13 @@ public class GameLogic implements GamePlayer
 	static GameClient gameClient = null;
 	int roomId;
 	static ArrayList<GameRoom> roomList;
+	static Action action;
+	static JAXBContext jaxbContext;
 
 	public static void main(String[] args) throws JAXBException
 	{
+		jaxbContext = JAXBContext.newInstance(Action.class);
+		action = new Action();
 		//gamelogic gamelogic = new gamelogic("team rocket","password123");
 
 		String msg = "<action type='room-joined'><usrlist ucount='1'><usr name='team rocket' id='1'></usr></usrlist></action>";
@@ -40,15 +45,18 @@ public class GameLogic implements GamePlayer
 		OurPair<Integer, Integer> FinalQ = new OurPair<Integer, Integer>(5,5);
 		OurPair<Integer, Integer> Arrow = new OurPair<Integer, Integer>(5,2);
 
-		Message message = new Message();
-		message.unmarshal(msg);
+		action.setType("move");
+		action.setQueen(new Queen());
+		action.setArrow(new Arrow());
+		action.queen.setMove(InitialQ, FinalQ);
+		action.arrow.setArrow(Arrow);
 
-//		message.setType("move");
-//		message.setMove(InitialQ, FinalQ);
-//		message.setArrow(Arrow);
+		System.out.println(marshal());
 
-		System.out.println(message.getArrow());
-		System.out.println(message.marshal());
+		action = new Action();
+		unmarshal(msg);
+		System.out.println(marshal());
+
 	}
 
 	public GameLogic(String name, String passwd)
@@ -141,5 +149,32 @@ public class GameLogic implements GamePlayer
 			// set to their move
 
 		}
+	}
+
+
+	/**
+	 * @param msg Reads in an XML string from the game server and unmarshalls
+	 *            it into the object mappings
+	 * @throws JAXBException
+	 */
+
+	public static void unmarshal(String msg) throws JAXBException {
+		InputStream is = new ByteArrayInputStream(msg.getBytes());
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		action = (Action) unmarshaller.unmarshal(is);
+	}
+
+	/**
+	 * @return String which is the XML formatting for the response message
+	 * to the server
+	 * @throws JAXBException
+	 */
+	public static String marshal() throws JAXBException {
+		OutputStream os = new ByteArrayOutputStream();
+		Marshaller marshaller = jaxbContext.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+		marshaller.marshal(action, os);
+
+		return os.toString();
 	}
 }
