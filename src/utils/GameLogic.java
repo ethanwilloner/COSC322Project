@@ -1,13 +1,14 @@
 package utils;
 
 import ai.OurBoard;
-import javafx.print.PageLayout;
+import ai.OurPair;
 import ubco.ai.GameRoom;
 import ubco.ai.connection.ServerMessage;
 import ubco.ai.games.GameClient;
 import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
 
+import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -19,12 +20,30 @@ public class GameLogic implements GamePlayer
 	int roomId;
 	static ArrayList<GameRoom> roomList;
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws JAXBException
 	{
-		GameLogic gameLogic = new GameLogic("Team Rocket","password123");
+		//gamelogic gamelogic = new gamelogic("team rocket","password123");
+
+		String msg = "<action type='room-joined'><usrlist ucount='1'><usr name='team rocket' id='1'></usr></usrlist></action>";
+		String msg2 = "<action type='move'> <queen move='a3-g3'></queen><arrow move='h4'></arrow></action>";
+
+//		Message message = new Message();
+//		message.unmarshal(msg);
+////		message.marshal();
+//
+//		Message message1 = new Message();
+//		message1.unmarshal(msg2);
+//		OurPair<Integer, Integer> ourPair = new OurPair<Integer, Integer>(6,7);
+//		OurPair<Integer, Integer> ourPair1 = new OurPair<Integer, Integer>(0,5);
+//		message1.setArrow(ourPair);
+//		message1.setMove(ourPair, ourPair1);
+//		System.out.println(message1.getArrow());
+//
+//		System.out.println(message1.marshal());
 	}
 
-	public GameLogic(String name, String passwd) {
+	public GameLogic(String name, String passwd)
+	{
 		//initialize board
 		ourBoard = new OurBoard();
 
@@ -52,11 +71,8 @@ public class GameLogic implements GamePlayer
 
 	}
 
-	public void dumpSeverMessage(){
-		gameClient.dumpSeverMessage();
-	}
-
-	public static boolean joinRoom(int roomId) {
+	public static boolean joinRoom(int roomId)
+	{
 		roomList = gameClient.getRoomLists();
 		try {
 			for(GameRoom r : roomList)
