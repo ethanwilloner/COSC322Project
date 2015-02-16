@@ -11,7 +11,7 @@ import utils.Move;
  * @author Yarko Senyuta
  *
  */
-public class OurBoard {
+public class OurBoard implements Cloneable{
 
 	/**
 	 * store board as a 2D array
@@ -216,35 +216,35 @@ public class OurBoard {
 	
 	/**
 	 * make given move to the board
-	 * @param move move to be made
+	 * @param action move to be made
 	 * @param side which side is making the move
 	 * @return
 	 */
-	public boolean makeMove(Move move)
+	public boolean makeMove(Move action)
 	{
 		//get code of queen
-		int side = board[move.getInitialQ().getX()][move.getInitialQ().getY()];
+		int side = board[action.getInitialQ().getX()][action.getInitialQ().getY()];
 		
 		
 		//check if this move is legal
-		if (GameRules.isLegalMove(this, move, side))
+		if (GameRules.isLegalMove(this, action, side))
 		{	
 			//free old queen position
-			placeMarker(move.getInitialQ().getX(), move.getInitialQ().getY(), FREE);
+			placeMarker(action.getInitialQ().getX(), action.getInitialQ().getY(), FREE);
 			
 			//place new queen
-			placeMarker(move.getFinalQ().getX(), move.getFinalQ().getY(), side);
+			placeMarker(action.getFinalQ().getX(), action.getFinalQ().getY(), side);
 			
 			//place arrow
-			placeMarker(move.getArrow().getX(), move.getArrow().getY(), ARROW);
+			placeMarker(action.getArrow().getX(), action.getArrow().getY(), ARROW);
 			
 			
 			//update queen in hashset
-			updateQueenPosition(move.getInitialQ().getX(), move.getInitialQ().getY(), move.getFinalQ().getX(), move.getFinalQ().getY(), side);
+			updateQueenPosition(action.getInitialQ().getX(), action.getInitialQ().getY(), action.getFinalQ().getX(), action.getFinalQ().getY(), side);
 			return true;
 		}
 		
-		System.out.println(move + " is illegal");
+		System.out.println(action + " is illegal");
 		
 		throw new NullPointerException();
 		
@@ -313,5 +313,39 @@ public class OurBoard {
 		
 		return s;
 		
+	}
+	
+	public boolean cutoffTest(int depth, long startTime)
+	{
+		//  watch memory usage
+		if (Runtime.getRuntime().freeMemory() <= 5000000)
+		{
+			return true;
+		}
+		
+		// watch the time
+		long time = System.currentTimeMillis() - startTime;
+		if (time >= 25000)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public OurBoard clone()
+	{
+		OurBoard clone = new OurBoard();
+		
+		for (int x = 0; x < 10; x++)
+		{
+			for (int y = 0; y < 10; y++)
+			{
+				clone.placeMarker(x, y, this.board[x][y]);
+			}
+		}
+		
+		return clone;
 	}
 }

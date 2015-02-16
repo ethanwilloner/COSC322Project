@@ -3,7 +3,6 @@ package utils;
 import MessageParsing.*;
 import minimax.minimaxSearch;
 import minimax.minimaxSearch.minimaxNode;
-
 import ai.OurBoard;
 import ai.OurPair;
 import ubco.ai.GameRoom;
@@ -16,6 +15,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -203,15 +203,22 @@ public class GameLogic implements GamePlayer
 
         minimaxSearch minimax = new minimaxSearch();
 
-
+        long start, end;
 
         //while we are still playing
-        while (OurEvaluation.evaluateBoard(board, side)[1] == 0)
+        //while (OurEvaluation.evaluateBoard(board, side)[1] == 0)
+        while(GameRules.checkEndGame(board) == 0)
         {
+        	//time run
+        	start = System.currentTimeMillis();
+        	
             minimaxNode node = minimax.minimax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
-
+            
+            end = System.currentTimeMillis() - start;
+            
             board.makeMove(node.getMove());
 
+            System.out.println("Time: " + end/1000 + " seconds");
             System.out.println("move made: " + node.getMove());
 
             System.out.println("minimax score " + node.getValue());

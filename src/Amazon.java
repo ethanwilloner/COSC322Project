@@ -1,4 +1,4 @@
-package ubco.ai.games;
+
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -9,20 +9,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.regex.Pattern;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.n3.nanoxml.IXMLElement;
-
 import ubco.ai.GameRoom;
 import ubco.ai.connection.ServerMessage;
+import ubco.ai.games.BoardGameModel;
+import ubco.ai.games.GameClient;
+import ubco.ai.games.GameMessage;
+import ubco.ai.games.GamePlayer;
 
 /**
  * for testing purposes only. An GUI Amazon client for manual playing 

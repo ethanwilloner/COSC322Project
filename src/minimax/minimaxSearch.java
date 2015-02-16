@@ -15,7 +15,7 @@ public class minimaxSearch
 		
 		
 		//if we have run out of depth or one side has pretty much won
-		if (depth == 0 || eval[1] != 0)
+		if (depth == 0 || GameRules.checkEndGame(board) != 0/*eval[1] != 0*/)
 		{
 			return new minimaxNode(eval[0], null);
 		}
@@ -91,48 +91,6 @@ public class minimaxSearch
 			return new minimaxNode(bestValue, bestMove);
 		}
 		
-	}
-	
-	public class minimaxNode
-	{
-		int value;
-		/* (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			return "minimaxNode [value=" + value + ", move=" + move + "]";
-		}
-		/**
-		 * @return the value
-		 */
-		public int getValue() {
-			return value;
-		}
-		/**
-		 * @param value the value to set
-		 */
-		public void setValue(int value) {
-			this.value = value;
-		}
-		/**
-		 * @return the move
-		 */
-		public Move getMove() {
-			return move;
-		}
-		/**
-		 * @param move the move to set
-		 */
-		public void setMove(Move move) {
-			this.move = move;
-		}
-		Move move;
-		public minimaxNode(int value, Move move) {
-			super();
-			this.value = value;
-			this.move = move;
-		}
 	}
 
 	

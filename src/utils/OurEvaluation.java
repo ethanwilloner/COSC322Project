@@ -8,6 +8,8 @@ import ai.OurPair;
 public class OurEvaluation 
 {
 	
+	private static int[][][] tempBoard = new int[10][10][2]; 
+	
 	/**evaluation function that computes a value for whose in a better spot;
 	 * a negative value places black ahead;
 	 * a positive value places white ahead;
@@ -23,7 +25,12 @@ public class OurEvaluation
 		HashSet<OurPair> blackPositions = board.getBlackPositions();
 		
 		//mark up this board with minimum moves to each tile for black and for white (represented in the last dimension)
-		int[][][] tempBoard = new int[10][10][2];
+		//USE STATIC VAR SO DON"T HAVE TO ALLOCATE MEM DURING RUN
+		//int[][][] tempBoard = new int[10][10][2];
+		
+		
+		//keep track if we need to check for end of game
+		boolean isEnd = true;
 		
 		//fill board with max values
 		for (int x = 0; x < 10; x++)
@@ -75,7 +82,7 @@ public class OurEvaluation
 					continue;
 				
 				
-				//if white's value is greater than black's or blacks never reached this tile, 
+				//if white's value is less than black's or blacks never reached this tile, 
 				if (whiteTemp < blackTemp || blackTemp == Integer.MAX_VALUE)
 				{
 					white++;

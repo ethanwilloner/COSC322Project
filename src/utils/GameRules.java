@@ -242,7 +242,7 @@ public class GameRules
 	public static int checkEndGame(OurBoard board){
 		int rtn = 0;
 		
-		if(getLegalMoves(board,1).size()==0){
+		if(getLegalMoves(board,1).size() == 0){
 			rtn = 2; //black wins
 		}
 		else if(getLegalMoves(board,2).size()==0){
