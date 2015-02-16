@@ -13,9 +13,7 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 import utils.Move;
-import utils.OurEvaluation;
 import ai.OurBoard;
-import ai.OurPair;
 
 
 

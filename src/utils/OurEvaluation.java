@@ -19,8 +19,8 @@ public class OurEvaluation
 	 */
 	public static int[] evaluateBoard(OurBoard board, int side)
 	{
-		HashSet<OurPair<Integer, Integer>> whitePositions = board.getWhitePositions();
-		HashSet<OurPair<Integer, Integer>> blackPositions = board.getBlackPositions();
+		HashSet<OurPair> whitePositions = board.getWhitePositions();
+		HashSet<OurPair> blackPositions = board.getBlackPositions();
 		
 		//mark up this board with minimum moves to each tile for black and for white (represented in the last dimension)
 		int[][][] tempBoard = new int[10][10][2];
@@ -36,16 +36,20 @@ public class OurEvaluation
 			}
 		}
 		//evaluate board for each queen (white)
-		for (OurPair<Integer, Integer> queen : whitePositions)
+		for (OurPair queen : whitePositions)
 		{
 			tempBoard[queen.getX()][queen.getY()][0] = 0;
+			tempBoard[queen.getX()][queen.getY()][1] = 0;
+			
 			paintBoardWithQueen(board, tempBoard, queen, 1, 0);
 		}
 		
 		//evaluate board for each queen (black)
-		for (OurPair<Integer, Integer> queen : blackPositions)
+		for (OurPair queen : blackPositions)
 		{
 			tempBoard[queen.getX()][queen.getY()][1] = 0;
+			tempBoard[queen.getX()][queen.getY()][0] = 0;
+			
 			paintBoardWithQueen(board, tempBoard, queen, 2, 0);
 		}
 		
@@ -66,9 +70,10 @@ public class OurEvaluation
 				whiteTemp = tempBoard[x][y][0];
 				blackTemp = tempBoard[x][y][1];
 				
-				//if this space is occupied by a queen initially, or both black and white can reach in same number of moves,
-				if (whiteTemp == 0 || blackTemp == 0 || whiteTemp == blackTemp)
+				//is this space not free? or if both black and white can reach in same number of moves,
+				if (!board.isFree(x,  y) || whiteTemp == blackTemp)
 					continue;
+				
 				
 				//if white's value is greater than black's or blacks never reached this tile, 
 				if (whiteTemp > blackTemp || blackTemp == Integer.MAX_VALUE)
@@ -76,7 +81,7 @@ public class OurEvaluation
 					white++;
 					
 					//if black cannot reach this tile, it's whiteOnly
-					if (blackTemp == Integer.MAX_VALUE)
+					if (blackTemp == Integer.MAX_VALUE && whiteTemp != Integer.MAX_VALUE)
 					{
 						whiteOnly++;
 					}
@@ -87,7 +92,7 @@ public class OurEvaluation
 					black++;
 					
 					//if white cannot reach this tile, it's ghetto
-					if (whiteTemp == Integer.MAX_VALUE)
+					if (whiteTemp == Integer.MAX_VALUE && blackTemp != Integer.MAX_VALUE)
 					{
 						blackOnly++;
 					}
@@ -95,7 +100,6 @@ public class OurEvaluation
 			}
 		}
 		
-		//maybe use flag for later to get overall evaluation or end-game evaluation
 		
 		//what we return
 		int[] rtn = new int[2];
@@ -123,17 +127,42 @@ public class OurEvaluation
 		}
 		
 		
+		//Output coloring for debugging
+
+//		String s = "";
+//		
+//		for (int j = 0; j < 10; j++)
+//		{
+//			s+="-----------------------------------------\n";
+//			s+="|";
+//			for (int i = 0; i<10; i++)
+//			{
+//				if (!board.isFree(i, j) || tempBoard[i][j][0] == tempBoard[i][j][1])
+//					s+= "   |";
+//				else
+//					s += " " + ((tempBoard[i][j][0] > tempBoard[i][j][1])?1:2) + " |";
+//			}
+//			s+= "\n";
+//		}
+//		
+//		s+="-----------------------------------------\n";
+//		
+//		System.out.println(s);
+//		System.out.println(rtn[0] + " " + rtn[1]);
+		
+		
 		return rtn;
 	}
 	
-	private static void paintBoardWithQueen(OurBoard board, int[][][] tempBoard, OurPair<Integer, Integer> queen, int side, int depth)
+	private static void paintBoardWithQueen(OurBoard board, int[][][] tempBoard, OurPair queen, int side, int depth)
 	{
 		//get positions the queen can move now
-		HashSet<OurPair<Integer, Integer>> moves = GameRules.getLegalQueenMoves(board, queen, side);
+		HashSet<OurPair> moves = GameRules.getLegalQueenMoves(board, queen, side);
 		
 		//for every move available to queen, see how expensive it is
-		for (OurPair<Integer, Integer> move : moves)
+		for (OurPair move : moves)
 		{
+			//prune search
 			if (tempBoard[move.getX()][move.getY()][side-1] > depth+1)
 			{
 				tempBoard[move.getX()][move.getY()][side-1] = depth+1;

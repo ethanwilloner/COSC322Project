@@ -8,7 +8,7 @@ import ai.OurBoard;
 public class minimaxSearch 
 {
 	
-	public minimaxNode minimax(OurBoard board, int depth, boolean maximizingPlayer, int side)
+	public minimaxNode minimax(OurBoard board, int depth, boolean maximizingPlayer, int side, int alpha, int beta)
 	{
 		//evaluation
 		int[] eval = OurEvaluation.evaluateBoard(board, side);
@@ -29,15 +29,13 @@ public class minimaxSearch
 		if (maximizingPlayer) 
 		{
 			bestValue = Integer.MIN_VALUE;
+			//maximizing our moves
 			for (Move m: GameRules.getLegalMoves(board, side)) 
 			{
 				board.makeMove(m);
 				
-//				System.out.println("Board after move:");
-//				System.out.println(board);
+				node = minimax(board, depth-1, false, (side==1)?2:1, alpha, beta);
 				
-				
-				node = minimax(board, depth-1, false, (side==1)?2:1);
 				val = node.value;
 				
 				if (bestValue < val)
@@ -49,19 +47,27 @@ public class minimaxSearch
 				//undo move
 				board.undoMove(m);
 				
-//				System.out.println("Board after undo:");
-//				System.out.println(board);
+				//alpha check
+				alpha = Math.max(alpha, bestValue);
+				
+				if (beta <= alpha)
+				{
+					System.out.println("pruned from max");
+					break;
+				}
 				
 			}
+			
 			return new minimaxNode(bestValue, bestMove);
 			
 		}
 		else {
 			bestValue = Integer.MAX_VALUE;
+			//minimizing other player's moves
 			for (Move m : GameRules.getLegalMoves(board, side)) 
 			{
 				board.makeMove(m);
-				node = minimax(board, depth-1, false, (side==1)?2:1);
+				node = minimax(board, depth-1, true, (side==1)?2:1, alpha, beta);
 				
 				val = node.value;
 				
@@ -72,6 +78,15 @@ public class minimaxSearch
 				}
 				//undo move
 				board.undoMove(m);
+				
+				//alpha beta check
+				beta = Math.min(beta, bestValue);
+				
+				if (beta <= alpha)
+				{
+					System.out.println("pruned from min");
+					break;
+				}
 			}
 			
 			return new minimaxNode(bestValue, bestMove);
@@ -79,7 +94,7 @@ public class minimaxSearch
 		
 	}
 	
-	private class minimaxNode
+	public class minimaxNode
 	{
 		int value;
 		/* (non-Javadoc)
@@ -88,6 +103,30 @@ public class minimaxSearch
 		@Override
 		public String toString() {
 			return "minimaxNode [value=" + value + ", move=" + move + "]";
+		}
+		/**
+		 * @return the value
+		 */
+		public int getValue() {
+			return value;
+		}
+		/**
+		 * @param value the value to set
+		 */
+		public void setValue(int value) {
+			this.value = value;
+		}
+		/**
+		 * @return the move
+		 */
+		public Move getMove() {
+			return move;
+		}
+		/**
+		 * @param move the move to set
+		 */
+		public void setMove(Move move) {
+			this.move = move;
 		}
 		Move move;
 		public minimaxNode(int value, Move move) {

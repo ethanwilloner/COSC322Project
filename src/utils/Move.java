@@ -59,47 +59,47 @@ public class Move
 			return false;
 		return true;
 	}
-	OurPair<Integer, Integer> initialQ;
-	OurPair<Integer, Integer> FinalQ;
-	OurPair<Integer, Integer> arrow;
+	OurPair initialQ;
+	OurPair FinalQ;
+	OurPair arrow;
 	/**
 	 * @return the initialQ
 	 */
-	public OurPair<Integer, Integer> getInitialQ() {
+	public OurPair getInitialQ() {
 		return initialQ;
 	}
 	/**
 	 * @param initialQ the initialQ to set
 	 */
-	public void setInitialQ(OurPair<Integer, Integer> initialQ) {
+	public void setInitialQ(OurPair initialQ) {
 		this.initialQ = initialQ;
 	}
 	/**
 	 * @return the finalQ
 	 */
-	public OurPair<Integer, Integer> getFinalQ() {
+	public OurPair getFinalQ() {
 		return FinalQ;
 	}
 	/**
 	 * @param finalQ the finalQ to set
 	 */
-	public void setFinalQ(OurPair<Integer, Integer> finalQ) {
+	public void setFinalQ(OurPair finalQ) {
 		FinalQ = finalQ;
 	}
 	/**
 	 * @return the arrow
 	 */
-	public OurPair<Integer, Integer> getArrow() {
+	public OurPair getArrow() {
 		return arrow;
 	}
 	/**
 	 * @param arrow the arrow to set
 	 */
-	public void setArrow(OurPair<Integer, Integer> arrow) {
+	public void setArrow(OurPair arrow) {
 		this.arrow = arrow;
 	}
-	public Move(OurPair<Integer, Integer> initialQ,
-			OurPair<Integer, Integer> finalQ, OurPair<Integer, Integer> arrow) {
+	public Move(OurPair initialQ,
+			OurPair finalQ, OurPair arrow) {
 		super();
 		this.initialQ = initialQ;
 		FinalQ = finalQ;

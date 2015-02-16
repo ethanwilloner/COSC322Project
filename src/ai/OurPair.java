@@ -9,9 +9,9 @@ package ai;
  * @param <L>
  * @param <R>
  */
-public class OurPair<L, R>{
+public class OurPair{
 
-	L x;
+	int x;
 	@Override
 	public String toString() {
 		return "OurPair [x=" + x + ", y=" + y + "]";
@@ -19,20 +19,20 @@ public class OurPair<L, R>{
 	/**
 	 * @param l the left to set
 	 */
-	public void setX(L l) {
+	public void setX(int l) {
 		this.x = l;
 	}
 	/**
 	 * @param r the right to set
 	 */
-	public void setY(R r) {
+	public void setY(int r) {
 		this.y = r;
 	}
 
 
-	R y;
+	int y;
 	
-	public OurPair(L l, R r){
+	public OurPair(int l, int r){
 		this.x = l;
 		this.y = r;
 	}
@@ -40,7 +40,7 @@ public class OurPair<L, R>{
 	 * Left pair, for this it is the x value
 	 * @return X-coordinate
 	 */
-	public L getX(){
+	public int getX(){
 		return x;
 	}
 
@@ -48,12 +48,9 @@ public class OurPair<L, R>{
 	 * Right pair, for this it is the y value
 	 * @return Y-coordinate
 	 */
-	public R getY(){
+	public int getY(){
 		return y;
 	}
-	
-	
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -61,8 +58,8 @@ public class OurPair<L, R>{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((x == null) ? 0 : x.hashCode());
-		result = prime * result + ((y == null) ? 0 : y.hashCode());
+		result = prime * result + x;
+		result = prime * result + y;
 		return result;
 	}
 	/* (non-Javadoc)
@@ -77,17 +74,14 @@ public class OurPair<L, R>{
 		if (getClass() != obj.getClass())
 			return false;
 		OurPair other = (OurPair) obj;
-		if (x == null) {
-			if (other.x != null)
-				return false;
-		} else if (!x.equals(other.x))
+		if (x != other.x)
 			return false;
-		if (y == null) {
-			if (other.y != null)
-				return false;
-		} else if (!y.equals(other.y))
+		if (y != other.y)
 			return false;
 		return true;
 	}
 	
+	
+
+
 }

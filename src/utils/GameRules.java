@@ -21,17 +21,30 @@ public class GameRules
 	 */
 	public static boolean isLegalMove(OurBoard board, Move move, int side)
 	{
-		//check if initial queen is indeed a queen
-		if (side == 1)
-		{
-			if (!board.getWhitePositions().contains(move.initialQ))
-				return false;
-		}	
-		else
-		{
-			if (!board.getBlackPositions().contains(move.initialQ))
-				return false;
-		}
+//		//check if initial queen is indeed a queen
+//		if (side == 1)
+//		{
+//			if (!board.getWhitePositions().contains(move.initialQ))
+//			{
+//				System.out.println(move.initialQ + "\thashcode: " + move.initialQ.hashCode());
+//				System.out.println("Is in white positions? " + board.getWhitePositions().contains(move.initialQ));
+//				System.out.println("White positions: " + board.getWhitePositions());
+//				
+//				for (OurPair p : board.getWhitePositions())
+//				{
+//					System.out.println(p + "\t" + p.hashCode());
+//				}
+//				
+//				throw new NullPointerException();
+//			}
+//		}	
+//		else
+//		{
+//			if (!board.getBlackPositions().contains(move.initialQ))
+//			{
+//				throw new NullPointerException();
+//			}
+//		}
 		
 		HashSet<Move> moves = getLegalMoves(board, side);
 		return (moves.contains(move));
@@ -49,7 +62,7 @@ public class GameRules
 		HashSet<Move> toReturn = new HashSet<Move>();
 		
 		
-		HashSet<OurPair<Integer, Integer>> queens; 
+		HashSet<OurPair> queens; 
 		//get queens
 		if (side == 1)
 			queens = board.getWhitePositions();
@@ -57,23 +70,23 @@ public class GameRules
 			queens = board.getBlackPositions();
 		
 		
-		HashSet<OurPair<Integer, Integer>> queenToTiles;
-		HashSet<OurPair<Integer, Integer>> arrowToTiles;
+		HashSet<OurPair> queenToTiles;
+		HashSet<OurPair> arrowToTiles;
 		
 		//for every given queen,
-		for (OurPair<Integer, Integer> queen : queens)
+		for (OurPair queen : queens)
 		{
 			//get where the queen can move
 			queenToTiles = getMoveCross(board, queen);
 			
 			//for every place the queen can move, get where arrow can be thrown
-			for (OurPair<Integer, Integer> newQueen : queenToTiles)
+			for (OurPair newQueen : queenToTiles)
 			{
 				arrowToTiles = getMoveCross(board, newQueen);
 				//add to moves
-				for (OurPair<Integer, Integer> arrow : arrowToTiles)
+				for (OurPair arrow : arrowToTiles)
 				{
-					toReturn.add(new Move(new OurPair<Integer, Integer>(queen.getX(), queen.getY()), newQueen, arrow));
+					toReturn.add(new Move(new OurPair(queen.getX(), queen.getY()), newQueen, arrow));
 				}
 			}
 		}
@@ -90,9 +103,9 @@ public class GameRules
 	 * @param tileToMove the tile we are interested in
 	 * @return tiles where the given one is allowed to move to
 	 */
-	private static HashSet<OurPair<Integer, Integer>> getMoveCross(OurBoard board, OurPair<Integer, Integer> tileToMove)
+	private static HashSet<OurPair> getMoveCross(OurBoard board, OurPair tileToMove)
 	{
-		HashSet<OurPair<Integer, Integer>> toReturn = new HashSet<OurPair<Integer, Integer>>();
+		HashSet<OurPair> toReturn = new HashSet<OurPair>();
 		
 		int x = tileToMove.getX();
 		int y = tileToMove.getY();
@@ -103,7 +116,7 @@ public class GameRules
 			//is this a viable place to move tile, add it to hashset
 			if (board.isFree(tempX, y))
 			{
-				toReturn.add(new OurPair<Integer, Integer>(tempX, y));
+				toReturn.add(new OurPair(tempX, y));
 			}
 			//do not need to check any further, cannot get past a blocked tile
 			else
@@ -115,7 +128,7 @@ public class GameRules
 			//is this a viable place to move tile, add it to hashset
 			if (board.isFree(tempX, y))
 			{
-				toReturn.add(new OurPair<Integer, Integer>(tempX, y));
+				toReturn.add(new OurPair(tempX, y));
 			}
 			//do not need to check any further, cannot get past a blocked tile
 			else
@@ -128,7 +141,7 @@ public class GameRules
 			//is this a viable place to move tile, add it to hashset
 			if (board.isFree(x, tempY))
 			{
-				toReturn.add(new OurPair<Integer, Integer>(x, tempY));
+				toReturn.add(new OurPair(x, tempY));
 			}
 			//do not need to check any further, cannot get past a blocked tile
 			else
@@ -140,7 +153,7 @@ public class GameRules
 			//is this a viable place to move tile, add it to hashset
 			if (board.isFree(x, tempY))
 			{
-				toReturn.add(new OurPair<Integer, Integer>(x, tempY));
+				toReturn.add(new OurPair(x, tempY));
 			}
 			//do not need to check any further, cannot get past a blocked tile
 			else
@@ -158,7 +171,7 @@ public class GameRules
 		{
 			
 			if (board.isFree(tempX, tempY))
-				toReturn.add(new OurPair<Integer, Integer>(tempX, tempY));
+				toReturn.add(new OurPair(tempX, tempY));
 			else
 				break;
 			
@@ -176,7 +189,7 @@ public class GameRules
 		{
 			
 			if (board.isFree(tempX, tempY))
-				toReturn.add(new OurPair<Integer, Integer>(tempX, tempY));
+				toReturn.add(new OurPair(tempX, tempY));
 			else
 				break;
 			
@@ -193,7 +206,7 @@ public class GameRules
 		{
 			
 			if (board.isFree(tempX, tempY))
-				toReturn.add(new OurPair<Integer, Integer>(tempX, tempY));
+				toReturn.add(new OurPair(tempX, tempY));
 			else
 				break;
 			
@@ -210,7 +223,7 @@ public class GameRules
 		{
 			
 			if (board.isFree(tempX, tempY))
-				toReturn.add(new OurPair<Integer, Integer>(tempX, tempY));
+				toReturn.add(new OurPair(tempX, tempY));
 			else
 				break;
 			
@@ -245,7 +258,7 @@ public class GameRules
 	 * @param side 1 for white queen, 2 for black queen
 	 * @return a set of legal moves
 	 */
-	public static HashSet<OurPair<Integer, Integer>> getLegalQueenMoves(OurBoard board, OurPair<Integer, Integer> queen, int side)
+	public static HashSet<OurPair> getLegalQueenMoves(OurBoard board, OurPair queen, int side)
 	{
 		//get where the queen can move
 		return getMoveCross(board, queen);

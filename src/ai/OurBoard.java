@@ -72,8 +72,8 @@ public class OurBoard {
 	 */
 	public final int FREE = -1;
 	
-	HashSet<OurPair<Integer, Integer> > whitePositions;
-	HashSet<OurPair<Integer, Integer> > blackPositions;
+	HashSet<OurPair> whitePositions;
+	HashSet<OurPair> blackPositions;
 	
 	/**
 	 * constructor to initialize our board
@@ -86,8 +86,8 @@ public class OurBoard {
 		this.columns = 10;
 		//instantiate 2D array
 		board = new int[rows][columns];
-		whitePositions = new HashSet<OurPair<Integer, Integer>>();
-		blackPositions = new HashSet<OurPair<Integer, Integer>>();
+		whitePositions = new HashSet<OurPair>();
+		blackPositions = new HashSet<OurPair>();
 		
 		initialize();		
 	}
@@ -110,20 +110,20 @@ public class OurBoard {
 		board[3][0] = BQUEEN;
 		board[9][3] = BQUEEN;
 
-		blackPositions.add(new OurPair<Integer, Integer>(0,3));
-		blackPositions.add(new OurPair<Integer, Integer>(6,0));
-		blackPositions.add(new OurPair<Integer, Integer>(3,0));
-		blackPositions.add(new OurPair<Integer, Integer>(9,3));
+		blackPositions.add(new OurPair(0,3));
+		blackPositions.add(new OurPair(6,0));
+		blackPositions.add(new OurPair(3,0));
+		blackPositions.add(new OurPair(9,3));
 
 		board[0][6] = WQUEEN;
 		board[6][9] = WQUEEN;
 		board[3][9] = WQUEEN;
 		board[9][6] = WQUEEN;	
 
-		whitePositions.add(new OurPair<Integer, Integer>(0, 6));
-		whitePositions.add(new OurPair<Integer, Integer>(6, 9));
-		whitePositions.add(new OurPair<Integer, Integer>(3, 9));
-		whitePositions.add(new OurPair<Integer, Integer>(9, 6));
+		whitePositions.add(new OurPair(0, 6));
+		whitePositions.add(new OurPair(6, 9));
+		whitePositions.add(new OurPair(3, 9));
+		whitePositions.add(new OurPair(9, 6));
 		
 	}
 	/**
@@ -174,7 +174,7 @@ public class OurBoard {
 
 	public void updateQueenPosition(int oldX, int oldY, int newX, int newY, int queenCode){
 		
-		HashSet<OurPair<Integer, Integer>> positions;
+		HashSet<OurPair> positions;
 		
 		//System.out.println(blackPositions+"\n"+whitePositions);
 		
@@ -183,7 +183,7 @@ public class OurBoard {
 		else
 			positions = blackPositions;
 			
-		for (OurPair<Integer, Integer> p : positions){
+		for (OurPair p : positions){
 			
 			if (p.getX() == oldX && p.getY() == oldY){
 				p.setX(newX);
@@ -202,7 +202,7 @@ public class OurBoard {
 	 * return the ArrayList of black positions
 	 * @return black positions
 	 */
-	public HashSet<OurPair<Integer, Integer> > getBlackPositions(){
+	public HashSet<OurPair > getBlackPositions(){
 		return blackPositions;
 	}
 	
@@ -210,7 +210,7 @@ public class OurBoard {
 	 * return the ArrayList of white positions
 	 * @return
 	 */
-	public HashSet<OurPair<Integer, Integer> > getWhitePositions(){
+	public HashSet<OurPair> getWhitePositions(){
 		return whitePositions;
 	}
 	
@@ -282,7 +282,7 @@ public class OurBoard {
 	 */
 	public boolean isQueen(int x, int y)
 	{
-		OurPair<Integer, Integer> thisSpace = new OurPair<Integer, Integer>(x, y);
+		OurPair thisSpace = new OurPair(x, y);
 		
 		if (blackPositions.contains(thisSpace) || whitePositions.contains(thisSpace))
 			return true;
