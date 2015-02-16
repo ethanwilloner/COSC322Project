@@ -76,7 +76,7 @@ public class OurEvaluation
 				
 				
 				//if white's value is greater than black's or blacks never reached this tile, 
-				if (whiteTemp > blackTemp || blackTemp == Integer.MAX_VALUE)
+				if (whiteTemp < blackTemp || blackTemp == Integer.MAX_VALUE)
 				{
 					white++;
 					
@@ -87,7 +87,7 @@ public class OurEvaluation
 					}
 				}
 				//if blacks got there quicker or white never got there
-				else if (blackTemp > whiteTemp || whiteTemp == Integer.MAX_VALUE)
+				else if (blackTemp < whiteTemp || whiteTemp == Integer.MAX_VALUE)
 				{
 					black++;
 					
@@ -163,7 +163,7 @@ public class OurEvaluation
 		for (OurPair move : moves)
 		{
 			//prune search
-			if (tempBoard[move.getX()][move.getY()][side-1] > depth+1)
+			if (tempBoard[move.getX()][move.getY()][side-1] > depth+1 && depth < 3)
 			{
 				tempBoard[move.getX()][move.getY()][side-1] = depth+1;
 				paintBoardWithQueen(board, tempBoard, move, side, depth+1);

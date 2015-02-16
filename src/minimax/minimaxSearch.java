@@ -14,7 +14,6 @@ public class minimaxSearch
 		int[] eval = OurEvaluation.evaluateBoard(board, side);
 		
 		
-		
 		//if we have run out of depth or one side has pretty much won
 		if (depth == 0 || eval[1] != 0)
 		{
@@ -34,7 +33,7 @@ public class minimaxSearch
 			{
 				board.makeMove(m);
 				
-				node = minimax(board, depth-1, false, (side==1)?2:1, alpha, beta);
+				node = minimax(board, depth-1, false, side /*(side==1)?2:1*/, alpha, beta);
 				
 				val = node.value;
 				
@@ -52,7 +51,7 @@ public class minimaxSearch
 				
 				if (beta <= alpha)
 				{
-					System.out.println("pruned from max");
+					//System.out.println("pruned from max");
 					break;
 				}
 				
@@ -67,7 +66,7 @@ public class minimaxSearch
 			for (Move m : GameRules.getLegalMoves(board, side)) 
 			{
 				board.makeMove(m);
-				node = minimax(board, depth-1, true, (side==1)?2:1, alpha, beta);
+				node = minimax(board, depth-1, true, side /*(side==1)?2:1*/, alpha, beta);
 				
 				val = node.value;
 				
@@ -84,7 +83,7 @@ public class minimaxSearch
 				
 				if (beta <= alpha)
 				{
-					System.out.println("pruned from min");
+					//System.out.println("pruned from min");
 					break;
 				}
 			}

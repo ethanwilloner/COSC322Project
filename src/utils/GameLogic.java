@@ -67,10 +67,12 @@ public class GameLogic
 		
 		minimaxSearch minimax = new minimaxSearch();
 		
+		
+		
 		//while we are still playing
 		while (OurEvaluation.evaluateBoard(board, side)[1] == 0)
 		{
-			minimaxNode node = minimax.minimax(board, 1, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
+			minimaxNode node = minimax.minimax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			
 			board.makeMove(node.getMove());
 			
