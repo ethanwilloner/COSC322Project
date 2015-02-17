@@ -1,30 +1,63 @@
 package utils;
 
-import MessageParsing.*;
-import minimax.minimaxSearch;
-import minimax.minimaxSearch.minimaxNode;
-import ai.OurBoard;
-import ai.OurPair;
-import ubco.ai.GameRoom;
-import ubco.ai.connection.ServerMessage;
-import ubco.ai.games.GameClient;
-import ubco.ai.games.GameMessage;
-import ubco.ai.games.GamePlayer;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.XMLFormatter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Scanner;
+import minimax.concurrentMinimax;
+import minimax.minimaxNode;
+import minimax.minimaxSearch;
+import ubco.ai.GameRoom;
+import ubco.ai.connection.ServerMessage;
+import ubco.ai.games.GameClient;
+import ubco.ai.games.GameMessage;
+import ubco.ai.games.GamePlayer;
+import MessageParsing.Action;
+import ai.OurBoard;
 
 public class GameLogic implements GamePlayer
 {
+	
+	public static final Logger debug;
+	private static Handler handler;
+	
+	
+	static
+	{
+		debug = Logger.getLogger(GameLogic.class.getPackage().getName());
+		debug.setLevel(Level.ALL);
+		Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.ALL);
+		Calendar date = Calendar.getInstance();
+		String fileName = date.get(Calendar.YEAR)+"-"+(date.get(Calendar.MONTH)+1)+"-"+date.get(Calendar.DATE)+"-"+date.get(Calendar.HOUR_OF_DAY)+""+date.get(Calendar.MINUTE);
+		try
+		{
+			new File("logs").mkdir();
+			handler = new FileHandler("logs/"+fileName+".xml", true);
+			handler.setFormatter(new XMLFormatter());
+			handler.setLevel(Level.ALL);
+			debug.addHandler(handler);
+		}
+		catch (Exception e)
+		{
+			debug.warning("Could not add FileHandler to debug logger! Stack trace to follow:");
+			e.printStackTrace();
+		}
+	}
+	
     static OurBoard ourBoard;
 
     static GameClient gameClient = null;
@@ -61,6 +94,8 @@ public class GameLogic implements GamePlayer
 		System.out.println(marshal());
 */
         GameLogic gamelogic = new GameLogic("team rocket","password123");
+        
+        
     }
 
     public GameLogic(String name, String passwd)
@@ -202,7 +237,8 @@ public class GameLogic implements GamePlayer
         OurBoard board = new OurBoard();
 
         minimaxSearch minimax = new minimaxSearch();
-
+        
+        concurrentMinimax cMinimax = new concurrentMinimax(6);
         long start, end;
 
         //while we are still playing
@@ -212,16 +248,19 @@ public class GameLogic implements GamePlayer
         	//time run
         	start = System.currentTimeMillis();
         	
-            minimaxNode node = minimax.minimax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            //minimaxNode node = minimax.minimax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            
+            Move move = cMinimax.minimaxDecision(board, side);
+            
             
             end = System.currentTimeMillis() - start;
             
-            board.makeMove(node.getMove());
+            board.makeMove(move);
 
             System.out.println("Time: " + end/1000 + " seconds");
-            System.out.println("move made: " + node.getMove());
+            System.out.println("move made: " + move);
 
-            System.out.println("minimax score " + node.getValue());
+            //System.out.println("minimax score " + node.getValue());
 
             System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(board, 1)[0] + "\t" + OurEvaluation.evaluateBoard(board, 1)[1]);
 

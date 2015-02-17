@@ -26,7 +26,7 @@ public class OurEvaluation
 		
 		//mark up this board with minimum moves to each tile for black and for white (represented in the last dimension)
 		//USE STATIC VAR SO DON"T HAVE TO ALLOCATE MEM DURING RUN
-		//int[][][] tempBoard = new int[10][10][2];
+		int[][][] tempBoard = new int[10][10][2];
 		
 		
 		//keep track if we need to check for end of game
@@ -170,7 +170,7 @@ public class OurEvaluation
 		for (OurPair move : moves)
 		{
 			//prune search
-			if (tempBoard[move.getX()][move.getY()][side-1] > depth+1 && depth < 3)
+			if (tempBoard[move.getX()][move.getY()][side-1] > depth+1 /*&& depth < 2*/)
 			{
 				tempBoard[move.getX()][move.getY()][side-1] = depth+1;
 				paintBoardWithQueen(board, tempBoard, move, side, depth+1);

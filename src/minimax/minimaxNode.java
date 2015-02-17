@@ -43,4 +43,13 @@ public class minimaxNode
 		this.value = value;
 		this.move = move;
 	}
+	
+	public void max (minimaxNode other)
+	{
+		if (other.getValue() > this.value)
+		{
+			this.setValue(other.getValue());
+			this.setMove(other.getMove());
+		}
+	}
 }

@@ -1,10 +1,11 @@
 package minimax;
 
+import static utils.GameLogic.debug;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,13 +15,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
-import javax.naming.directory.SearchResult;
-
 import utils.GameRules;
 import utils.Move;
 import utils.OurEvaluation;
 import ai.OurBoard;
-
 
 public class concurrentMinimax
 {
@@ -36,9 +34,8 @@ public class concurrentMinimax
 	private AtomicBoolean isCutoff = new AtomicBoolean();
 
 	/**
-	 * Constructor
-	 * 
-	 * @param maxThreads the max threads to use in the thread pool
+	 * constructor
+	 * @param maxThreads number of threads to be used
 	 */
 	public concurrentMinimax (int maxThreads)
 	{
@@ -46,7 +43,8 @@ public class concurrentMinimax
 	}
 	
 	/**
-	 * @return the current depth at which a search will end during IDS
+	 * what depth do we cut off at?
+	 * @return depth
 	 */
 	public int getCutoffDepth ()
 	{
@@ -54,7 +52,8 @@ public class concurrentMinimax
 	}
 	
 	/**
-	 * @param cutoffDepth the depth to end a search during IDS
+	 * set cut off depth
+	 * @param cutoffDepth
 	 */
 	public void setCutoffDepth (int cutoffDepth)
 	{
@@ -62,47 +61,50 @@ public class concurrentMinimax
 	}
 
 	/**
-	 * Searches the game tree and returns the best possible action according
-	 * to the evaluation function and bounded by the cutoff function.
-	 * 
-	 * @param maxPlayer the MAX player
-	 * @param minPlayer the MIN player
-	 * @param state initial state
-	 * @return an action
+	 * get next move
+	 * @param board current board
+	 * @param side which side we maximize
+	 * @return best move to be found
 	 */
 	@SuppressWarnings("unchecked")
 	public Move minimaxDecision (OurBoard board, int side)
 	{
-		// record the start time of the search for the cutoff functions
+		//start the clock
 		startTime = System.currentTimeMillis();
+		//set the sides
 		this.maxPlayer = side;
 		this.minPlayer = (side%2)+1;
-		// cutoff depth for IDS
+		
 		// the best result of any search
 		minimaxNode globalBest = new minimaxNode(Integer.MIN_VALUE, null);
-		// construct the search sub trees, they will persist through each iteration
-		List<MinimaxSearchThread> searchThreads = new LinkedList<MinimaxSearchThread>();
 		
+		//the threads to be used
+		List<MinimaxThread> searchThreads = new LinkedList<MinimaxThread>();
+		
+		//try each move
 		Iterator<Move> iterator = (Iterator<Move>) GameRules.getLegalMoves(board, maxPlayer).iterator();
 		while(iterator.hasNext())
 		{
-			searchThreads.add(new MinimaxSearchThread(board.clone(), iterator.next()));
+			//add thread
+			searchThreads.add(new MinimaxThread(board.clone(), iterator.next()));
 		}
-		// begin IDS
+		// begin iterative deepening search
 		do
 		{
-			// the best depth achieved by this search
+			//the best depth achieved by this search
 			localMaxDepth.set(1);
 			// if this search was terminated by a cutoff test
 			isCutoff.set(false);
-			// construct our thread pool
+			// make thread pool
 			ExecutorService executor = Executors.newFixedThreadPool(maxThreads);
 			List<Future<minimaxNode>> results = new LinkedList<Future<minimaxNode>>();
-			// supply each worker thread with a subtree
-			for (MinimaxSearchThread searchThread : searchThreads)
+			// give each thread to pool
+			for (MinimaxThread searchThread : searchThreads)
 			{
 				results.add(executor.submit(searchThread));
 			}
+			
+			//the best locally
 			minimaxNode localBest = new minimaxNode(Integer.MIN_VALUE, null);
 			try
 			{
@@ -134,27 +136,26 @@ public class concurrentMinimax
 		// if we didn't make the target depth then we won't make a deeper target depth next iteration; end the search
 		while (!isCutoff.get() && localMaxDepth.get() >= cutoffDepth - 1);
 		cutoffDepth -= 2;
-		debug.logp(Level.INFO, "MinimaxSearch", "minimaxDecision", "Search took:"+(System.currentTimeMillis()-startTime)+" maximum depth:"+cutoffDepth+" best value:"+globalBest.v);
+		debug.logp(Level.INFO, "MinimaxSearch", "minimaxDecision", "Search took:"+(System.currentTimeMillis()-startTime)+" maximum depth:"+cutoffDepth+" best value:"+globalBest.getValue());
 		return globalBest.getMove();
 	}
 
 	/**
-	 * A Callable alpha-beta search to be executed on a thread.
-	 * 
-	 * @author Paul
+	 * A thread for search
+	 * @author Yarko
+	 *
 	 */
-	private class MinimaxSearchThread implements Callable<minimaxNode>
+	private class MinimaxThread implements Callable<minimaxNode>
 	{
 		private OurBoard board;
 		private Move parentAction;
 		
 		/**
-		 * Constructor.
-		 * 
-		 * @param state the initial state
-		 * @param action the action for the initial state, used for callback
+		 * constructor for thread
+		 * @param state initial board
+		 * @param action move to be made
 		 */
-		public MinimaxSearchThread (OurBoard state, Move action)
+		public MinimaxThread(OurBoard state, Move action)
 		{
 			this.board = state;
 			parentAction = action;
@@ -174,19 +175,18 @@ public class concurrentMinimax
 				isCutoff.set(true);
 				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer)[0], parentAction);
 			}
+			//if we've gone too deep
 			if (depth >= cutoffDepth)
 			{
 				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer)[0], parentAction);
 			}
-			
-			HashSet<Move> successors = GameRules.getLegalMoves(board, minPlayer);
+			Iterator<Move> it = GameRules.getLegalMoves(board, minPlayer).iterator();
+
 			// we can end the search here if there are no successors
-			if (successors.isEmpty())
+			if (!it.hasNext())
 			{
 				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer)[0], parentAction);
 			}
-			
-			Iterator<Move> it = successors.iterator();
 			
 			Move action;
 			minimaxNode result = new minimaxNode(Integer.MIN_VALUE, parentAction);

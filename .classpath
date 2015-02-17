@@ -4,5 +4,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="cosc322-2015.jar"/>
 	<classpathentry kind="lib" path="nanoxml-2.2.1.jar"/>
+	<classpathentry kind="lib" path="H:/cosc322project/lib/cloning-1.9.0-dist/cloning-1.9.0/cloning-1.9.0.jar"/>
+	<classpathentry kind="lib" path="H:/cosc322project/lib/cloning-1.9.0-dist/cloning-1.9.0/cloning-1.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="H:/cosc322project/lib/cloning-1.9.0-dist/cloning-1.9.0/lib/objenesis-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

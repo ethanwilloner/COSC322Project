@@ -5,6 +5,8 @@ import java.util.HashSet;
 import utils.GameRules;
 import utils.Move;
 
+import com.rits.cloning.Cloner;
+
 /**
  * Board class that contains the instance of the board
  * 
@@ -12,7 +14,8 @@ import utils.Move;
  *
  */
 public class OurBoard implements Cloneable{
-
+	
+	static Cloner clone = new Cloner();
 	/**
 	 * store board as a 2D array
 	 */
@@ -336,16 +339,6 @@ public class OurBoard implements Cloneable{
 	@Override
 	public OurBoard clone()
 	{
-		OurBoard clone = new OurBoard();
-		
-		for (int x = 0; x < 10; x++)
-		{
-			for (int y = 0; y < 10; y++)
-			{
-				clone.placeMarker(x, y, this.board[x][y]);
-			}
-		}
-		
-		return clone;
+		return clone.deepClone(this);
 	}
 }

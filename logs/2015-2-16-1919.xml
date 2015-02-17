@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2015-02-16T19:20:03</date>
+  <millis>1424143203018</millis>
+  <sequence>0</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:26328 maximum depth:2 best value:63</message>
+</record>
