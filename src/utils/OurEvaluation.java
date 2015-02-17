@@ -8,8 +8,6 @@ import ai.OurPair;
 public class OurEvaluation 
 {
 	
-	private static int[][][] tempBoard = new int[10][10][2]; 
-	
 	/**evaluation function that computes a value for whose in a better spot;
 	 * a negative value places black ahead;
 	 * a positive value places white ahead;
@@ -23,6 +21,7 @@ public class OurEvaluation
 	{
 		HashSet<OurPair> whitePositions = board.getWhitePositions();
 		HashSet<OurPair> blackPositions = board.getBlackPositions();
+	
 		
 		//mark up this board with minimum moves to each tile for black and for white (represented in the last dimension)
 		//USE STATIC VAR SO DON"T HAVE TO ALLOCATE MEM DURING RUN
@@ -42,22 +41,55 @@ public class OurEvaluation
 				
 			}
 		}
+		
+		//iterative deepening
+		int iterativeDepth = 1;
+		
 		//evaluate board for each queen (white)
-		for (OurPair queen : whitePositions)
+		//while all queens haven't explored the places they can
+		
+		boolean keepGoing = true;
+		int canKeepGoing = 0;
+		
+		while (keepGoing)
 		{
-			tempBoard[queen.getX()][queen.getY()][0] = 0;
-			tempBoard[queen.getX()][queen.getY()][1] = 0;
+			canKeepGoing = 0;
+			for (OurPair queen : whitePositions)
+			{
+				tempBoard[queen.getX()][queen.getY()][0] = 0;
+				tempBoard[queen.getX()][queen.getY()][1] = 0;
+				
+				if (paintBoardWithQueen(board, tempBoard, queen, 1, 0, iterativeDepth))
+					canKeepGoing++;
+			}
 			
-			paintBoardWithQueen(board, tempBoard, queen, 1, 0);
+			//can keep exploring?
+			keepGoing = !(canKeepGoing == 0);
+			//increase depth
+			iterativeDepth++;
 		}
 		
+		keepGoing = true;
+		iterativeDepth = 1;
+		
 		//evaluate board for each queen (black)
-		for (OurPair queen : blackPositions)
+		while (keepGoing)
 		{
-			tempBoard[queen.getX()][queen.getY()][1] = 0;
-			tempBoard[queen.getX()][queen.getY()][0] = 0;
+			canKeepGoing = 0;
+			for (OurPair queen : blackPositions)
+			{
+				tempBoard[queen.getX()][queen.getY()][1] = 0;
+				tempBoard[queen.getX()][queen.getY()][0] = 0;
+				
+				if (paintBoardWithQueen(board, tempBoard, queen, 2, 0, iterativeDepth))
+					canKeepGoing++;
+			}
 			
-			paintBoardWithQueen(board, tempBoard, queen, 2, 0);
+			//can keep exploring?
+			keepGoing = !(canKeepGoing == 0);
+			//increase depth
+			iterativeDepth++;
+			
 		}
 		
 		
@@ -134,48 +166,37 @@ public class OurEvaluation
 		}
 		
 		
-		//Output coloring for debugging
-
-//		String s = "";
-//		
-//		for (int j = 0; j < 10; j++)
-//		{
-//			s+="-----------------------------------------\n";
-//			s+="|";
-//			for (int i = 0; i<10; i++)
-//			{
-//				if (!board.isFree(i, j) || tempBoard[i][j][0] == tempBoard[i][j][1])
-//					s+= "   |";
-//				else
-//					s += " " + ((tempBoard[i][j][0] > tempBoard[i][j][1])?1:2) + " |";
-//			}
-//			s+= "\n";
-//		}
-//		
-//		s+="-----------------------------------------\n";
-//		
-//		System.out.println(s);
-//		System.out.println(rtn[0] + " " + rtn[1]);
 		
 		
 		return rtn;
 	}
 	
-	private static void paintBoardWithQueen(OurBoard board, int[][][] tempBoard, OurPair queen, int side, int depth)
+	private static boolean paintBoardWithQueen(OurBoard board, int[][][] tempBoard, OurPair queen, int side, int depth, int maxDepth)
 	{
 		//get positions the queen can move now
 		HashSet<OurPair> moves = GameRules.getLegalQueenMoves(board, queen, side);
 		
+		boolean rtn = false;
 		//for every move available to queen, see how expensive it is
 		for (OurPair move : moves)
 		{
 			//prune search
-			if (tempBoard[move.getX()][move.getY()][side-1] > depth+1 /*&& depth < 2*/)
+			//can we improve this locale?
+			if (tempBoard[move.getX()][move.getY()][side-1] > depth+1)
 			{
 				tempBoard[move.getX()][move.getY()][side-1] = depth+1;
-				paintBoardWithQueen(board, tempBoard, move, side, depth+1);
+				
+				if (depth < maxDepth)
+				{
+					rtn = paintBoardWithQueen(board, tempBoard, move, side, depth+1, maxDepth);
+				}
+				//we could make a better move but cut by depth
+				else
+					rtn = true;
 			}
 		}
+		
+		return rtn;
 	}
 
 }

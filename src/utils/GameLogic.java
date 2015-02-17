@@ -238,7 +238,7 @@ public class GameLogic implements GamePlayer
 
         minimaxSearch minimax = new minimaxSearch();
         
-        concurrentMinimax cMinimax = new concurrentMinimax(6);
+        concurrentMinimax cMinimax = new concurrentMinimax(5);
         long start, end;
 
         //while we are still playing
@@ -252,6 +252,7 @@ public class GameLogic implements GamePlayer
             
             Move move = cMinimax.minimaxDecision(board, side);
             
+            //Move move = minimax.minimax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE).getMove();
             
             end = System.currentTimeMillis() - start;
             

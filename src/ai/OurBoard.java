@@ -312,6 +312,7 @@ public class OurBoard implements Cloneable{
 		s+="-----------------------------------------\n";
 		
 		s = s.replaceAll("-1", " ");
+		s = s.replaceAll("3", "X");
 		
 		
 		return s;
