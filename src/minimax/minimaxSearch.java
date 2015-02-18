@@ -5,14 +5,39 @@ import utils.Move;
 import utils.OurEvaluation;
 import ai.OurBoard;
 
+
+/**
+ * a sequential minimax search
+ * @author Yarko Senyuta
+ *
+ */
 public class minimaxSearch 
 {
+	private static long startTime;
+	
+	/**
+	 * make minimax decision
+	 * @param board
+	 * @param side
+	 * @param depth
+	 * @return
+	 */
+	public Move getDecision(OurBoard board, int side, int depth)
+	{
+		startTime = System.currentTimeMillis();
+		
+		return minimax(board, depth, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE).getMove();
+	}
 	
 	public minimaxNode minimax(OurBoard board, int depth, boolean maximizingPlayer, int side, int alpha, int beta)
 	{
 		//evaluation
 		int[] eval = OurEvaluation.evaluateBoard(board, side);
-		
+	
+		if (board.cutoffTest(depth, startTime))
+		{
+			return new minimaxNode(OurEvaluation.evaluateBoard(board, side)[0], null);
+		}
 		
 		//if we have run out of depth or one side has pretty much won
 		if (depth == 0 || GameRules.checkEndGame(board) != 0/*eval[1] != 0*/)

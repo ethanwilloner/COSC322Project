@@ -238,7 +238,7 @@ public class GameLogic implements GamePlayer
 
         minimaxSearch minimax = new minimaxSearch();
         
-        concurrentMinimax cMinimax = new concurrentMinimax(5);
+        concurrentMinimax cMinimax = new concurrentMinimax(10);
         long start, end;
 
         //while we are still playing
@@ -252,7 +252,7 @@ public class GameLogic implements GamePlayer
             
             Move move = cMinimax.minimaxDecision(board, side);
             
-            //Move move = minimax.minimax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE).getMove();
+            //Move move = minimax.getDecision(board, side, 2);
             
             end = System.currentTimeMillis() - start;
             
@@ -271,6 +271,10 @@ public class GameLogic implements GamePlayer
 
         }
 
-        System.out.println(OurEvaluation.evaluateBoard(board, side));
+        System.out.println(GameRules.checkEndGame(board));
+        
+        System.out.println("All legal white moves: " + GameRules.getLegalMoves(board, 1));
+        
+        System.out.println("All legal black moves: " + GameRules.getLegalMoves(board, 2));
     }
 }

@@ -28,8 +28,6 @@ public class concurrentMinimax
 	private int maxPlayer;
 	private int minPlayer;
 	
-	private volatile int cutoffDepth = 1;
-	
 	private AtomicInteger localMaxDepth = new AtomicInteger();
 	private AtomicBoolean isCutoff = new AtomicBoolean();
 
@@ -42,23 +40,7 @@ public class concurrentMinimax
 		this.maxThreads = maxThreads;
 	}
 	
-	/**
-	 * what depth do we cut off at?
-	 * @return depth
-	 */
-	public int getCutoffDepth ()
-	{
-		return cutoffDepth;
-	}
 	
-	/**
-	 * set cut off depth
-	 * @param cutoffDepth
-	 */
-	public void setCutoffDepth (int cutoffDepth)
-	{
-		this.cutoffDepth = cutoffDepth;
-	}
 
 	/**
 	 * get next move
@@ -88,16 +70,21 @@ public class concurrentMinimax
 			//add thread
 			searchThreads.add(new MinimaxThread(board.clone(), iterator.next()));
 		}
-		// begin iterative deepening search
+		
+		//the best depth achieved by this search
+		localMaxDepth.set(1);
+		// if this search was terminated by a cutoff test
+		isCutoff.set(false);
+		// make thread pool
+		ExecutorService executor;
+		List<Future<minimaxNode>> results = new LinkedList<Future<minimaxNode>>();
+		
+		// begin iterative deepening search		
 		do
 		{
-			//the best depth achieved by this search
-			localMaxDepth.set(1);
-			// if this search was terminated by a cutoff test
-			isCutoff.set(false);
-			// make thread pool
-			ExecutorService executor = Executors.newFixedThreadPool(maxThreads);
-			List<Future<minimaxNode>> results = new LinkedList<Future<minimaxNode>>();
+			executor= Executors.newFixedThreadPool(maxThreads);
+			results.clear();
+			
 			// give each thread to pool
 			for (MinimaxThread searchThread : searchThreads)
 			{
@@ -131,12 +118,13 @@ public class concurrentMinimax
 			{
 				globalBest.max(localBest);
 			}
-			cutoffDepth++;
+			localMaxDepth.set(localMaxDepth.get()+1);;
 		}
 		// if we didn't make the target depth then we won't make a deeper target depth next iteration; end the search
-		while (!isCutoff.get() && localMaxDepth.get() >= cutoffDepth - 1);
-		cutoffDepth -= 2;
-		debug.logp(Level.INFO, "MinimaxSearch", "minimaxDecision", "Search took:"+(System.currentTimeMillis()-startTime)+" maximum depth:"+cutoffDepth+" best value:"+globalBest.getValue());
+		while (!isCutoff.get());
+		
+	
+		debug.logp(Level.INFO, "MinimaxSearch", "minimaxDecision", "Search took:"+(System.currentTimeMillis()-startTime)+" maximum depth:"+ localMaxDepth.get() +" best value:"+globalBest.getValue());
 		return globalBest.getMove();
 	}
 
@@ -167,7 +155,7 @@ public class concurrentMinimax
 		{
 			// note depth 2, results from depth 1 are being collected in minimaxDecision
 			int depth = 2;
-			localMaxDepth.set(Math.max(depth, localMaxDepth.get()));
+			
 			
 			// test the cutoff function
 			if (board.cutoffTest(depth, startTime))
@@ -176,7 +164,7 @@ public class concurrentMinimax
 				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer)[0], parentAction);
 			}
 			//if we've gone too deep
-			if (depth >= cutoffDepth)
+			if (depth >= localMaxDepth.get())
 			{
 				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer)[0], parentAction);
 			}
@@ -213,14 +201,14 @@ public class concurrentMinimax
 
 		private int maxValue (int alpha, int beta, int depth)
 		{
-			localMaxDepth.set(Math.max(depth, localMaxDepth.get()));
+			
 			// test for IDS cutoff and the cutoff function
 			if (board.cutoffTest(depth, startTime))
 			{
 				isCutoff.set(true);
 				return OurEvaluation.evaluateBoard(board, maxPlayer)[0];				
 			}
-			if (depth >= cutoffDepth)
+			if (depth >= localMaxDepth.get())
 			{
 				return OurEvaluation.evaluateBoard(board, maxPlayer)[0];
 			}
@@ -253,14 +241,13 @@ public class concurrentMinimax
 
 		private int minValue (int alpha, int beta, int depth)
 		{
-			localMaxDepth.set(Math.max(depth, localMaxDepth.get()));
 			// test for IDS cutoff and the cutoff function
 			if (board.cutoffTest(depth, startTime))
 			{
 				isCutoff.set(true);
 				return OurEvaluation.evaluateBoard(board, maxPlayer)[0];
 			}
-			if (depth >= cutoffDepth)
+			if (depth >= localMaxDepth.get())
 			{
 				return OurEvaluation.evaluateBoard(board, maxPlayer)[0];
 			}

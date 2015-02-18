@@ -257,7 +257,7 @@ public class OurBoard implements Cloneable{
 	public void undoMove(Move move)
 	{
 		//get rid of arrow
-		board[move.getArrow().getX()][move.getArrow().y] = FREE;
+		board[move.getArrow().getX()][move.getArrow().getY()] = FREE;
 		
 		//figure out side
 		int side = board[move.getFinalQ().getX()][move.getFinalQ().getY()];

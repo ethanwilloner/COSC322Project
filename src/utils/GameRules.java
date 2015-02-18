@@ -79,16 +79,28 @@ public class GameRules
 			//get where the queen can move
 			queenToTiles = getMoveCross(board, queen);
 			
+			//remove queen from board
+			board.freeSquare(queen.getX(), queen.getY());
+			
 			//for every place the queen can move, get where arrow can be thrown
 			for (OurPair newQueen : queenToTiles)
 			{
+				//add queen to future tile
+				board.placeMarker(newQueen.getX(), newQueen.getY(), side);
+				
 				arrowToTiles = getMoveCross(board, newQueen);
+				
+				//remove queen from future tile
+				board.placeMarker(newQueen.getX(), newQueen.getY(), board.FREE);
+				
 				//add to moves
 				for (OurPair arrow : arrowToTiles)
 				{
 					toReturn.add(new Move(new OurPair(queen.getX(), queen.getY()), newQueen, arrow));
 				}
 			}
+			
+			board.placeMarker(queen.getX(), queen.getY(), side);
 		}
 		
 //		System.out.println("Number of legal moves: " + toReturn.size());

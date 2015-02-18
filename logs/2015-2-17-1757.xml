@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2015-02-17T17:57:18</date>
+  <millis>1424224638394</millis>
+  <sequence>0</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:6037 maximum depth:4 best value:18</message>
+</record>
+<record>
+  <date>2015-02-17T17:57:24</date>
+  <millis>1424224644548</millis>
+  <sequence>1</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:6091 maximum depth:4 best value:2</message>
+</record>
+<record>
+  <date>2015-02-17T17:57:30</date>
+  <millis>1424224650149</millis>
+  <sequence>2</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:5601 maximum depth:4 best value:11</message>
+</record>
+<record>
+  <date>2015-02-17T17:57:35</date>
+  <millis>1424224655969</millis>
+  <sequence>3</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:5820 maximum depth:4 best value:3</message>
+</record>
