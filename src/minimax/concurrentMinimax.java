@@ -2,7 +2,6 @@ package minimax;
 
 import static utils.GameLogic.debug;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 
 import utils.GameRules;
@@ -23,7 +23,7 @@ import ai.OurBoard;
 public class concurrentMinimax
 {
 	private int maxThreads;
-	private long startTime;
+	private AtomicLong startTime = new AtomicLong();
 	
 	private int maxPlayer;
 	private int minPlayer;
@@ -52,7 +52,7 @@ public class concurrentMinimax
 	public Move minimaxDecision (OurBoard board, int side)
 	{
 		//start the clock
-		startTime = System.currentTimeMillis();
+		startTime.set(System.currentTimeMillis());
 		//set the sides
 		this.maxPlayer = side;
 		this.minPlayer = (side%2)+1;
@@ -124,7 +124,7 @@ public class concurrentMinimax
 		while (!isCutoff.get());
 		
 	
-		debug.logp(Level.INFO, "MinimaxSearch", "minimaxDecision", "Search took:"+(System.currentTimeMillis()-startTime)+" maximum depth:"+ localMaxDepth.get() +" best value:"+globalBest.getValue());
+		debug.logp(Level.INFO, "MinimaxSearch", "minimaxDecision", "Search took:"+(System.currentTimeMillis()-startTime.get())+" maximum depth:"+ localMaxDepth.get() +" best value:"+globalBest.getValue());
 		return globalBest.getMove();
 	}
 
@@ -158,7 +158,7 @@ public class concurrentMinimax
 			
 			
 			// test the cutoff function
-			if (board.cutoffTest(depth, startTime))
+			if (board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
 				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer)[0], parentAction);
@@ -203,7 +203,7 @@ public class concurrentMinimax
 		{
 			
 			// test for IDS cutoff and the cutoff function
-			if (board.cutoffTest(depth, startTime))
+			if (board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
 				return OurEvaluation.evaluateBoard(board, maxPlayer)[0];				
@@ -242,7 +242,7 @@ public class concurrentMinimax
 		private int minValue (int alpha, int beta, int depth)
 		{
 			// test for IDS cutoff and the cutoff function
-			if (board.cutoffTest(depth, startTime))
+			if (board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
 				return OurEvaluation.evaluateBoard(board, maxPlayer)[0];
