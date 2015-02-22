@@ -190,112 +190,112 @@ public class GameLogic implements GamePlayer
             System.out.println("Team Role: " + (TeamSide == 1? "White":"Black"));
 
             if(TeamSide == 1) {
-                minimaxSearch = new minimaxSearch();
-
-                concurrentMinimax cMinimax = new concurrentMinimax(10);
-                long start, end;
-
-                start = System.currentTimeMillis();
-                // Get a move from the concurrent minimax
-                Move move = cMinimax.minimaxDecision(ourBoard, TeamID);
-
-                //Make the move on our board
-                ourBoard.makeMove(move);
-                // Construct the new Action object that we will send to the server
-
-                sendAction = new Action();
-                sendAction.type = GameMessage.ACTION_MOVE;
-                Queen ourQueen = new Queen();
-                ourQueen.setMove(move.getInitialQ(), move.getFinalQ());
-                Arrow ourArrow = new Arrow();
-                ourArrow.setArrow(move.getArrow());
-                sendAction.setQueen(ourQueen);
-                sendAction.setArrow(ourArrow);
-
-                String marshalledMessage = marshal(sendAction);
-                System.out.println("Our marshalled Action: " + marshalledMessage);
-
-                //Compile the message and send it to the server
-                sendToServer(marshalledMessage, roomId);
-
-                // Repositioned the timer to take into account the time used to build the object and send to the server
-                end = System.currentTimeMillis() - start;
-
-                // End of turn statistics
-                System.out.println("Time: " + end / 1000 + " seconds");
-                System.out.println("move made: " + move);
-                System.out.println("Current evaluation: " + OurEvaluation.evaluateBoard(ourBoard, 1)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1)[1]);
-                System.out.println(ourBoard);
+                makeFirstMove();
             }
 
         }
         else if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE))
         {
-            //Get initialQ, finalQ and arrow from the move that the opponent made, and make it on our board
-            OurPair initialQ = receivedAction.queen.getInitialQ();
-            OurPair finalQ = receivedAction.queen.getFinalQ();
-            OurPair arrow = receivedAction.arrow.getArrow();
-            Move opponentMove = new Move(initialQ, finalQ, arrow);
-            ourBoard.makeMove(opponentMove);
 
-            //If it is the end of the game, print end game stats and then exit the application
-            if (GameRules.checkEndGame(ourBoard) == 1)
-            {
-                System.out.println(GameRules.checkEndGame(ourBoard));
-                System.out.println("All legal white moves: " + GameRules.getLegalMoves(ourBoard, 1));
-                System.out.println("All legal black moves: " + GameRules.getLegalMoves(ourBoard, 2));
-                System.out.println("\n\nGame over");
-                //TODO not sure what to do when game is actually over
-                System.exit(0);
-            }
-
-            minimaxSearch = new minimaxSearch();
-
-            concurrentMinimax cMinimax = new concurrentMinimax(10);
-            long start, end;
-
-            start = System.currentTimeMillis();
-            // Get a move from the concurrent minimax
-            Move move = cMinimax.minimaxDecision(ourBoard, TeamID);
-
-            //Make the move on our board
-            ourBoard.makeMove(move);
-            // Construct the new Action object that we will send to the server
-            {
-                sendAction = new Action();
-                sendAction.type = GameMessage.ACTION_MOVE;
-                Queen ourQueen = new Queen();
-                ourQueen.setMove(move.getInitialQ(), move.getFinalQ());
-                Arrow ourArrow = new Arrow();
-                ourArrow.setArrow(move.getArrow());
-                sendAction.setQueen(ourQueen);
-                sendAction.setArrow(ourArrow);
-                System.out.println("Our marshalled Action");
-                System.out.println(marshal(sendAction).toString());
-            }
-
-            //Compile the message and send it to the server
-            String serverMsg = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomId, marshal(sendAction));
-            gameClient.sendToServer(serverMsg, true);
-
-            // Repositioned the timer to take into account the time used to build the object and send to the server
-            end = System.currentTimeMillis() - start;
-
-            // End of turn statistics
-            System.out.println("Time: " + end/1000 + " seconds");
-            System.out.println("move made: " + move);
-            System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(ourBoard, 1)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1)[1]);
-            System.out.println(ourBoard);
+            handleMove();
         }
 
         return true;
     }
 
-    public void sendToServer(String msgType, int roomId){
-        String msg = "Message goes here";
-        boolean isMove = true;
-        ServerMessage.compileGameMessage(msgType, roomId, msg);
-        gameClient.sendToServer(msg, isMove);
+    public static void makeFirstMove() throws JAXBException {
+        minimaxSearch = new minimaxSearch();
+
+        concurrentMinimax cMinimax = new concurrentMinimax(10);
+        long start, end;
+
+        start = System.currentTimeMillis();
+        // Get a move from the concurrent minimax
+        Move move = cMinimax.minimaxDecision(ourBoard, TeamID);
+
+        //Make the move on our board
+        ourBoard.makeMove(move);
+        // Construct the new Action object that we will send to the server
+
+        sendAction = new Action();
+        sendAction.type = GameMessage.ACTION_MOVE;
+        Queen ourQueen = new Queen();
+        ourQueen.setMove(move.getInitialQ(), move.getFinalQ());
+        Arrow ourArrow = new Arrow();
+        ourArrow.setArrow(move.getArrow());
+        sendAction.setQueen(ourQueen);
+        sendAction.setArrow(ourArrow);
+
+        String marshalledAction = marshal(sendAction);
+        System.out.println("Our marshalled Action: " + marshalledAction);
+
+        String serverMsg = ServerMessage.compileGameMessage(GameMessage.ACTION_MOVE, roomId, marshalledAction);
+        gameClient.sendToServer(serverMsg, true);
+
+        // Repositioned the timer to take into account the time used to build the object and send to the server
+        end = System.currentTimeMillis() - start;
+
+        // End of turn statistics
+        System.out.println("Time: " + end / 1000 + " seconds");
+        System.out.println("move made: " + move);
+        System.out.println("Current evaluation: " + OurEvaluation.evaluateBoard(ourBoard, 1)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1)[1]);
+        System.out.println(ourBoard);
+    }
+
+    public static void handleMove() throws JAXBException {
+        //Get initialQ, finalQ and arrow from the move that the opponent made, and make it on our board
+        OurPair initialQ = receivedAction.queen.getInitialQ();
+        OurPair finalQ = receivedAction.queen.getFinalQ();
+        OurPair arrow = receivedAction.arrow.getArrow();
+        Move opponentMove = new Move(initialQ, finalQ, arrow);
+        ourBoard.makeMove(opponentMove);
+
+        //If it is the end of the game, print end game stats and then exit the application
+        if (GameRules.checkEndGame(ourBoard) == 1)
+        {
+            System.out.println(GameRules.checkEndGame(ourBoard));
+            System.out.println("All legal white moves: " + GameRules.getLegalMoves(ourBoard, 1));
+            System.out.println("All legal black moves: " + GameRules.getLegalMoves(ourBoard, 2));
+            System.out.println("\n\nGame over");
+            //TODO not sure what to do when game is actually over
+            System.exit(0);
+        }
+
+        minimaxSearch = new minimaxSearch();
+
+        concurrentMinimax cMinimax = new concurrentMinimax(10);
+        long start, end;
+
+        start = System.currentTimeMillis();
+        // Get a move from the concurrent minimax
+        Move move = cMinimax.minimaxDecision(ourBoard, TeamID);
+
+        //Make the move on our board
+        ourBoard.makeMove(move);
+        // Construct the new Action object that we will send to the server
+        sendAction = new Action();
+        sendAction.type = GameMessage.ACTION_MOVE;
+        Queen ourQueen = new Queen();
+        ourQueen.setMove(move.getInitialQ(), move.getFinalQ());
+        Arrow ourArrow = new Arrow();
+        ourArrow.setArrow(move.getArrow());
+        sendAction.setQueen(ourQueen);
+        sendAction.setArrow(ourArrow);
+
+        String marshalledAction = marshal(sendAction);
+        System.out.println("Our marshalled Action: " + marshalledAction);
+
+        String serverMsg = ServerMessage.compileGameMessage(GameMessage.ACTION_MOVE, roomId, marshalledAction);
+        gameClient.sendToServer(serverMsg, true);
+
+        // Repositioned the timer to take into account the time used to build the object and send to the server
+        end = System.currentTimeMillis() - start;
+
+        // End of turn statistics
+        System.out.println("Time: " + end/1000 + " seconds");
+        System.out.println("move made: " + move);
+        System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(ourBoard, 1)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1)[1]);
+        System.out.println(ourBoard);
     }
 
     /**
