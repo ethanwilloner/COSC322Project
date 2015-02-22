@@ -321,6 +321,9 @@ public class OurBoard implements Cloneable{
 	
 	public boolean cutoffTest(int depth, long startTime)
 	{
+//		if (depth > 2)
+//			return true;
+//		
 		//  watch memory usage
 		if (Runtime.getRuntime().freeMemory() <= 5000000)
 		{
@@ -329,7 +332,7 @@ public class OurBoard implements Cloneable{
 		
 		// watch the time
 		long time = System.currentTimeMillis() - startTime;
-		if (time >= 25000)
+		if (time >= 5000)
 		{
 			return true;
 		}

@@ -238,7 +238,7 @@ public class GameLogic implements GamePlayer
 
         minimaxSearch minimax = new minimaxSearch();
         
-        concurrentMinimax cMinimax = new concurrentMinimax(10);
+        concurrentMinimax cMinimax = new concurrentMinimax(3);
         long start, end;
 
         //while we are still playing

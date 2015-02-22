@@ -51,7 +51,9 @@ public class OurEvaluation
 		boolean keepGoing = true;
 		int canKeepGoing = 0;
 		
-		while (keepGoing)
+		int maxDepth = 4;
+		
+		while (iterativeDepth < maxDepth)
 		{
 			canKeepGoing = 0;
 			for (OurPair queen : whitePositions)
@@ -73,7 +75,7 @@ public class OurEvaluation
 		iterativeDepth = 1;
 		
 		//evaluate board for each queen (black)
-		while (keepGoing)
+		while (iterativeDepth < maxDepth)
 		{
 			canKeepGoing = 0;
 			for (OurPair queen : blackPositions)
@@ -182,7 +184,7 @@ public class OurEvaluation
 		{
 			//prune search
 			//can we improve this locale?
-			if (tempBoard[move.getX()][move.getY()][side-1] > depth+1)
+			if (tempBoard[move.getX()][move.getY()][side-1] >= depth+1)
 			{
 				tempBoard[move.getX()][move.getY()][side-1] = depth+1;
 				
@@ -190,10 +192,12 @@ public class OurEvaluation
 				{
 					rtn = paintBoardWithQueen(board, tempBoard, move, side, depth+1, maxDepth);
 				}
-				//we could make a better move but cut by depth
-				else
-					rtn = true;
+//				//we could make a better move but cut by depth
+//				else
+//					rtn = true;
 			}
+			
+			
 		}
 		
 		return rtn;

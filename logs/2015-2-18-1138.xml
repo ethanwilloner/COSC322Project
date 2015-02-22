@@ -1,0 +1,972 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2015-02-18T11:38:26</date>
+  <millis>1424288306646</millis>
+  <sequence>0</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:11107 maximum depth:4 best value:18</message>
+</record>
+<record>
+  <date>2015-02-18T11:38:37</date>
+  <millis>1424288317583</millis>
+  <sequence>1</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10843 maximum depth:4 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:38:48</date>
+  <millis>1424288328362</millis>
+  <sequence>2</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10779 maximum depth:4 best value:11</message>
+</record>
+<record>
+  <date>2015-02-18T11:38:59</date>
+  <millis>1424288339220</millis>
+  <sequence>3</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10843 maximum depth:4 best value:3</message>
+</record>
+<record>
+  <date>2015-02-18T11:39:09</date>
+  <millis>1424288349829</millis>
+  <sequence>4</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10593 maximum depth:4 best value:9</message>
+</record>
+<record>
+  <date>2015-02-18T11:39:20</date>
+  <millis>1424288360191</millis>
+  <sequence>5</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10346 maximum depth:4 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:39:30</date>
+  <millis>1424288370722</millis>
+  <sequence>6</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10531 maximum depth:4 best value:7</message>
+</record>
+<record>
+  <date>2015-02-18T11:39:41</date>
+  <millis>1424288381175</millis>
+  <sequence>7</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10453 maximum depth:4 best value:1</message>
+</record>
+<record>
+  <date>2015-02-18T11:39:51</date>
+  <millis>1424288391459</millis>
+  <sequence>8</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10284 maximum depth:4 best value:5</message>
+</record>
+<record>
+  <date>2015-02-18T11:40:01</date>
+  <millis>1424288401787</millis>
+  <sequence>9</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10328 maximum depth:4 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:40:12</date>
+  <millis>1424288412115</millis>
+  <sequence>10</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10328 maximum depth:4 best value:9</message>
+</record>
+<record>
+  <date>2015-02-18T11:40:22</date>
+  <millis>1424288422334</millis>
+  <sequence>11</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10219 maximum depth:4 best value:1</message>
+</record>
+<record>
+  <date>2015-02-18T11:40:32</date>
+  <millis>1424288432540</millis>
+  <sequence>12</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10206 maximum depth:4 best value:6</message>
+</record>
+<record>
+  <date>2015-02-18T11:40:42</date>
+  <millis>1424288442743</millis>
+  <sequence>13</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10203 maximum depth:4 best value:6</message>
+</record>
+<record>
+  <date>2015-02-18T11:40:52</date>
+  <millis>1424288452946</millis>
+  <sequence>14</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10203 maximum depth:4 best value:4</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:03</date>
+  <millis>1424288463087</millis>
+  <sequence>15</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10141 maximum depth:4 best value:1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:13</date>
+  <millis>1424288473245</millis>
+  <sequence>16</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10158 maximum depth:4 best value:3</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:23</date>
+  <millis>1424288483339</millis>
+  <sequence>17</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:10094 maximum depth:4 best value:5</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:31</date>
+  <millis>1424288491140</millis>
+  <sequence>18</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:7801 maximum depth:4 best value:0</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:36</date>
+  <millis>1424288496387</millis>
+  <sequence>19</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:5247 maximum depth:4 best value:6</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:40</date>
+  <millis>1424288500522</millis>
+  <sequence>20</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:4135 maximum depth:4 best value:7</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:42</date>
+  <millis>1424288502832</millis>
+  <sequence>21</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:2310 maximum depth:4 best value:6</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:44</date>
+  <millis>1424288504580</millis>
+  <sequence>22</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:1748 maximum depth:4 best value:1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:46</date>
+  <millis>1424288506048</millis>
+  <sequence>23</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:1468 maximum depth:4 best value:6</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:47</date>
+  <millis>1424288507141</millis>
+  <sequence>24</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:1093 maximum depth:4 best value:-3</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:47</date>
+  <millis>1424288507173</millis>
+  <sequence>25</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:32 maximum depth:3 best value:9</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:47</date>
+  <millis>1424288507984</millis>
+  <sequence>26</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:795 maximum depth:4 best value:-5</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:48</date>
+  <millis>1424288508624</millis>
+  <sequence>27</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:640 maximum depth:4 best value:9</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:49</date>
+  <millis>1424288509374</millis>
+  <sequence>28</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:750 maximum depth:4 best value:-4</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:49</date>
+  <millis>1424288509967</millis>
+  <sequence>29</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:593 maximum depth:4 best value:8</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:50</date>
+  <millis>1424288510467</millis>
+  <sequence>30</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:500 maximum depth:4 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:50</date>
+  <millis>1424288510919</millis>
+  <sequence>31</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:452 maximum depth:4 best value:7</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:51</date>
+  <millis>1424288511216</millis>
+  <sequence>32</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:297 maximum depth:4 best value:-5</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:51</date>
+  <millis>1424288511529</millis>
+  <sequence>33</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:313 maximum depth:4 best value:8</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:51</date>
+  <millis>1424288511669</millis>
+  <sequence>34</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:140 maximum depth:4 best value:-5</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:51</date>
+  <millis>1424288511825</millis>
+  <sequence>35</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:156 maximum depth:4 best value:8</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:51</date>
+  <millis>1424288511981</millis>
+  <sequence>36</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:156 maximum depth:4 best value:-4</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:52</date>
+  <millis>1424288512106</millis>
+  <sequence>37</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:125 maximum depth:4 best value:8</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:52</date>
+  <millis>1424288512605</millis>
+  <sequence>38</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:499 maximum depth:5 best value:-5</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:53</date>
+  <millis>1424288513138</millis>
+  <sequence>39</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:533 maximum depth:5 best value:5</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:53</date>
+  <millis>1424288513200</millis>
+  <sequence>40</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:62 maximum depth:4 best value:-3</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:53</date>
+  <millis>1424288513699</millis>
+  <sequence>41</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:499 maximum depth:5 best value:3</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:54</date>
+  <millis>1424288514021</millis>
+  <sequence>42</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:322 maximum depth:5 best value:-2</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:54</date>
+  <millis>1424288514443</millis>
+  <sequence>43</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:422 maximum depth:5 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:54</date>
+  <millis>1424288514677</millis>
+  <sequence>44</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:234 maximum depth:5 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:55</date>
+  <millis>1424288515035</millis>
+  <sequence>45</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:358 maximum depth:5 best value:1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:55</date>
+  <millis>1424288515068</millis>
+  <sequence>46</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:33 maximum depth:4 best value:0</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:55</date>
+  <millis>1424288515255</millis>
+  <sequence>47</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:187 maximum depth:5 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:55</date>
+  <millis>1424288515380</millis>
+  <sequence>48</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:125 maximum depth:5 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:56</date>
+  <millis>1424288516284</millis>
+  <sequence>49</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:904 maximum depth:6 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:57</date>
+  <millis>1424288517291</millis>
+  <sequence>50</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:1007 maximum depth:6 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:57</date>
+  <millis>1424288517323</millis>
+  <sequence>51</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:32 maximum depth:2 best value:-2</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:57</date>
+  <millis>1424288517916</millis>
+  <sequence>52</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:593 maximum depth:6 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:58</date>
+  <millis>1424288518493</millis>
+  <sequence>53</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:577 maximum depth:6 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:58</date>
+  <millis>1424288518493</millis>
+  <sequence>54</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:0 maximum depth:2 best value:1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:58</date>
+  <millis>1424288518759</millis>
+  <sequence>55</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:266 maximum depth:6 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:58</date>
+  <millis>1424288518962</millis>
+  <sequence>56</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:203 maximum depth:6 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:59</date>
+  <millis>1424288519555</millis>
+  <sequence>57</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:593 maximum depth:6 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:59</date>
+  <millis>1424288519606</millis>
+  <sequence>58</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:51 maximum depth:5 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:59</date>
+  <millis>1424288519731</millis>
+  <sequence>59</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:125 maximum depth:6 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:41:59</date>
+  <millis>1424288519902</millis>
+  <sequence>60</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:171 maximum depth:6 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:00</date>
+  <millis>1424288520058</millis>
+  <sequence>61</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:156 maximum depth:6 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:00</date>
+  <millis>1424288520199</millis>
+  <sequence>62</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:141 maximum depth:6 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:00</date>
+  <millis>1424288520573</millis>
+  <sequence>63</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:374 maximum depth:7 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:00</date>
+  <millis>1424288520793</millis>
+  <sequence>64</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:204 maximum depth:6 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:00</date>
+  <millis>1424288520949</millis>
+  <sequence>65</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:156 maximum depth:7 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:01</date>
+  <millis>1424288521105</millis>
+  <sequence>66</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:156 maximum depth:6 best value:2</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:01</date>
+  <millis>1424288521432</millis>
+  <sequence>67</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:327 maximum depth:8 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:01</date>
+  <millis>1424288521448</millis>
+  <sequence>68</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:16 maximum depth:2 best value:1</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:01</date>
+  <millis>1424288521604</millis>
+  <sequence>69</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:156 maximum depth:8 best value:-1</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:01</date>
+  <millis>1424288521619</millis>
+  <sequence>70</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:0 maximum depth:2 best value:1</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:01</date>
+  <millis>1424288521917</millis>
+  <sequence>71</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:298 maximum depth:9 best value:-2</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:02</date>
+  <millis>1424288522026</millis>
+  <sequence>72</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:109 maximum depth:8 best value:3</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:02</date>
+  <millis>1424288522182</millis>
+  <sequence>73</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:156 maximum depth:14 best value:-2</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:02</date>
+  <millis>1424288522541</millis>
+  <sequence>74</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:359 maximum depth:9 best value:3</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:02</date>
+  <millis>1424288522556</millis>
+  <sequence>75</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:15 maximum depth:6 best value:-2</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:02</date>
+  <millis>1424288522775</millis>
+  <sequence>76</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:219 maximum depth:11 best value:4</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:02</date>
+  <millis>1424288522823</millis>
+  <sequence>77</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:48 maximum depth:44 best value:-3</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:02</date>
+  <millis>1424288522885</millis>
+  <sequence>78</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:62 maximum depth:26 best value:5</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:02</date>
+  <millis>1424288522916</millis>
+  <sequence>79</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:31 maximum depth:74 best value:-4</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:02</date>
+  <millis>1424288522979</millis>
+  <sequence>80</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:63 maximum depth:37 best value:4</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:03</date>
+  <millis>1424288523010</millis>
+  <sequence>81</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:31 maximum depth:148 best value:-3</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:03</date>
+  <millis>1424288523041</millis>
+  <sequence>82</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:31 maximum depth:2 best value:3</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:03</date>
+  <millis>1424288523057</millis>
+  <sequence>83</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:16 maximum depth:124 best value:-2</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:03</date>
+  <millis>1424288523072</millis>
+  <sequence>84</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:15 maximum depth:41 best value:3</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:03</date>
+  <millis>1424288523088</millis>
+  <sequence>85</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:16 maximum depth:76 best value:-2</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:03</date>
+  <millis>1424288523135</millis>
+  <sequence>86</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:16 maximum depth:18 best value:3</message>
+</record>
+<record>
+  <date>2015-02-18T11:42:03</date>
+  <millis>1424288523135</millis>
+  <sequence>87</sequence>
+  <logger>utils</logger>
+  <level>INFO</level>
+  <class>MinimaxSearch</class>
+  <method>minimaxDecision</method>
+  <thread>1</thread>
+  <message>Search took:0 maximum depth:145 best value:-2</message>
+</record>
+</log>

@@ -71,8 +71,7 @@ public class concurrentMinimax
 			searchThreads.add(new MinimaxThread(board.clone(), iterator.next()));
 		}
 		
-		//the best depth achieved by this search
-		localMaxDepth.set(1);
+		
 		// if this search was terminated by a cutoff test
 		isCutoff.set(false);
 		// make thread pool
@@ -82,6 +81,8 @@ public class concurrentMinimax
 		// begin iterative deepening search		
 		do
 		{
+			//the best depth achieved by this search
+			localMaxDepth.set(1);
 			executor= Executors.newFixedThreadPool(maxThreads);
 			results.clear();
 			
