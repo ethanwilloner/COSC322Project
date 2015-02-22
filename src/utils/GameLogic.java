@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -18,9 +20,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import MessageParsing.Arrow;
+import MessageParsing.Queen;
+import MessageParsing.User;
+import ai.OurPair;
 import minimax.concurrentMinimax;
-import minimax.minimaxNode;
 import minimax.minimaxSearch;
+import net.n3.nanoxml.IXMLElement;
 import ubco.ai.GameRoom;
 import ubco.ai.connection.ServerMessage;
 import ubco.ai.games.GameClient;
@@ -31,10 +37,8 @@ import ai.OurBoard;
 
 public class GameLogic implements GamePlayer
 {
-	
 	public static final Logger debug;
 	private static Handler handler;
-	
 	
 	static
 	{
@@ -59,48 +63,26 @@ public class GameLogic implements GamePlayer
 	}
 	
     static OurBoard ourBoard;
-
+    static String TeamName = "Team Rocket";
+    static String TeamPassword = "password";
+    static String TeamRole;
+    static int TeamID;
     static GameClient gameClient = null;
-    int roomId;
+    static int roomId;
     static ArrayList<GameRoom> roomList;
-    static Action action;
-    static Action recvAction;
+    static Action receivedAction;
     static Action sendAction;
     static JAXBContext jaxbContext;
+    static minimaxSearch minimaxSearch;
 
     public static void main(String[] args) throws JAXBException
     {
-        /*jaxbContext = JAXBContext.newInstance(Action.class);
-        action = new Action();
-
-        // Example code for using the JAXB objects to read and create new objects
-		String msg = "<action type='room-joined'><usrlist ucount='1'><usr name='team rocket' id='1'></usr></usrlist></action>";
-		String msg2 = "<action type='move'> <queen move='a3-g3'></queen><arrow move='h4'></arrow></action>";
-
-		OurPair InitialQ = new OurPair(0,0);
-		OurPair FinalQ = new OurPair(5,5);
-		OurPair Arrow = new OurPair(5,2);
-
-		action.setType("move");
-		action.setQueen(new Queen());
-		action.setArrow(new Arrow());
-		action.queen.setMove(InitialQ, FinalQ);
-		action.arrow.setArrow(Arrow);
-
-		System.out.println(marshal());
-
-		action = new Action();
-		unmarshal(msg);
-		System.out.println(marshal());
-*/
-        GameLogic gamelogic = new GameLogic("team rocket","password123");
-        
-        
+        jaxbContext = JAXBContext.newInstance(Action.class);
+        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
     }
 
     public GameLogic(String name, String passwd)
     {
-        /*
         //initialize board
 		ourBoard = new OurBoard();
 
@@ -114,8 +96,7 @@ public class GameLogic implements GamePlayer
         Scanner scanner = new Scanner(System.in);
         System.out.print("Input roomID to join: ");
         int roomId = scanner.nextInt();
-        joinRoom(roomId);
-        */
+        // joinRoom(roomId);
 
         //see whose turn it is
 
@@ -175,24 +156,94 @@ public class GameLogic implements GamePlayer
     public boolean handleMessage(GameMessage arg0) throws Exception {
         System.out.println("[SimplePlayer: The server said =]  " + arg0.toString());
 
-        // if not our turn
-        //
-        // calculate potential moves
-        // wait for message
-        // check for end game status
-        // alert team
-        // set to our turn
+        // unmarshal message into object
+        receivedAction = unmarshal(arg0.toString());
 
-        // else
-        // check opponent move legality
-        //if illegal
-        // send error message
-        // calculate move
-        // check for end game status
-        // alert team
-        // send move
-        // set to their move
+        if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_ROOM_JOINED))
+        {
+            System.out.println("Users in the current room:");
+            // Print list of users in the room
+            for(User user : receivedAction.getUserList().getUsers())
+            {
+                System.out.println("\tName: " + user.getName() + ", ID: " + user.getId());
+            }
 
+        } else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START))
+        {
+            //TODO add logging for start of game message
+            System.out.println("Game has started");
+            for(User user : receivedAction.getUserList().getUsers())
+            {
+                if(user.name.equalsIgnoreCase(TeamName))
+                {
+                    TeamRole = user.getRole();
+                    TeamID = user.getId();
+                }
+            }
+            //TODO add logging for what our side and purpose is
+            System.out.println("Team name: " + TeamName);
+            System.out.println("ID: " + TeamID);
+
+            //TODO add support for being a spectator if there are too many people in the room
+            System.out.println("Team Role: " + (TeamRole == "W"? "White":"Black"));
+
+        } else if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE)) {
+            //Get initialQ, finalQ and arrow from the move that the opponent made, and make it on our board
+            OurPair initialQ = receivedAction.queen.getInitialQ();
+            OurPair finalQ = receivedAction.queen.getFinalQ();
+            OurPair arrow = receivedAction.arrow.getArrow();
+            Move opponentMove = new Move(initialQ, finalQ, arrow);
+            ourBoard.makeMove(opponentMove);
+
+            //If it is the end of the game, print end game stats and then exit the application
+            if (GameRules.checkEndGame(ourBoard) == 1)
+            {
+                System.out.println(GameRules.checkEndGame(ourBoard));
+                System.out.println("All legal white moves: " + GameRules.getLegalMoves(ourBoard, 1));
+                System.out.println("All legal black moves: " + GameRules.getLegalMoves(ourBoard, 2));
+                System.out.println("\n\nGame over");
+                //TODO not sure what to do when game is actually over
+                System.exit(0);
+            }
+
+            minimaxSearch = new minimaxSearch();
+
+            concurrentMinimax cMinimax = new concurrentMinimax(10);
+            long start, end;
+
+            start = System.currentTimeMillis();
+            // Get a move from the concurrent minimax
+            Move move = cMinimax.minimaxDecision(ourBoard, Integer.parseInt(TeamRole));
+
+            //Make the move on our board
+            ourBoard.makeMove(move);
+            // Construct the new Action object that we will send to the server
+            {
+                sendAction = new Action();
+                sendAction.type = GameMessage.ACTION_MOVE;
+                Queen ourQueen = new Queen();
+                ourQueen.setMove(move.getInitialQ(), move.getFinalQ());
+                Arrow ourArrow = new Arrow();
+                ourArrow.setArrow(move.getArrow());
+                sendAction.setQueen(ourQueen);
+                sendAction.setArrow(ourArrow);
+                System.out.println("Our marshalled Action");
+                System.out.println(marshal(sendAction).toString());
+            }
+
+            //Compile the message and send it to the server
+            String serverMsg = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomId, marshal(sendAction));
+            gameClient.sendToServer(serverMsg, true);
+
+            // Repositioned the timer to take into account the time used to build the object and send to the server
+            end = System.currentTimeMillis() - start;
+
+            // End of turn statistics
+            System.out.println("Time: " + end/1000 + " seconds");
+            System.out.println("move made: " + move);
+            System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(ourBoard, 1)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1)[1]);
+            System.out.println(ourBoard);
+        }
 
         return true;
     }
@@ -210,10 +261,11 @@ public class GameLogic implements GamePlayer
      * @throws JAXBException
      */
 
-    public static void unmarshal(String msg) throws JAXBException {
+    public static Action unmarshal(String msg) throws JAXBException {
         InputStream is = new ByteArrayInputStream(msg.getBytes());
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        action = (Action) unmarshaller.unmarshal(is);
+        Action action = (Action) unmarshaller.unmarshal(is);
+        return action;
     }
 
     /**
@@ -221,7 +273,7 @@ public class GameLogic implements GamePlayer
      * to the server
      * @throws JAXBException
      */
-    public static String marshal() throws JAXBException {
+    public static String marshal(Action action) throws JAXBException {
         OutputStream os = new ByteArrayOutputStream();
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);

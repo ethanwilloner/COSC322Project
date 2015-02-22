@@ -32,6 +32,21 @@ public class Queen {
     /**
      * @return The location that the queen moved to
      */
+
+    public OurPair getInitialQ()
+    {
+        String[] str = this.move.split("-");
+        OurPair initialQ = new OurPair(str[0].charAt(0) - 'a', str[0].charAt(1) - '0');
+        return initialQ;
+    }
+
+    public OurPair getFinalQ()
+    {
+        String[] str = this.move.split("-");
+        OurPair finalQ = new OurPair(str[1].charAt(0) - 'a', str[1].charAt(1) - '0');
+        return finalQ;
+    }
+
     public OurPair getMove() {
         String[] str = this.move.split("-");
         // Transform the server-required alphanumeric position representation into our internal representation
