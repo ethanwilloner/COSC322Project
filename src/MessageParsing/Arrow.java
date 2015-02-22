@@ -5,6 +5,7 @@ import ai.OurPair;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlValue;
 
 /**
  * Stores location that the arrow was fired after
@@ -14,6 +15,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 public class Arrow {
     @XmlAttribute(name = "move")
     public String arrow;
+
+    @XmlValue
+    String content = "";
 
     /**
      * @param arrow takes OurPair object for location that we placed our arrow
