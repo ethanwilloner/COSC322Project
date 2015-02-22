@@ -202,21 +202,21 @@ public class GameLogic implements GamePlayer
                 //Make the move on our board
                 ourBoard.makeMove(move);
                 // Construct the new Action object that we will send to the server
-                
-                    sendAction = new Action();
-                    sendAction.type = GameMessage.ACTION_MOVE;
-                    Queen ourQueen = new Queen();
-                    ourQueen.setMove(move.getInitialQ(), move.getFinalQ());
-                    Arrow ourArrow = new Arrow();
-                    ourArrow.setArrow(move.getArrow());
-                    sendAction.setQueen(ourQueen);
-                    sendAction.setArrow(ourArrow);
-                    System.out.println("Our marshalled Action: " + marshal(sendAction).toString());
 
+                sendAction = new Action();
+                sendAction.type = GameMessage.ACTION_MOVE;
+                Queen ourQueen = new Queen();
+                ourQueen.setMove(move.getInitialQ(), move.getFinalQ());
+                Arrow ourArrow = new Arrow();
+                ourArrow.setArrow(move.getArrow());
+                sendAction.setQueen(ourQueen);
+                sendAction.setArrow(ourArrow);
+
+                String marshalledMessage = marshal(sendAction);
+                System.out.println("Our marshalled Action: " + marshalledMessage);
 
                 //Compile the message and send it to the server
-                String serverMsg = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomId, marshal(sendAction).toString());
-                gameClient.sendToServer(serverMsg, true);
+                sendToServer(marshalledMessage, roomId);
 
                 // Repositioned the timer to take into account the time used to build the object and send to the server
                 end = System.currentTimeMillis() - start;
@@ -291,7 +291,7 @@ public class GameLogic implements GamePlayer
         return true;
     }
 
-    public void sendToServer(String msgType, int roomID){
+    public void sendToServer(String msgType, int roomId){
         String msg = "Message goes here";
         boolean isMove = true;
         ServerMessage.compileGameMessage(msgType, roomId, msg);
