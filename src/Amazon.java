@@ -23,13 +23,12 @@ import ubco.ai.games.GameClient;
 import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
 
-*/
-/**
+*
  * for testing purposes only. An GUI Amazon client for manual playing 
  *
  * @author yongg
  *
- *//*
+
 
 
 public class Amazon extends JFrame implements GamePlayer{
@@ -49,24 +48,22 @@ public class Amazon extends JFrame implements GamePlayer{
     public String usrName = null;
 
 
-    */
-/**
+*
      * Constructor 
      * @param args
-     *//*
+
 
     public static void main(String[] args) {
         Amazon game = new Amazon("Team Rocket","password123", true);
     }
 
 
-    */
-/**
+*
      * Constructor
      * @param name
      * @param passwd
      * @param gamebot
-     *//*
+
 
     public Amazon(String name, String passwd, boolean gamebot){
 
@@ -84,8 +81,7 @@ public class Amazon extends JFrame implements GamePlayer{
     }
 
 
-    */
-/**
+*
      * Implements the GamePlayer interface. All the messages after the user login
      * will be forwarded to this method by the GameClient.
      *
@@ -93,7 +89,7 @@ public class Amazon extends JFrame implements GamePlayer{
      *
      * @param msg the GameMeesage instance that hold the message type and the action message in XML
      * 				format.
-     *//*
+
 
     public boolean handleMessage(GameMessage msg){
 
@@ -228,18 +224,16 @@ public class Amazon extends JFrame implements GamePlayer{
         return new GameBoard(this);
     }
 
-    */
-/**
+*
      *
      * @return true if white
-     *//*
+
 
     //public boolean isFirstPlayer(){
     //	return isPlayerA;
     //}
 
-    */
-/**
+*
      * handle a move of this player --- send the info to the server.
      * @param x queen row index 
      * @param y queen col index
@@ -247,14 +241,13 @@ public class Amazon extends JFrame implements GamePlayer{
      * @param acol arrow col index
      * @param qfr queen original row
      * @param qfc queen original col
-     *//*
+
 
     public void playerMove(int x, int y, int arow, int acol, int qfr, int qfc){
         this.sendToServer(GameMessage.ACTION_MOVE,  roomID, x,  y, arow, acol, qfr, qfc);
     }
 
-    */
-/**
+*
      * Send a message to the server. This is a specific method for the XOXO game
      *
      * @param action
@@ -265,7 +258,7 @@ public class Amazon extends JFrame implements GamePlayer{
      * @param acol arrow col index
      * @param qfr queen original row
      * @param qfc queen original col
-     *//*
+
 
     public void sendToServer(String action, int roomID, int posX, int posY,
                              int arow, int acol, int qfr, int qfc){
@@ -297,13 +290,12 @@ public class Amazon extends JFrame implements GamePlayer{
     }
 
 
-    */
-/**
+*
      * The game board
      *
      * @author yongg
      *
-     *//*
+
 
     public class GameBoard extends JPanel{
 
@@ -371,8 +363,7 @@ public class Amazon extends JFrame implements GamePlayer{
         }
 
 
-        */
-/**
+*
          * repaint the part of the board
          * @param qrow queen row index
          * @param qcol queen col index
@@ -380,7 +371,7 @@ public class Amazon extends JFrame implements GamePlayer{
          * @param acol arrow col index
          * @param qfr queen original row
          * @param qfc queen original col
-         *//*
+
 
         public boolean markPosition(int qrow, int qcol, int arow, int acol,
                                     int qfr, int qfc, boolean  opponentMove){
@@ -449,12 +440,11 @@ public class Amazon extends JFrame implements GamePlayer{
             return new Dimension(500,500);
         }
 
-        */
-/**
+*
          * Handle mouse events
          *
          * @author yongg
-         *//*
+
 
         public class GameEventHandler extends MouseAdapter{
 
@@ -533,4 +523,5 @@ public class Amazon extends JFrame implements GamePlayer{
         return true;
     }
 
-}//end of Amazon*/
+}//end of Amazon
+*/

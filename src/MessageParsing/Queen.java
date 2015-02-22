@@ -2,9 +2,7 @@ package MessageParsing;
 
 import ai.OurPair;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.*;
 
 /**
  * Queen, stores a move in a string of the
@@ -16,6 +14,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 public class Queen {
     @XmlAttribute(name = "move")
     public String move;
+
+    @XmlValue
+    String content = "";
 
     /**
      * @param InitialQ Where the queen started in our turn

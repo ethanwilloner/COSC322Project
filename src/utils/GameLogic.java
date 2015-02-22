@@ -202,7 +202,7 @@ public class GameLogic implements GamePlayer
                 //Make the move on our board
                 ourBoard.makeMove(move);
                 // Construct the new Action object that we will send to the server
-                {
+                
                     sendAction = new Action();
                     sendAction.type = GameMessage.ACTION_MOVE;
                     Queen ourQueen = new Queen();
@@ -211,12 +211,11 @@ public class GameLogic implements GamePlayer
                     ourArrow.setArrow(move.getArrow());
                     sendAction.setQueen(ourQueen);
                     sendAction.setArrow(ourArrow);
-                    System.out.println("Our marshalled Action");
-                    System.out.println(marshal(sendAction).toString());
-                }
+                    System.out.println("Our marshalled Action: " + marshal(sendAction).toString());
+
 
                 //Compile the message and send it to the server
-                String serverMsg = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomId, marshal(sendAction));
+                String serverMsg = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomId, marshal(sendAction).toString());
                 gameClient.sendToServer(serverMsg, true);
 
                 // Repositioned the timer to take into account the time used to build the object and send to the server
