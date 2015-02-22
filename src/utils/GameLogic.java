@@ -67,6 +67,7 @@ public class GameLogic implements GamePlayer
     static String TeamPassword = "password";
     static String TeamRole;
     static int TeamID;
+    static int TeamSide;
     static GameClient gameClient = null;
     static int roomId;
     static ArrayList<GameRoom> roomList;
@@ -96,7 +97,7 @@ public class GameLogic implements GamePlayer
         Scanner scanner = new Scanner(System.in);
         System.out.print("Input roomID to join: ");
         int roomId = scanner.nextInt();
-        // joinRoom(roomId);
+        joinRoom(roomId);
 
         //see whose turn it is
 
@@ -113,7 +114,7 @@ public class GameLogic implements GamePlayer
 //		
 //		System.out.println(board);
 
-        samplePlay();
+        //samplePlay();
     }
 
     //Prints the id, name, and user count of all available game rooms in the game client
@@ -148,8 +149,7 @@ public class GameLogic implements GamePlayer
     }
 
     public boolean handleMessage(String arg0) throws Exception {
-        String msg = XMLParser.parseXML(arg0);
-        System.out.print(arg0);
+        System.out.println(arg0);
         return true;
     }
 
@@ -168,7 +168,8 @@ public class GameLogic implements GamePlayer
                 System.out.println("\tName: " + user.getName() + ", ID: " + user.getId());
             }
 
-        } else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START))
+        }
+        else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START))
         {
             //TODO add logging for start of game message
             System.out.println("Game has started");
@@ -178,6 +179,7 @@ public class GameLogic implements GamePlayer
                 {
                     TeamRole = user.getRole();
                     TeamID = user.getId();
+                    TeamSide = (TeamRole.equalsIgnoreCase("W") ? 1:2);
                 }
             }
             //TODO add logging for what our side and purpose is
@@ -185,9 +187,51 @@ public class GameLogic implements GamePlayer
             System.out.println("ID: " + TeamID);
 
             //TODO add support for being a spectator if there are too many people in the room
-            System.out.println("Team Role: " + (TeamRole == "W"? "White":"Black"));
+            System.out.println("Team Role: " + (TeamSide == 1? "White":"Black"));
 
-        } else if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE)) {
+            if(TeamSide == 1) {
+                minimaxSearch = new minimaxSearch();
+
+                concurrentMinimax cMinimax = new concurrentMinimax(10);
+                long start, end;
+
+                start = System.currentTimeMillis();
+                // Get a move from the concurrent minimax
+                Move move = cMinimax.minimaxDecision(ourBoard, TeamID);
+
+                //Make the move on our board
+                ourBoard.makeMove(move);
+                // Construct the new Action object that we will send to the server
+                {
+                    sendAction = new Action();
+                    sendAction.type = GameMessage.ACTION_MOVE;
+                    Queen ourQueen = new Queen();
+                    ourQueen.setMove(move.getInitialQ(), move.getFinalQ());
+                    Arrow ourArrow = new Arrow();
+                    ourArrow.setArrow(move.getArrow());
+                    sendAction.setQueen(ourQueen);
+                    sendAction.setArrow(ourArrow);
+                    System.out.println("Our marshalled Action");
+                    System.out.println(marshal(sendAction).toString());
+                }
+
+                //Compile the message and send it to the server
+                String serverMsg = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomId, marshal(sendAction));
+                gameClient.sendToServer(serverMsg, true);
+
+                // Repositioned the timer to take into account the time used to build the object and send to the server
+                end = System.currentTimeMillis() - start;
+
+                // End of turn statistics
+                System.out.println("Time: " + end / 1000 + " seconds");
+                System.out.println("move made: " + move);
+                System.out.println("Current evaluation: " + OurEvaluation.evaluateBoard(ourBoard, 1)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1)[1]);
+                System.out.println(ourBoard);
+            }
+
+        }
+        else if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE))
+        {
             //Get initialQ, finalQ and arrow from the move that the opponent made, and make it on our board
             OurPair initialQ = receivedAction.queen.getInitialQ();
             OurPair finalQ = receivedAction.queen.getFinalQ();
@@ -213,7 +257,7 @@ public class GameLogic implements GamePlayer
 
             start = System.currentTimeMillis();
             // Get a move from the concurrent minimax
-            Move move = cMinimax.minimaxDecision(ourBoard, Integer.parseInt(TeamRole));
+            Move move = cMinimax.minimaxDecision(ourBoard, TeamID);
 
             //Make the move on our board
             ourBoard.makeMove(move);
