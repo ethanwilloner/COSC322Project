@@ -65,10 +65,17 @@ public class concurrentMinimax
 		
 		//try each move
 		Iterator<Move> iterator = (Iterator<Move>) GameRules.getLegalMoves(board, maxPlayer).iterator();
+		OurBoard tempBoard;
+		Move tempMove;
+		
 		while(iterator.hasNext())
 		{
 			//add thread
-			searchThreads.add(new MinimaxThread(board.clone(), iterator.next()));
+			tempBoard = board.clone();
+			tempMove = iterator.next();
+			//tempBoard.makeMove(tempMove);
+			
+			searchThreads.add(new MinimaxThread(tempBoard, tempMove));
 		}
 		
 		
@@ -78,11 +85,13 @@ public class concurrentMinimax
 		ExecutorService executor;
 		List<Future<minimaxNode>> results = new LinkedList<Future<minimaxNode>>();
 		
+		//the best depth achieved by this search
+		localMaxDepth.set(1);
+		
+		
 		// begin iterative deepening search		
 		do
 		{
-			//the best depth achieved by this search
-			localMaxDepth.set(1);
 			executor= Executors.newFixedThreadPool(maxThreads);
 			results.clear();
 			
@@ -253,7 +262,7 @@ public class concurrentMinimax
 				return OurEvaluation.evaluateBoard(board, maxPlayer)[0];
 			}
 			// actions for MIN player
-			Iterator<Move> successors = GameRules.getLegalMoves(board, maxPlayer).iterator();
+			Iterator<Move> successors = GameRules.getLegalMoves(board, minPlayer).iterator();
 			// we can end the search here if there are no successors
 			if (!successors.hasNext())
 			{

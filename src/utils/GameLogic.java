@@ -74,7 +74,10 @@ public class GameLogic implements GamePlayer
     static Action receivedAction;
     static Action sendAction;
     static JAXBContext jaxbContext;
-    static minimaxSearch minimaxSearch;
+    static minimaxSearch minimaxSearch = new minimaxSearch();
+    static int threadCount = 5;
+    static concurrentMinimax cMinimax = new concurrentMinimax(threadCount);
+    
 
     public static void main(String[] args) throws JAXBException
     {
@@ -90,14 +93,14 @@ public class GameLogic implements GamePlayer
 		//initialize gui
 
 		//make connection
-		gameClient = new GameClient(name, passwd, this);
+//		gameClient = new GameClient(name, passwd, this);
 
 		//choose room
-        getOurRooms();
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Input roomID to join: ");
-        int roomId = scanner.nextInt();
-        joinRoom(roomId);
+//        getOurRooms();
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.print("Input roomID to join: ");
+//        int roomId = scanner.nextInt();
+//        joinRoom(roomId);
 
         //see whose turn it is
 
@@ -114,7 +117,7 @@ public class GameLogic implements GamePlayer
 //		
 //		System.out.println(board);
 
-        //samplePlay();
+        samplePlay();
     }
 
     //Prints the id, name, and user count of all available game rooms in the game client
@@ -206,7 +209,6 @@ public class GameLogic implements GamePlayer
     public static void makeFirstMove() throws JAXBException {
         minimaxSearch = new minimaxSearch();
 
-        concurrentMinimax cMinimax = new concurrentMinimax(10);
         long start, end;
 
         start = System.currentTimeMillis();
@@ -251,7 +253,7 @@ public class GameLogic implements GamePlayer
         ourBoard.makeMove(opponentMove);
 
         //If it is the end of the game, print end game stats and then exit the application
-        if (GameRules.checkEndGame(ourBoard) == 1)
+        if (GameRules.checkEndGame(ourBoard) != 0)
         {
             System.out.println(GameRules.checkEndGame(ourBoard));
             System.out.println("All legal white moves: " + GameRules.getLegalMoves(ourBoard, 1));
@@ -261,9 +263,6 @@ public class GameLogic implements GamePlayer
             System.exit(0);
         }
 
-        minimaxSearch = new minimaxSearch();
-
-        concurrentMinimax cMinimax = new concurrentMinimax(10);
         long start, end;
 
         start = System.currentTimeMillis();
@@ -333,7 +332,7 @@ public class GameLogic implements GamePlayer
 
         minimaxSearch minimax = new minimaxSearch();
         
-        concurrentMinimax cMinimax = new concurrentMinimax(3);
+        concurrentMinimax cMinimax = new concurrentMinimax(threadCount);
         long start, end;
 
         //while we are still playing
