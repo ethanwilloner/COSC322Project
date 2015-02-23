@@ -46,7 +46,7 @@ public class minimaxNode
 	
 	public void max (minimaxNode other)
 	{
-		if (other.getValue() > this.value)
+		if (other.getValue() > this.value && other.move!=null)
 		{
 			this.setValue(other.getValue());
 			this.setMove(other.getMove());

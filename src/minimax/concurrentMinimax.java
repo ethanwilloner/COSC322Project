@@ -18,9 +18,10 @@ import java.util.logging.Level;
 import utils.GameRules;
 import utils.Move;
 import utils.OurEvaluation;
+import AbstractClasses.GameSearch;
 import ai.OurBoard;
 
-public class concurrentMinimax
+public class concurrentMinimax extends GameSearch
 {
 	private int maxThreads;
 	private AtomicLong startTime = new AtomicLong();
@@ -39,6 +40,8 @@ public class concurrentMinimax
 	{
 		this.maxThreads = maxThreads;
 	}
+	
+	
 	
 	
 
@@ -109,6 +112,10 @@ public class concurrentMinimax
 				executor.shutdown();
 				// we'll assume the timeout occurs naturally from the search cutoff test
 				executor.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
+				
+				if (isCutoff.get())
+					break;
+				
 				// find the best result for this search
 				minimaxNode search;
 				for (Future<minimaxNode> result : results)
@@ -134,7 +141,7 @@ public class concurrentMinimax
 		while (!isCutoff.get());
 		
 	
-		debug.logp(Level.INFO, "MinimaxSearch", "minimaxDecision", "Search took:"+(System.currentTimeMillis()-startTime.get())+" maximum depth:"+ localMaxDepth.get() +" best value:"+globalBest.getValue());
+		debug.logp(Level.INFO, "MinimaxSearch", "minimaxDecision", "Search took:"+(System.currentTimeMillis()-startTime.get())+" maximum depth:"+ (localMaxDepth.get()-1) +" best value:"+globalBest.getValue());
 		return globalBest.getMove();
 	}
 
@@ -286,5 +293,10 @@ public class concurrentMinimax
 			}
 			return v;
 		}
+	}
+
+	@Override
+	public Move getMove(OurBoard board, int side) {
+		return minimaxDecision(board, side);
 	}
 }

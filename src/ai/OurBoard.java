@@ -15,6 +15,7 @@ import com.rits.cloning.Cloner;
  */
 public class OurBoard implements Cloneable{
 	
+	
 	static Cloner clone = new Cloner();
 	/**
 	 * store board as a 2D array
@@ -84,6 +85,8 @@ public class OurBoard implements Cloneable{
 	 * @param columns the number of columns on the board
 	 */
 	public OurBoard() {
+		
+		
 		//set rows and columns
 		this.rows = 10;
 		this.columns = 10;
@@ -321,7 +324,7 @@ public class OurBoard implements Cloneable{
 	
 	public boolean cutoffTest(int depth, long startTime)
 	{
-//		if (depth > 2)
+//		if (depth > 4)
 //			return true;
 //		
 		//  watch memory usage
@@ -332,7 +335,7 @@ public class OurBoard implements Cloneable{
 		
 		// watch the time
 		long time = System.currentTimeMillis() - startTime;
-		if (time >= 10000)
+		if (time >= 5000)
 		{
 			return true;
 		}

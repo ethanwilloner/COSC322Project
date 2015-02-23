@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -20,20 +18,20 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import MessageParsing.Arrow;
-import MessageParsing.Queen;
-import MessageParsing.User;
-import ai.OurPair;
 import minimax.concurrentMinimax;
 import minimax.minimaxSearch;
-import net.n3.nanoxml.IXMLElement;
 import ubco.ai.GameRoom;
 import ubco.ai.connection.ServerMessage;
 import ubco.ai.games.GameClient;
 import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
+import AbstractClasses.GameSearch;
 import MessageParsing.Action;
+import MessageParsing.Arrow;
+import MessageParsing.Queen;
+import MessageParsing.User;
 import ai.OurBoard;
+import ai.OurPair;
 
 public class GameLogic implements GamePlayer
 {
@@ -75,7 +73,7 @@ public class GameLogic implements GamePlayer
     static Action sendAction;
     static JAXBContext jaxbContext;
     static minimaxSearch minimaxSearch = new minimaxSearch();
-    static int threadCount = 5;
+    static int threadCount = 1;
     static concurrentMinimax cMinimax = new concurrentMinimax(threadCount);
     
 
@@ -333,6 +331,9 @@ public class GameLogic implements GamePlayer
         minimaxSearch minimax = new minimaxSearch();
         
         concurrentMinimax cMinimax = new concurrentMinimax(threadCount);
+        
+        GameSearch search = minimax;
+        
         long start, end;
 
         //while we are still playing
@@ -344,7 +345,7 @@ public class GameLogic implements GamePlayer
         	
             //minimaxNode node = minimax.minimax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
             
-            Move move = cMinimax.minimaxDecision(board, side);
+            Move move = search.getMove(board, side);
             
             //Move move = minimax.getDecision(board, side, 2);
             
