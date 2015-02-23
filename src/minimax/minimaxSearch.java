@@ -19,7 +19,7 @@ public class minimaxSearch  extends GameSearch
 	private static boolean isCutoff;
 	
 	
-	
+
 	public minimaxNode minimax(OurBoard board, int depth, int maxDepth, boolean maximizingPlayer, int side, int alpha, int beta)
 	{
 		//evaluation
