@@ -24,8 +24,8 @@ public class Queen {
      */
     public void setMove(OurPair InitialQ, OurPair FinalQ) {
         // Take our internal representation of the game board and transform it into the alphanumeric representation that the server expects
-        String s1 = new StringBuilder().append(Character.toChars(InitialQ.getX() + 'a')).append(Integer.toString(InitialQ.getY())).toString();
-        String s2 = new StringBuilder().append(Character.toChars(FinalQ.getX() + 'a')).append(Integer.toString(FinalQ.getY())).toString();
+        String s1 = new StringBuilder().append(Character.toChars(InitialQ.getY() + 'a')).append(Integer.toString(InitialQ.getX())).toString();
+        String s2 = new StringBuilder().append(Character.toChars(FinalQ.getY() + 'a')).append(Integer.toString(FinalQ.getX())).toString();
 
         this.move = s1 + "-" + s2;
     }
@@ -37,7 +37,7 @@ public class Queen {
     public OurPair getInitialQ()
     {
         String[] str = this.move.split("-");
-        OurPair initialQ = new OurPair(str[0].charAt(0) - 'a', str[0].charAt(1) - '0');
+        OurPair initialQ = new OurPair(str[0].charAt(1) - '0', str[0].charAt(0) - 'a');
         return initialQ;
     }
 

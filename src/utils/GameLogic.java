@@ -19,6 +19,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import ai.InvalidMoveException;
 import minimax.concurrentMinimax;
 import minimax.minimaxSearch;
 import ubco.ai.GameRoom;
@@ -62,7 +63,7 @@ public class GameLogic implements GamePlayer
     }
 
     static OurBoard ourBoard;
-    static String TeamName = "Team Rocket";
+    static String TeamName = "Team Rocket123";
     static String TeamPassword = "password";
     static String TeamRole;
     static int TeamID;
@@ -92,15 +93,15 @@ public class GameLogic implements GamePlayer
 
         //initialize gui
 
-//        //make connection
-//        gameClient = new GameClient(name, passwd, this);
-//
-//        //choose room
-//        getOurRooms();
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.print("Input roomID to join: ");
-//        roomId = scanner.nextInt();
-//        joinRoom(roomId);
+        //make connection
+        gameClient = new GameClient(name, passwd, this);
+
+        //choose room
+        getOurRooms();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Input roomID to join: ");
+        roomId = scanner.nextInt();
+        joinRoom(roomId);
 
         //see whose turn it is
 
@@ -117,7 +118,7 @@ public class GameLogic implements GamePlayer
 //		
 //		System.out.println(board);
 
-        samplePlay();
+        //samplePlay();
     }
 
     //Prints the id, name, and user count of all available game rooms in the game client
@@ -251,13 +252,19 @@ public class GameLogic implements GamePlayer
 
         if(makeFirstMove == false)
         {
-            System.out.println("not making first move");
             //Get initialQ, finalQ and arrow from the move that the opponent made, and make it on our board
             OurPair initialQ = receivedAction.queen.getInitialQ();
             OurPair finalQ = receivedAction.queen.getFinalQ();
             OurPair arrow = receivedAction.arrow.getArrow();
             Move opponentMove = new Move(initialQ, finalQ, arrow);
-            ourBoard.makeMove(opponentMove);
+            try {
+                ourBoard.makeMove(opponentMove);
+            }catch (NullPointerException e)
+            {
+                System.out.println("Opponent made an illegal move: " + opponentMove.toString());
+                e.printStackTrace();
+                System.exit(0);
+            }
         }
         else
         {
@@ -271,7 +278,14 @@ public class GameLogic implements GamePlayer
         Move move = minimaxSearch.getMove(ourBoard, TeamID);
 
         //Make the move on our board
-        ourBoard.makeMove(move);
+        try
+        {
+            ourBoard.makeMove(move);
+        } catch (NullPointerException e)
+        {
+            e.printStackTrace();
+        }
+
         // Construct the new Action object that we will send to the server
         sendAction = new Action();
         sendAction.type = GameMessage.ACTION_MOVE;
@@ -283,12 +297,6 @@ public class GameLogic implements GamePlayer
         sendAction.setArrow(ourArrow);
 
         sendToServer(sendAction, roomId);
-
-        String marshalledAction = marshal(sendAction);
-//        System.out.println("Our marshalled Action: " + marshalledAction);
-//
-//        String serverMsg = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomId, marshalledAction);
-//        gameClient.sendToServer(serverMsg, true);
 
         // Repositioned the timer to take into account the time used to build the object and send to the server
         end = System.currentTimeMillis() - start;
@@ -327,7 +335,7 @@ public class GameLogic implements GamePlayer
         return os.toString();
     }
 
-    public static void samplePlay()
+    public static void samplePlay() throws InvalidMoveException
     {
         int side = 1;
 
