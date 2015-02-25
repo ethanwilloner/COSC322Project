@@ -37,7 +37,7 @@ public class Queen {
     public OurPair getInitialQ()
     {
         String[] str = this.move.split("-");
-        OurPair initialQ = new OurPair(str[0].charAt(0) - 'a', str[0].charAt(1) - '0');
+        OurPair initialQ = new OurPair(str[0].charAt(1) - '0', str[0].charAt(0) - 'a');
         return initialQ;
     }
 
