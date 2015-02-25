@@ -20,33 +20,8 @@ import java.util.logging.*;
 
 public class GameLogic implements GamePlayer
 {
-    public static final Logger debug;
-    private static Handler handler;
-
-    static
-    {
-        debug = Logger.getLogger(GameLogic.class.getPackage().getName());
-        debug.setLevel(Level.ALL);
-        Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.ALL);
-        Calendar date = Calendar.getInstance();
-        String fileName = date.get(Calendar.YEAR)+"-"+(date.get(Calendar.MONTH)+1)+"-"+date.get(Calendar.DATE)+"-"+date.get(Calendar.HOUR_OF_DAY)+""+date.get(Calendar.MINUTE);
-        try
-        {
-            new File("logs").mkdir();
-            handler = new FileHandler("logs/"+fileName+".xml", true);
-            handler.setFormatter(new XMLFormatter());
-            handler.setLevel(Level.ALL);
-            debug.addHandler(handler);
-        }
-        catch (Exception e)
-        {
-            debug.warning("Could not add FileHandler to debug logger! Stack trace to follow:");
-            e.printStackTrace();
-        }
-    }
-
     static OurBoard ourBoard = new OurBoard();
-    static String TeamName = "Team Rocket123";
+    static String TeamName = "Team Rocket1234";
     static String TeamPassword = "password";
     static GameClient gameClient;
 
@@ -67,9 +42,9 @@ public class GameLogic implements GamePlayer
     public static void main(String[] args) throws JAXBException
     {
         xmlParser = new XMLParser();
-        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+        //GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
 
-        //samplePlay();
+        samplePlay();
     }
 
     public GameLogic(String name, String passwd)
@@ -260,8 +235,8 @@ public class GameLogic implements GamePlayer
         move.moveInfo(ourBoard);
 
         // Call the garbage collector when we are done each turn
-        System.gc();
         System.runFinalization();
+        System.gc();
     }
 
 

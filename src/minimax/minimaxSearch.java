@@ -114,7 +114,7 @@ public class minimaxSearch  extends GameSearch
 	public Move getMove(OurBoard board, int side) {
 		
 		//use iterative deepening
-		int depth = 1;
+		int depth = 2;
 		
 		startTime = System.currentTimeMillis();
 		isCutoff = false;

@@ -1,7 +1,5 @@
 package minimax;
 
-import static utils.GameLogic.debug;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -141,7 +139,6 @@ public class concurrentMinimax extends GameSearch
 		while (!isCutoff.get());
 		
 	
-		debug.logp(Level.INFO, "MinimaxSearch", "minimaxDecision", "Search took:"+(System.currentTimeMillis()-startTime.get())+" maximum depth:"+ (localMaxDepth.get()-1) +" best value:"+globalBest.getValue());
 		return globalBest.getMove();
 	}
 
