@@ -40,7 +40,7 @@ public class Arrow {
      */
     public OurPair getArrow() {
         // Transform the stored alphanumeric representation into our internal representation
-        return new OurPair(this.arrow.charAt(1) - '0', this.arrow.charAt(0) - 'a');
+        return new OurPair(this.arrow.charAt(0) - 'a', this.arrow.charAt(1) - '0');
     }
 
     public void setArrow(String arrow) {
