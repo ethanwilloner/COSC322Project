@@ -111,25 +111,25 @@ public class OurBoard implements Cloneable{
 		}
 		
 		//set initial positions of the queens
-		board[0][3] = BQUEEN;
-		board[6][0] = BQUEEN;
-		board[3][0] = BQUEEN;
-		board[9][3] = BQUEEN;
+		board[0][3] = WQUEEN;
+		board[6][0] = WQUEEN;
+		board[3][0] = WQUEEN;
+		board[9][3] = WQUEEN;
 
-		blackPositions.add(new OurPair(0,3));
-		blackPositions.add(new OurPair(6,0));
-		blackPositions.add(new OurPair(3,0));
-		blackPositions.add(new OurPair(9,3));
+        whitePositions.add(new OurPair(0,3));
+        whitePositions.add(new OurPair(6,0));
+        whitePositions.add(new OurPair(3,0));
+        whitePositions.add(new OurPair(9,3));
 
-		board[0][6] = WQUEEN;
-		board[6][9] = WQUEEN;
-		board[3][9] = WQUEEN;
-		board[9][6] = WQUEEN;	
+		board[0][6] = BQUEEN;
+		board[6][9] = BQUEEN;
+		board[3][9] = BQUEEN;
+		board[9][6] = BQUEEN;
 
-		whitePositions.add(new OurPair(0, 6));
-		whitePositions.add(new OurPair(6, 9));
-		whitePositions.add(new OurPair(3, 9));
-		whitePositions.add(new OurPair(9, 6));
+        blackPositions.add(new OurPair(0, 6));
+        blackPositions.add(new OurPair(6, 9));
+        blackPositions.add(new OurPair(3, 9));
+        blackPositions.add(new OurPair(9, 6));
 		
 	}
 	/**
@@ -301,7 +301,7 @@ public class OurBoard implements Cloneable{
 	{
 		String s = "";
 		
-		for (int j = 0; j < 10; j++)
+		for (int j = 9; j >= 0; j--)
 		{
 			s+="-----------------------------------------\n";
 			s+="|";

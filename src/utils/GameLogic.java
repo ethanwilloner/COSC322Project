@@ -92,15 +92,15 @@ public class GameLogic implements GamePlayer
 
         //initialize gui
 
-        //make connection
-        gameClient = new GameClient(name, passwd, this);
-
-        //choose room
-        getOurRooms();
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Input roomID to join: ");
-        int roomId = scanner.nextInt();
-        joinRoom(roomId);
+//        //make connection
+//        gameClient = new GameClient(name, passwd, this);
+//
+//        //choose room
+//        getOurRooms();
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.print("Input roomID to join: ");
+//        roomId = scanner.nextInt();
+//        joinRoom(roomId);
 
         //see whose turn it is
 
@@ -117,7 +117,7 @@ public class GameLogic implements GamePlayer
 //		
 //		System.out.println(board);
 
-        //samplePlay();
+        samplePlay();
     }
 
     //Prints the id, name, and user count of all available game rooms in the game client
@@ -229,6 +229,11 @@ public class GameLogic implements GamePlayer
 
     private static void handleOpponentMove(boolean makeFirstMove) throws JAXBException {
         if(!gameStarted){
+            return;
+        }
+        if(TeamSide == -1)
+        {
+            System.out.println("We are a spectator");
             return;
         }
 
