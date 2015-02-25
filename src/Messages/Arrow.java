@@ -19,12 +19,12 @@ public class Arrow {
     @XmlValue
     String content = "";
 
-    public Arrow(){};
+    public Arrow(){}
 
     public Arrow(OurPair arrow)
     {
         // Transform our internal arrow position into the external alphanumeric representation
-        this.arrow = new StringBuilder().append(Character.toChars(arrow.getY() + 'a')).append(Character.toChars(arrow.getX() + '0')).toString();
+        this.arrow = new StringBuilder().append(Character.toChars(arrow.getX() + 'a')).append(Character.toChars(arrow.getY() + '0')).toString();
     }
 
     /**
@@ -32,7 +32,7 @@ public class Arrow {
      */
     public void setArrow(OurPair arrow) {
         // Transform our internal arrow position into the external alphanumeric representation
-        this.arrow = new StringBuilder().append(Character.toChars(arrow.getY() + 'a')).append(Character.toChars(arrow.getX() + '0')).toString();
+        this.arrow = new StringBuilder().append(Character.toChars(arrow.getX() + 'a')).append(Character.toChars(arrow.getY() + '0')).toString();
     }
 
     /**
@@ -40,7 +40,6 @@ public class Arrow {
      */
     public OurPair getArrow() {
         // Transform the stored alphanumeric representation into our internal representation
-        // Get [x,y] from [a-z,0-9], where the letter is our y and the number is our x
         return new OurPair(this.arrow.charAt(1) - '0', this.arrow.charAt(0) - 'a');
     }
 

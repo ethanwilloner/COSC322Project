@@ -42,9 +42,9 @@ public class GameLogic implements GamePlayer
     public static void main(String[] args) throws JAXBException
     {
         xmlParser = new XMLParser();
-        //GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
 
-        samplePlay();
+        //samplePlay();
     }
 
     public GameLogic(String name, String passwd)
@@ -96,7 +96,7 @@ public class GameLogic implements GamePlayer
     }
 
     public boolean handleMessage(GameMessage arg0) throws Exception {
-        //System.out.println("[SimplePlayer: The server said =]  " + arg0.toString());
+        System.out.println("[SimplePlayer: The server said =]  " + arg0.toString());
 
         // unmarshal message into object
         receivedAction = xmlParser.unmarshal(arg0.toString());
@@ -151,6 +151,7 @@ public class GameLogic implements GamePlayer
         }
         else if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE))
         {
+            System.out.println("Received action");
             handleOpponentMove(false);
         }
         return true;
