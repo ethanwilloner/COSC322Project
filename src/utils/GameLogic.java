@@ -1,183 +1,375 @@
 package utils;
 
-import MessageParsing.Action;
-import MessageParsing.Arrow;
-import MessageParsing.Queen;
-import ai.OurBoard;
-import ai.OurPair;
-import ubco.ai.GameRoom;
-import ubco.ai.connection.ServerMessage;
-import ubco.ai.games.GameClient;
-import ubco.ai.games.GameMessage;
-import ubco.ai.games.GamePlayer;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.XMLFormatter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Scanner;
+
+import minimax.concurrentMinimax;
+import minimax.minimaxSearch;
+import ubco.ai.GameRoom;
+import ubco.ai.connection.ServerMessage;
+import ubco.ai.games.GameClient;
+import ubco.ai.games.GameMessage;
+import ubco.ai.games.GamePlayer;
+import AbstractClasses.GameSearch;
+import MessageParsing.Action;
+import MessageParsing.Arrow;
+import MessageParsing.Queen;
+import MessageParsing.User;
+import ai.OurBoard;
+import ai.OurPair;
 
 public class GameLogic implements GamePlayer
 {
-	static OurBoard ourBoard;
+    public static final Logger debug;
+    private static Handler handler;
 
-	static GameClient gameClient = null;
-	int roomId;
-	static ArrayList<GameRoom> roomList;
-	static Action action;
-	static Action recvAction;
-	static Action sendAction;
-	static JAXBContext jaxbContext;
+    static
+    {
+        debug = Logger.getLogger(GameLogic.class.getPackage().getName());
+        debug.setLevel(Level.ALL);
+        Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.ALL);
+        Calendar date = Calendar.getInstance();
+        String fileName = date.get(Calendar.YEAR)+"-"+(date.get(Calendar.MONTH)+1)+"-"+date.get(Calendar.DATE)+"-"+date.get(Calendar.HOUR_OF_DAY)+""+date.get(Calendar.MINUTE);
+        try
+        {
+            new File("logs").mkdir();
+            handler = new FileHandler("logs/"+fileName+".xml", true);
+            handler.setFormatter(new XMLFormatter());
+            handler.setLevel(Level.ALL);
+            debug.addHandler(handler);
+        }
+        catch (Exception e)
+        {
+            debug.warning("Could not add FileHandler to debug logger! Stack trace to follow:");
+            e.printStackTrace();
+        }
+    }
 
-	public static void main(String[] args) throws JAXBException
-	{
-		jaxbContext = JAXBContext.newInstance(Action.class);
-		action = new Action();
-		//GameLogic gamelogic = new GameLogic("team rocket","password123");
-
-		// Example code for using the JAXB objects to read and create new objects
-/*		String msg = "<action type='room-joined'><usrlist ucount='1'><usr name='team rocket' id='1'></usr></usrlist></action>";
-		String msg2 = "<action type='move'> <queen move='a3-g3'></queen><arrow move='h4'></arrow></action>";
-
-		OurPair<Integer, Integer> InitialQ = new OurPair<Integer, Integer>(0,0);
-		OurPair<Integer, Integer> FinalQ = new OurPair<Integer, Integer>(5,5);
-		OurPair<Integer, Integer> Arrow = new OurPair<Integer, Integer>(5,2);
-
-		action.setType("move");
-		action.setQueen(new Queen());
-		action.setArrow(new Arrow());
-		action.queen.setMove(InitialQ, FinalQ);
-		action.arrow.setArrow(Arrow);
-
-		System.out.println(marshal());
-
-		action = new Action();
-		unmarshal(msg);
-		System.out.println(marshal());*/
-
-	}
-
-	public GameLogic(String name, String passwd)
-	{
-		//initialize board
-		ourBoard = new OurBoard();
-
-		//initialize gui
-
-		//make connection
-		gameClient = new GameClient(name, passwd, this);
-
-		//choose room
-		getOurRooms();
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Input roomID to join: ");
-		int roomId = scanner.nextInt();
-		joinRoom(roomId);
-	}
-
-	//Prints the id, name, and user count of all available game rooms in the game client
-	private void getOurRooms() {
-		roomList = gameClient.getRoomLists();
-		System.out.println("Available Game Rooms:");
-		for(GameRoom room : roomList)
-		{
-			System.out.println("Room ID: "+room.roomID + "\tRoom Name: "+room.roomName+ "\tUser Count: "+room.userCount);
-		}
-
-	}
-
-	public static boolean joinRoom(int roomId)
-	{
-		roomList = gameClient.getRoomLists();
-		try {
-			for(GameRoom r : roomList)
-			{
-				if(r.roomID == roomId)
-				{
-					gameClient.joinGameRoom(r.roomName);
-					System.out.println("Joined room: " + roomId);
-					return true;
-				}
-			}
-			System.out.println("Failed to join room: " + roomId);
-			return false;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	public boolean handleMessage(String arg0) throws Exception {
-		String msg = XMLParser.parseXML(arg0);
-		System.out.print(arg0);
-		return true;
-	}
-
-	public boolean handleMessage(GameMessage arg0) throws Exception {
-		System.out.println("[SimplePlayer: The server said =]  " + arg0.toString());
-		return true;
-	}
-
-	public void sendToServer(String msgType, int roomID){
-		String msg = "Message goes here";
-		boolean isMove = true;
-		ServerMessage.compileGameMessage(msgType, roomId, msg);
-		gameClient.sendToServer(msg, isMove);
-	}
-
-	public void playGame() {
-		while (true) {
+    static OurBoard ourBoard;
+    static String TeamName = "Team Rocket";
+    static String TeamPassword = "password";
+    static String TeamRole;
+    static int TeamID;
+    static int TeamSide;
+    static GameClient gameClient = null;
+    static int roomId;
+    static boolean gameStarted;
+    static ArrayList<GameRoom> roomList;
+    static Action receivedAction;
+    static Action sendAction;
+    static JAXBContext jaxbContext;
+    static minimaxSearch minimaxSearch = new minimaxSearch();
+    static int threadCount = 1;
+    static concurrentMinimax cMinimax = new concurrentMinimax(threadCount);
 
 
-			// if not our turn
-			//
-			// calculate potential moves
-			// wait for message
-			// check for end game status
-			// alert team
-			// set to our turn
+    public static void main(String[] args) throws JAXBException
+    {
+        jaxbContext = JAXBContext.newInstance(Action.class);
+        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+    }
 
-			// else
-			// check opponent move legality
-			//if illegal
-			// send error message
-			// calculate move
-			// check for end game status
-			// alert team
-			// send move
-			// set to their move
+    public GameLogic(String name, String passwd)
+    {
+        //initialize board
+        ourBoard = new OurBoard();
 
-		}
-	}
+        //initialize gui
+
+        //make connection
+        gameClient = new GameClient(name, passwd, this);
+
+        //choose room
+        getOurRooms();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Input roomID to join: ");
+        int roomId = scanner.nextInt();
+        joinRoom(roomId);
+
+        //see whose turn it is
+
+//		OurBoard board = new OurBoard();
+//		
+//		minimaxSearch minimax = new minimaxSearch();
+//		
+//		
+//		minimaxNode move = minimax.minimax(board, 1, false, 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
+//		
+//		System.out.println("Minimax value: " + move.getValue());
+//		
+//		board.makeMove(move.getMove());
+//		
+//		System.out.println(board);
+
+        //samplePlay();
+    }
+
+    //Prints the id, name, and user count of all available game rooms in the game client
+    private static void getOurRooms() {
+        roomList = gameClient.getRoomLists();
+        System.out.println("Available Game Rooms:");
+        for(GameRoom room : roomList)
+        {
+            System.out.println("Room ID: "+room.roomID + "\tRoom Name: "+room.roomName+ "\tUser Count: "+room.userCount);
+        }
+
+    }
+
+    public static boolean joinRoom(int roomId)
+    {
+        roomList = gameClient.getRoomLists();
+        try {
+            for(GameRoom r : roomList)
+            {
+                if(r.roomID == roomId)
+                {
+                    gameClient.joinGameRoom(r.roomName);
+                    System.out.println("Joined room: " + roomId);
+                    return true;
+                }
+            }
+            System.out.println("Failed to join room: " + roomId);
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean handleMessage(String arg0) throws Exception {
+        System.out.println(arg0);
+        return true;
+    }
+
+    public boolean handleMessage(GameMessage arg0) throws Exception {
+        System.out.println("[SimplePlayer: The server said =]  " + arg0.toString());
+
+        // unmarshal message into object
+        receivedAction = unmarshal(arg0.toString());
+
+        if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_ROOM_JOINED))
+        {
+            System.out.println("Users in the current room:");
+            // Print list of users in the room
+            for(User user : receivedAction.getUserList().getUsers())
+            {
+                System.out.println("\tName: " + user.getName() + ", ID: " + user.getId());
+            }
+
+        }
+        else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START))
+        {
+            gameStarted = true;
+            //TODO add logging for start of game message
+            System.out.println("Game has started");
+            for(User user : receivedAction.getUserList().getUsers())
+            {
+                if(user.name.equalsIgnoreCase(TeamName))
+                {
+                    TeamRole = user.getRole();
+                    TeamID = user.getId();
+                    switch (TeamRole.toString())
+                    {
+                        case "W":
+                            TeamSide = 1;
+                            break;
+                        case "B":
+                            TeamSide = 2;
+                            break;
+                        case "S":
+                            TeamSide = -1;
+                            break;
+                        default:
+                            TeamSide = -1;
+                            break;
+                    }
+                }
+            }
+            //TODO add logging for what our side and purpose is
+            System.out.println("Team name: " + TeamName);
+            System.out.println("ID: " + TeamID);
+
+            //TODO add support for being a spectator if there are too many people in the room
+            System.out.println("Team Role: " + TeamRole);
+
+            if(TeamSide == 1)
+            {
+                handleOpponentMove(true);
+            }
+        }
+        else if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE))
+        {
+            System.out.println("Action received");
+            handleOpponentMove(false);
+        }
+        return true;
+    }
+
+    public static void sendToServer(Action action, int roomID) throws JAXBException {
+        String actionMsg = marshal(action);
+        System.out.println("Marshalled Message: " + actionMsg);
+        String compiledGameMessage = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomID, actionMsg);
+        gameClient.sendToServer(compiledGameMessage, true);
+    }
+
+    private static void handleOpponentMove(boolean makeFirstMove) throws JAXBException {
+        if(!gameStarted){
+            return;
+        }
+
+        //If it is the end of the game, print end game stats and then exit the application
+        if (GameRules.checkEndGame(ourBoard) != 0)
+        {
+            System.out.println(GameRules.checkEndGame(ourBoard));
+            System.out.println("All legal white moves: " + GameRules.getLegalMoves(ourBoard, 1));
+            System.out.println("All legal black moves: " + GameRules.getLegalMoves(ourBoard, 2));
+            System.out.println("\n\nGame over");
+            //TODO not sure what to do when game is actually over
+            System.exit(0);
+        }
 
 
-	/**
-	 * @param msg Reads in an XML string from the game server and unmarshalls
-	 *            it into the object mappings
-	 * @throws JAXBException
-	 */
+        if(makeFirstMove == false)
+        {
+            System.out.println("not making first move");
+            //Get initialQ, finalQ and arrow from the move that the opponent made, and make it on our board
+            OurPair initialQ = receivedAction.queen.getInitialQ();
+            OurPair finalQ = receivedAction.queen.getFinalQ();
+            OurPair arrow = receivedAction.arrow.getArrow();
+            Move opponentMove = new Move(initialQ, finalQ, arrow);
+            ourBoard.makeMove(opponentMove);
+        }
+        else
+        {
+            System.out.println("Making the first move");
+        }
 
-	public static void unmarshal(String msg) throws JAXBException {
-		InputStream is = new ByteArrayInputStream(msg.getBytes());
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		action = (Action) unmarshaller.unmarshal(is);
-	}
+        long start, end;
 
-	/**
-	 * @return String which is the XML formatting for the response message
-	 * to the server
-	 * @throws JAXBException
-	 */
-	public static String marshal() throws JAXBException {
-		OutputStream os = new ByteArrayOutputStream();
-		Marshaller marshaller = jaxbContext.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
-		marshaller.marshal(action, os);
+        start = System.currentTimeMillis();
+        // Get a move from the concurrent minimax
+        Move move = minimaxSearch.getMove(ourBoard, TeamID);
 
-		return os.toString();
-	}
+        //Make the move on our board
+        ourBoard.makeMove(move);
+        // Construct the new Action object that we will send to the server
+        sendAction = new Action();
+        sendAction.type = GameMessage.ACTION_MOVE;
+        Queen ourQueen = new Queen();
+        ourQueen.setMove(move.getInitialQ(), move.getFinalQ());
+        Arrow ourArrow = new Arrow();
+        ourArrow.setArrow(move.getArrow());
+        sendAction.setQueen(ourQueen);
+        sendAction.setArrow(ourArrow);
+
+        sendToServer(sendAction, roomId);
+
+        String marshalledAction = marshal(sendAction);
+//        System.out.println("Our marshalled Action: " + marshalledAction);
+//
+//        String serverMsg = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomId, marshalledAction);
+//        gameClient.sendToServer(serverMsg, true);
+
+        // Repositioned the timer to take into account the time used to build the object and send to the server
+        end = System.currentTimeMillis() - start;
+
+        // End of turn statistics
+        System.out.println("Time: " + end/1000 + " seconds");
+        System.out.println("move made: " + move);
+        System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(ourBoard, 1)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1)[1]);
+        System.out.println(ourBoard);
+    }
+
+    /**
+     * @param msg Reads in an XML string from the game server and unmarshalls
+     *            it into the object mappings
+     * @throws JAXBException
+     */
+
+    public static Action unmarshal(String msg) throws JAXBException {
+        InputStream is = new ByteArrayInputStream(msg.getBytes());
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        Action action = (Action) unmarshaller.unmarshal(is);
+        return action;
+    }
+
+    /**
+     * @return String which is the XML formatting for the response message
+     * to the server
+     * @throws JAXBException
+     */
+    public static String marshal(Action action) throws JAXBException {
+        OutputStream os = new ByteArrayOutputStream();
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+        marshaller.marshal(action, os);
+
+        return os.toString();
+    }
+
+    public static void samplePlay()
+    {
+        int side = 1;
+
+        OurBoard board = new OurBoard();
+
+        minimaxSearch minimax = new minimaxSearch();
+
+        concurrentMinimax cMinimax = new concurrentMinimax(threadCount);
+
+        GameSearch search = minimax;
+
+        long start, end;
+
+        //while we are still playing
+        //while (OurEvaluation.evaluateBoard(board, side)[1] == 0)
+        while(GameRules.checkEndGame(board) == 0)
+        {
+            //time run
+            start = System.currentTimeMillis();
+
+            //minimaxNode node = minimax.minimax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+            Move move = search.getMove(board, side);
+
+            //Move move = minimax.getDecision(board, side, 2);
+
+            end = System.currentTimeMillis() - start;
+
+            board.makeMove(move);
+
+            System.out.println("Time: " + end/1000 + " seconds");
+            System.out.println("move made: " + move);
+
+            //System.out.println("minimax score " + node.getValue());
+
+            System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(board, 1)[0] + "\t" + OurEvaluation.evaluateBoard(board, 1)[1]);
+
+            System.out.println(board);
+
+            side = (side==1)?2:1;
+
+        }
+
+        System.out.println(GameRules.checkEndGame(board));
+
+        System.out.println("All legal white moves: " + GameRules.getLegalMoves(board, 1));
+
+        System.out.println("All legal black moves: " + GameRules.getLegalMoves(board, 2));
+    }
 }
