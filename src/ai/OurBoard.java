@@ -5,14 +5,18 @@ import java.util.HashSet;
 import utils.GameRules;
 import utils.Move;
 
+import com.rits.cloning.Cloner;
+
 /**
  * Board class that contains the instance of the board
  * 
  * @author Yarko Senyuta
  *
  */
-public class OurBoard {
-
+public class OurBoard implements Cloneable{
+	
+	
+	static Cloner clone = new Cloner();
 	/**
 	 * store board as a 2D array
 	 */
@@ -72,8 +76,8 @@ public class OurBoard {
 	 */
 	public final int FREE = -1;
 	
-	HashSet<OurPair<Integer, Integer> > whitePositions;
-	HashSet<OurPair<Integer, Integer> > blackPositions;
+	HashSet<OurPair> whitePositions;
+	HashSet<OurPair> blackPositions;
 	
 	/**
 	 * constructor to initialize our board
@@ -81,13 +85,15 @@ public class OurBoard {
 	 * @param columns the number of columns on the board
 	 */
 	public OurBoard() {
+		
+		
 		//set rows and columns
 		this.rows = 10;
 		this.columns = 10;
 		//instantiate 2D array
 		board = new int[rows][columns];
-		whitePositions = new HashSet<OurPair<Integer, Integer>>();
-		blackPositions = new HashSet<OurPair<Integer, Integer>>();
+		whitePositions = new HashSet<OurPair>();
+		blackPositions = new HashSet<OurPair>();
 		
 		initialize();		
 	}
@@ -105,25 +111,25 @@ public class OurBoard {
 		}
 		
 		//set initial positions of the queens
-		board[0][3] = WQUEEN;
-		board[0][6] = WQUEEN;
-		board[3][0] = WQUEEN;
-		board[3][9] = WQUEEN;
-
-		whitePositions.add(new OurPair<Integer, Integer>(0,3));
-		whitePositions.add(new OurPair<Integer, Integer>(0,6));
-		whitePositions.add(new OurPair<Integer, Integer>(3,0));
-		whitePositions.add(new OurPair<Integer, Integer>(3,9));
-
+		board[0][3] = BQUEEN;
 		board[6][0] = BQUEEN;
-		board[6][9] = BQUEEN;
+		board[3][0] = BQUEEN;
 		board[9][3] = BQUEEN;
-		board[9][6] = BQUEEN;	
 
-		blackPositions.add(new OurPair<Integer, Integer>(6, 9));
-		blackPositions.add(new OurPair<Integer, Integer>(9, 3));
-		blackPositions.add(new OurPair<Integer, Integer>(6, 0));
-		blackPositions.add(new OurPair<Integer, Integer>(9, 6));
+		blackPositions.add(new OurPair(0,3));
+		blackPositions.add(new OurPair(6,0));
+		blackPositions.add(new OurPair(3,0));
+		blackPositions.add(new OurPair(9,3));
+
+		board[0][6] = WQUEEN;
+		board[6][9] = WQUEEN;
+		board[3][9] = WQUEEN;
+		board[9][6] = WQUEEN;	
+
+		whitePositions.add(new OurPair(0, 6));
+		whitePositions.add(new OurPair(6, 9));
+		whitePositions.add(new OurPair(3, 9));
+		whitePositions.add(new OurPair(9, 6));
 		
 	}
 	/**
@@ -174,18 +180,21 @@ public class OurBoard {
 
 	public void updateQueenPosition(int oldX, int oldY, int newX, int newY, int queenCode){
 		
-		HashSet<OurPair<Integer, Integer>> positions;
-		System.out.println(blackPositions+"\n"+whitePositions);
+		HashSet<OurPair> positions;
+		
+		//System.out.println(blackPositions+"\n"+whitePositions);
+		
 		if (queenCode == WQUEEN)
 			positions = whitePositions;
 		else
 			positions = blackPositions;
 			
-		for (OurPair<Integer, Integer> p : positions){
+		for (OurPair p : positions){
 			
 			if (p.getX() == oldX && p.getY() == oldY){
 				p.setX(newX);
 				p.setY(newY);
+				break;
 				
 			}	
 		}
@@ -193,14 +202,13 @@ public class OurBoard {
 			whitePositions=positions;
 		else
 			blackPositions = positions;
-		System.out.println(blackPositions+"\n"+whitePositions);
 	}
 	
 	/**
 	 * return the ArrayList of black positions
 	 * @return black positions
 	 */
-	public HashSet<OurPair<Integer, Integer> > getBlackPositions(){
+	public HashSet<OurPair > getBlackPositions(){
 		return blackPositions;
 	}
 	
@@ -208,42 +216,69 @@ public class OurBoard {
 	 * return the ArrayList of white positions
 	 * @return
 	 */
-	public HashSet<OurPair<Integer, Integer> > getWhitePositions(){
+	public HashSet<OurPair> getWhitePositions(){
 		return whitePositions;
 	}
 	
 	/**
 	 * make given move to the board
-	 * @param move move to be made
+	 * @param action move to be made
 	 * @param side which side is making the move
 	 * @return
 	 */
-	public boolean makeMove(Move move)
+	public boolean makeMove(Move action)
 	{
 		//get code of queen
-		int side = board[move.getInitialQ().getX()][move.getInitialQ().getY()];
+		int side = board[action.getInitialQ().getX()][action.getInitialQ().getY()];
 		
 		
 		//check if this move is legal
-		if (GameRules.isLegalMove(this, move, side))
+		if (GameRules.isLegalMove(this, action, side))
 		{	
 			//free old queen position
-			placeMarker(move.getInitialQ().getX(), move.getInitialQ().getY(), FREE);
+			placeMarker(action.getInitialQ().getX(), action.getInitialQ().getY(), FREE);
 			
 			//place new queen
-			placeMarker(move.getFinalQ().getX(), move.getFinalQ().getY(), side);
+			placeMarker(action.getFinalQ().getX(), action.getFinalQ().getY(), side);
 			
 			//place arrow
-			placeMarker(move.getArrow().getX(), move.getArrow().getY(), ARROW);
+			placeMarker(action.getArrow().getX(), action.getArrow().getY(), ARROW);
 			
 			
 			//update queen in hashset
-			updateQueenPosition(move.getInitialQ().getX(), move.getInitialQ().getY(), move.getFinalQ().getX(), move.getFinalQ().getY(), side);
+			updateQueenPosition(action.getInitialQ().getX(), action.getInitialQ().getY(), action.getFinalQ().getX(), action.getFinalQ().getY(), side);
 			return true;
 		}
 		
-		return false;
+		System.out.println(action + " is illegal");
+		
+		throw new NullPointerException();
+		
 	}
+	
+	
+	public void undoMove(Move move)
+	{
+		//get rid of arrow
+		board[move.getArrow().getX()][move.getArrow().getY()] = FREE;
+		
+		//figure out side
+		int side = board[move.getFinalQ().getX()][move.getFinalQ().getY()];
+		
+		
+		//place old queen position
+		placeMarker(move.getInitialQ().getX(), move.getInitialQ().getY(), side);
+		
+		//free new queen
+		placeMarker(move.getFinalQ().getX(), move.getFinalQ().getY(), FREE);
+		
+		
+		//update queen in hashset
+		updateQueenPosition(move.getFinalQ().getX(), move.getFinalQ().getY(), move.getInitialQ().getX(), move.getInitialQ().getY(), side);
+		
+		
+	}
+	
 	
 	/**
 	 * returns true if designated position is a queen
@@ -253,11 +288,64 @@ public class OurBoard {
 	 */
 	public boolean isQueen(int x, int y)
 	{
-		OurPair<Integer, Integer> thisSpace = new OurPair<Integer, Integer>(x, y);
+		OurPair thisSpace = new OurPair(x, y);
 		
 		if (blackPositions.contains(thisSpace) || whitePositions.contains(thisSpace))
 			return true;
 		else 
 			return false;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String s = "";
+		
+		for (int j = 0; j < 10; j++)
+		{
+			s+="-----------------------------------------\n";
+			s+="|";
+			for (int i = 0; i<10; i++)
+			{
+				s += " " + board[i][j] + " |";
+			}
+			s+= "\n";
+		}
+		
+		s+="-----------------------------------------\n";
+		
+		s = s.replaceAll("-1", " ");
+		s = s.replaceAll("3", "X");
+		
+		
+		return s;
+		
+	}
+	
+	public boolean cutoffTest(int depth, long startTime)
+	{
+//		if (depth > 4)
+//			return true;
+//		
+		//  watch memory usage
+		if (Runtime.getRuntime().freeMemory() <= 5000000)
+		{
+			return true;
+		}
+		
+		// watch the time
+		long time = System.currentTimeMillis() - startTime;
+		if (time >= 5000)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public OurBoard clone()
+	{
+		return clone.deepClone(this);
 	}
 }

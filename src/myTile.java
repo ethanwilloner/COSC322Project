@@ -23,7 +23,7 @@ public class myTile extends JPanel {
 	
 	public boolean colored;
 
-	private OurPair<Integer, Integer> position;
+	private OurPair position;
 	private AmazonsGUI gui;
 	
 	private boolean highlighted;
@@ -40,7 +40,7 @@ public class myTile extends JPanel {
 		gui = g;
 		
 		
-		this.position = new OurPair<Integer, Integer>(x/40, y/40);
+		this.position = new OurPair(x/40, y/40);
 		
 		this.highlighted=false;
 		this.setBounds(x, y, width, height);
@@ -57,14 +57,14 @@ public class myTile extends JPanel {
 	/**
 	 * @return the position
 	 */
-	public OurPair<Integer, Integer> getPosition() {
+	public OurPair getPosition() {
 		return position;
 	}
 
 	/**
 	 * @param position the position to set
 	 */
-	public void setPosition(OurPair<Integer, Integer> position) {
+	public void setPosition(OurPair position) {
 		this.position = position;
 	}
 
