@@ -37,14 +37,14 @@ public class Queen {
     public OurPair getInitialQ()
     {
         String[] str = this.move.split("-");
-        OurPair initialQ = new OurPair(str[0].charAt(1) - '0', str[0].charAt(0) - 'a');
+        OurPair initialQ = new OurPair(str[0].charAt(0) - 'a', str[0].charAt(1) - '0');
         return initialQ;
     }
 
     public OurPair getFinalQ()
     {
         String[] str = this.move.split("-");
-        OurPair finalQ = new OurPair(str[1].charAt(0) - 'a', str[1].charAt(1) - '0');
+        OurPair finalQ = new OurPair(str[1].charAt(1) - '0', str[1].charAt(0) - 'a');
         return finalQ;
     }
 
