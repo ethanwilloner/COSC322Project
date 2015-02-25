@@ -2,9 +2,7 @@ package utils;
 
 import AbstractClasses.GameSearch;
 import Messages.*;
-import ai.InvalidMoveException;
 import ai.OurBoard;
-import ai.OurPair;
 import minimax.concurrentMinimax;
 import minimax.minimaxSearch;
 import ubco.ai.GameRoom;
@@ -50,28 +48,33 @@ public class GameLogic implements GamePlayer
     static OurBoard ourBoard = new OurBoard();
     static String TeamName = "Team Rocket123";
     static String TeamPassword = "password";
+    static GameClient gameClient;
+
+    static ArrayList<GameRoom> roomList;
     static int TeamID;
     static int TeamSide;
-    static GameClient gameClient = null;
     static int roomId;
     static boolean gameStarted;
-    static ArrayList<GameRoom> roomList;
+
+    static XMLParser xmlParser;
     static Action receivedAction;
     static Action sendAction;
-    static XMLParser xmlParser;
-    static minimaxSearch minimaxSearch = new minimaxSearch();
+
     static int threadCount = 1;
+    static minimaxSearch minimaxSearch = new minimaxSearch();
     static concurrentMinimax cMinimax = new concurrentMinimax(threadCount);
 
     public static void main(String[] args) throws JAXBException
     {
         xmlParser = new XMLParser();
         GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+
+        //samplePlay();
     }
 
     public GameLogic(String name, String passwd)
     {
-        gameClient = new GameClient(name, passwd, this);
+        gameClient = new GameClient(TeamName, TeamPassword, this);
         do {
             getOurRooms();
             Scanner scanner = new Scanner(System.in);
@@ -79,8 +82,6 @@ public class GameLogic implements GamePlayer
             roomId = scanner.nextInt();
 
         }while (joinRoom(roomId) == false);
-
-        //samplePlay();
     }
 
     //Prints the id, name, and user count of all available game rooms in the game client
@@ -230,7 +231,8 @@ public class GameLogic implements GamePlayer
         start = System.currentTimeMillis();
 
         // Get a move from the concurrent minimax
-        Move move = minimaxSearch.getMove(ourBoard, TeamID);
+        Move move = minimaxSearch.getMove(ourBoard, TeamSide);
+        //Move move = cMinimax.getMove(ourBoard, TeamID);
 
         //Make the move on our board
         try
@@ -256,6 +258,10 @@ public class GameLogic implements GamePlayer
         System.out.println("\n\nOur Turn:");
         System.out.println("Time: " + end/1000 + " seconds");
         move.moveInfo(ourBoard);
+
+        // Call the garbage collector when we are done each turn
+        System.gc();
+        System.runFinalization();
     }
 
 
@@ -270,12 +276,15 @@ public class GameLogic implements GamePlayer
      */
     public static void sendToServer(Action action, int roomID) throws JAXBException {
         String actionMsg = xmlParser.marshal(action);
-        System.out.println("Marshalled Message: " + actionMsg);
         String compiledGameMessage = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomID, actionMsg);
         gameClient.sendToServer(compiledGameMessage, true);
     }
 
-    public static void samplePlay() throws InvalidMoveException
+    public static void sendToChat(String msg, int roomID) throws JAXBException {
+
+    }
+
+    public static void samplePlay()
     {
         int side = 1;
 
