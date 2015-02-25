@@ -22,14 +22,14 @@ public class minimaxSearch  extends GameSearch
 
 	public minimaxNode minimax(OurBoard board, int depth, int maxDepth, boolean maximizingPlayer, int side, int alpha, int beta)
 	{
-		//evaluation
+        if (board.cutoffTest(depth, startTime))
+        {
+            isCutoff = true;
+            return new minimaxNode(OurEvaluation.evaluateBoard(board, side)[0], null);
+        }
+
+        //evaluation
 		int[] eval = OurEvaluation.evaluateBoard(board, side);
-	
-		if (board.cutoffTest(depth, startTime))
-		{
-			isCutoff = true;
-			return new minimaxNode(OurEvaluation.evaluateBoard(board, side)[0], null);
-		}
 		
 		//if we have run out of depth or one side has pretty much won
 		if (depth >= maxDepth || GameRules.checkEndGame(board) != 0/*eval[1] != 0*/)

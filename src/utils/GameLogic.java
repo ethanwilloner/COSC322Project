@@ -12,16 +12,13 @@ import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Scanner;
-import java.util.logging.*;
 
 public class GameLogic implements GamePlayer
 {
     static OurBoard ourBoard = new OurBoard();
-    static String TeamName = "Team Rocket1234";
+    static String TeamName = "Team Rocket123";
     static String TeamPassword = "password";
     static GameClient gameClient;
 
@@ -35,9 +32,9 @@ public class GameLogic implements GamePlayer
     static Action receivedAction;
     static Action sendAction;
 
-    static int threadCount = 1;
+    static int threadCount = 4;
     static minimaxSearch minimaxSearch = new minimaxSearch();
-    static concurrentMinimax cMinimax = new concurrentMinimax(threadCount);
+    //static concurrentMinimax minimaxSearch = new concurrentMinimax(threadCount);
 
     public static void main(String[] args) throws JAXBException
     {
@@ -146,18 +143,18 @@ public class GameLogic implements GamePlayer
 
             if(TeamSide == 1)
             {
-                handleOpponentMove(true);
+                handleMove(true);
             }
         }
         else if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE))
         {
             System.out.println("Received action");
-            handleOpponentMove(false);
+            handleMove(false);
         }
         return true;
     }
 
-    private static void handleOpponentMove(boolean makeFirstMove) throws JAXBException {
+    private static void handleMove(boolean makeFirstMove) throws JAXBException {
         if(!gameStarted){
             return;
         }

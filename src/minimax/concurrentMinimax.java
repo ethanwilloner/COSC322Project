@@ -85,14 +85,15 @@ public class concurrentMinimax extends GameSearch
 		// make thread pool
 		ExecutorService executor;
 		List<Future<minimaxNode>> results = new LinkedList<Future<minimaxNode>>();
-		
-		//the best depth achieved by this search
-		localMaxDepth.set(1);
+
 		
 		
 		// begin iterative deepening search		
 		do
 		{
+            //the best depth achieved by this search
+            localMaxDepth.set(2);
+
 			executor= Executors.newFixedThreadPool(maxThreads);
 			results.clear();
 			
