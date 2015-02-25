@@ -1,4 +1,4 @@
-package MessageParsing;
+package Messages;
 
 import javax.xml.bind.annotation.*;
 
@@ -16,6 +16,10 @@ public class Action {
     public Queen queen;
     @XmlElement(name = "arrow")
     public Arrow arrow;
+
+    public Action(){}
+
+    public Action(String type) { this.type = type; }
 
     public String getType() {
         return type;

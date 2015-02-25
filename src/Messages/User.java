@@ -1,4 +1,4 @@
-package MessageParsing;
+package Messages;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

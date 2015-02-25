@@ -1,5 +1,6 @@
 package utils;
 
+import ai.OurBoard;
 import ai.OurPair;
 
 /**
@@ -106,7 +107,12 @@ public class Move
 		this.arrow = arrow;
 	}
 	
-	
+	public void moveInfo(OurBoard ourBoard)
+    {
+        System.out.println("move made: " + this);
+        System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(ourBoard, 1)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1)[1]);
+        System.out.println(ourBoard);
+    }
 	
 	
 
