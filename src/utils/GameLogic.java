@@ -33,15 +33,15 @@ public class GameLogic implements GamePlayer
     static Action sendAction;
 
     static int threadCount = 4;
-    static minimaxSearch minimaxSearch = new minimaxSearch();
-    //static concurrentMinimax minimaxSearch = new concurrentMinimax(threadCount);
+    //static minimaxSearch minimaxSearch = new minimaxSearch();
+    static concurrentMinimax minimaxSearch = new concurrentMinimax(threadCount);
 
     public static void main(String[] args) throws JAXBException
     {
         xmlParser = new XMLParser();
-        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+        //GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
 
-        //samplePlay();
+        samplePlay();
     }
 
     public GameLogic(String name, String passwd)
@@ -263,11 +263,7 @@ public class GameLogic implements GamePlayer
 
         OurBoard board = new OurBoard();
 
-        minimaxSearch minimax = new minimaxSearch();
-
-        concurrentMinimax cMinimax = new concurrentMinimax(threadCount);
-
-        GameSearch search = minimax;
+        GameSearch search = minimaxSearch;
 
         long start, end;
 
