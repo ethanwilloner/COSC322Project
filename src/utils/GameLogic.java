@@ -39,9 +39,9 @@ public class GameLogic implements GamePlayer
     public static void main(String[] args) throws JAXBException
     {
         xmlParser = new XMLParser();
-        //GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
 
-        samplePlay();
+        //samplePlay();
     }
 
     public GameLogic(String name, String passwd)
