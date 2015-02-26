@@ -291,6 +291,8 @@ public class GameLogic implements GamePlayer
 
             System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(board, 1)[0] + "\t" + OurEvaluation.evaluateBoard(board, 1)[1]);
 
+            //OurEvaluation.evaluateBoardOutput(board, 1);
+            
             System.out.println(board);
 
             side = (side==1)?2:1;
