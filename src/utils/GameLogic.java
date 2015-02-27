@@ -4,7 +4,6 @@ import AbstractClasses.GameSearch;
 import Messages.*;
 import ai.OurBoard;
 import minimax.concurrentMinimax;
-import minimax.minimaxSearch;
 import ubco.ai.GameRoom;
 import ubco.ai.connection.ServerMessage;
 import ubco.ai.games.GameClient;
@@ -18,7 +17,7 @@ import java.util.Scanner;
 public class GameLogic implements GamePlayer
 {
     static OurBoard ourBoard = new OurBoard();
-    static String TeamName = "Team Rocket123";
+    static String TeamName = "Team Rocket1";
     static String TeamPassword = "password";
     static GameClient gameClient;
 
@@ -32,7 +31,7 @@ public class GameLogic implements GamePlayer
     static Action receivedAction;
     static Action sendAction;
 
-    static int threadCount = 4;
+    static int threadCount = 3;
     //static minimaxSearch minimaxSearch = new minimaxSearch();
     static concurrentMinimax minimaxSearch = new concurrentMinimax(threadCount);
 
@@ -165,15 +164,7 @@ public class GameLogic implements GamePlayer
         }
 
         //If it is the end of the game, print end game stats and then exit the application
-        if (GameRules.checkEndGame(ourBoard) != 0)
-        {
-            System.out.println(GameRules.checkEndGame(ourBoard));
-            System.out.println("All legal white moves: " + GameRules.getLegalMoves(ourBoard, 1));
-            System.out.println("All legal black moves: " + GameRules.getLegalMoves(ourBoard, 2));
-            System.out.println("\n\nGame over");
-            //TODO not sure what to do when game is actually over
-            System.exit(0);
-        }
+        checkEndGame(ourBoard);
 
         // if we are not the ones making the first move in the game, we can start parsing the first action message we get
         if(makeFirstMove == false)
@@ -232,6 +223,9 @@ public class GameLogic implements GamePlayer
         System.out.println("Time: " + end/1000 + " seconds");
         move.moveInfo(ourBoard);
 
+        //If it is the end of the game, print end game stats and then exit the application
+        checkEndGame(ourBoard);
+
         // Call the garbage collector when we are done each turn
         System.runFinalization();
         System.gc();
@@ -251,6 +245,19 @@ public class GameLogic implements GamePlayer
         String actionMsg = xmlParser.marshal(action);
         String compiledGameMessage = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomID, actionMsg);
         gameClient.sendToServer(compiledGameMessage, true);
+    }
+
+    public static void checkEndGame(OurBoard board)
+    {
+        if (GameRules.checkEndGame(ourBoard) != 0)
+        {
+            System.out.println(GameRules.checkEndGame(ourBoard));
+            System.out.println("All legal white moves: " + GameRules.getLegalMoves(ourBoard, 1));
+            System.out.println("All legal black moves: " + GameRules.getLegalMoves(ourBoard, 2));
+            System.out.println("\n\nGame over");
+            //TODO not sure what to do when game is actually over
+            System.exit(0);
+        }
     }
 
     public static void sendToChat(String msg, int roomID) throws JAXBException {
