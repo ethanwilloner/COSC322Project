@@ -180,22 +180,34 @@ public class OurEvaluation
 			
 		
 		boolean rtn = false;
+		int old;
+		
 		//for every move available to queen, see how expensive it is
 		for (OurPair move : moves)
 		{
 			//prune search
+			
+			//what was the old evaluation of square?
+			old = tempBoard[move.getX()][move.getY()][side-1];
+			
 			//can we improve this locale?
-			if (tempBoard[move.getX()][move.getY()][side-1] >= depth+1)
+			if (old >= depth+1)
 			{
+				//update evaluation
 				tempBoard[move.getX()][move.getY()][side-1] = depth+1;
 				
-				if (depth < maxDepth)
+				//we can keep going further
+				if (depth <= maxDepth)
 				{
 					rtn = paintBoardWithQueen(board, tempBoard, move, side, depth+1, maxDepth);
 				}
 				//we could make a better move but cut by depth
 				else
-					rtn = true;
+				{
+					//if we kept going, could we find a better solution?
+					if (old > depth+1)
+						rtn = true;
+				}
 			}
 			
 			

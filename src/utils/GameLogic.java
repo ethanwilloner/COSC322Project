@@ -31,7 +31,7 @@ public class GameLogic implements GamePlayer
     static Action receivedAction;
     static Action sendAction;
 
-    static int threadCount = 3;
+    static int threadCount = 5;
     //static minimaxSearch minimaxSearch = new minimaxSearch();
     static concurrentMinimax minimaxSearch = new concurrentMinimax(threadCount);
 
