@@ -51,8 +51,6 @@ public class OurEvaluation
 		boolean keepGoing = true;
 		int canKeepGoing = 0;
 		
-		int maxDepth = 4;
-		
 		while (keepGoing)
 		{
 			canKeepGoing = 0;
@@ -113,7 +111,12 @@ public class OurEvaluation
 				
 				//is this space not free? or if both black and white can reach in same number of moves,
 				if (!board.isFree(x,  y) || whiteTemp == blackTemp)
+				{
+//					//can both get to the same tile in the same moves? then the game isn't over
+//					if (whiteTemp == blackTemp && whiteTemp > 0)
+//						isEnd = false;
 					continue;
+				}
 				
 				
 				//if white's value is less than black's or blacks never reached this tile, 
@@ -146,7 +149,7 @@ public class OurEvaluation
 		int[] rtn = new int[2];
 		
 		//if an end-game is reached
-		if (blackOnly == black && whiteOnly == white)
+		if (blackOnly == black && whiteOnly == white && isEnd)
 		{
 			//black wins
 			if (black > white)
@@ -205,7 +208,7 @@ public class OurEvaluation
 				else
 				{
 					//if we kept going, could we find a better solution?
-					if (old > depth+1)
+//					if (old >= depth+1)
 						rtn = true;
 				}
 			}
@@ -275,8 +278,6 @@ public class OurEvaluation
 		boolean keepGoing = true;
 		int canKeepGoing = 0;
 		
-		int maxDepth = 4;
-		
 		while (keepGoing)
 		{
 			canKeepGoing = 0;
@@ -337,7 +338,12 @@ public class OurEvaluation
 				
 				//is this space not free? or if both black and white can reach in same number of moves,
 				if (!board.isFree(x,  y) || whiteTemp == blackTemp)
+				{
+//					//can both get to the same tile in the same moves? then the game isn't over
+//					if (whiteTemp == blackTemp && whiteTemp > 0)
+//						isEnd = false;
 					continue;
+				}
 				
 				
 				//if white's value is less than black's or blacks never reached this tile, 
@@ -370,7 +376,7 @@ public class OurEvaluation
 		int[] rtn = new int[2];
 		
 		//if an end-game is reached
-		if (blackOnly == black && whiteOnly == white)
+		if (blackOnly == black && whiteOnly == white && isEnd)
 		{
 			//black wins
 			if (black > white)
@@ -391,6 +397,8 @@ public class OurEvaluation
 			rtn[1] = -rtn[1];
 		}
 		
+		
+	
 		//print output
 		System.out.println(toString(tempBoard));
 		
