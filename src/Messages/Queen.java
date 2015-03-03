@@ -46,7 +46,7 @@ public class Queen {
 
     public OurPair getInitialQ()
     {
-        String[] str = this.move.split("-");
+        String[] str = this.move.toLowerCase().split("-");
 
         OurPair initialQ = new OurPair(str[0].charAt(0) - 'a', str[0].charAt(1) - '0');
         return initialQ;
@@ -54,23 +54,23 @@ public class Queen {
 
     public OurPair getFinalQ()
     {
-        String[] str = this.move.split("-");
+        String[] str = this.move.toLowerCase().split("-");
         OurPair finalQ = new OurPair(str[1].charAt(0) - 'a', str[1].charAt(1) - '0');
         return finalQ;
     }
 
     public OurPair getMove() {
-        String[] str = this.move.split("-");
+        String[] str = this.move.toLowerCase().split("-");
         // Transform the server-required alphanumeric position representation into our internal representation
         return new OurPair(str[1].charAt(0) - 'a', str[1].charAt(1) - '0');
     }
 
     public void setMove(String move) {
-        this.move = move;
+        this.move = move.toLowerCase();
     }
 
     public String getMove(String move) {
-        return this.move;
+        return this.move.toLowerCase();
     }
 }
 

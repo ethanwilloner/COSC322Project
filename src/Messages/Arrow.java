@@ -40,15 +40,15 @@ public class Arrow {
      */
     public OurPair getArrow() {
         // Transform the stored alphanumeric representation into our internal representation
-        return new OurPair(this.arrow.charAt(0) - 'a', this.arrow.charAt(1) - '0');
+        return new OurPair(this.arrow.toLowerCase().charAt(0) - 'a', this.arrow.toLowerCase().charAt(1) - '0');
     }
 
     public void setArrow(String arrow) {
-        this.arrow = arrow;
+        this.arrow = arrow.toLowerCase();
     }
 
     public String getArrow(String arrow) {
-        return this.arrow;
+        return this.arrow.toLowerCase();
     }
 }
 
