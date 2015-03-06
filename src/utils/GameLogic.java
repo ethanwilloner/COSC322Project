@@ -1,5 +1,7 @@
 package utils;
 
+import gui.AmazonsGUI;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -61,7 +63,7 @@ public class GameLogic implements GamePlayer
 			e.printStackTrace();
 		}
 	}
-	
+	static AmazonsGUI gui;
     static OurBoard ourBoard;
     static String TeamName = "Team Rocket";
     static String TeamPassword = "password";
@@ -85,11 +87,17 @@ public class GameLogic implements GamePlayer
         GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
     }
 
+	
+
     public GameLogic(String name, String passwd)
     {
         //initialize board
-		ourBoard = new OurBoard();
-
+		
+//		gui = new AmazonsGUI();
+//		ourBoard = new OurBoard(gui);
+//		
+//		gui.setVisible(true);
+		
 		//initialize gui
 
 		//make connection
@@ -328,7 +336,10 @@ public class GameLogic implements GamePlayer
     {
         int side = 1;
 
-        OurBoard board = new OurBoard();
+        gui = new AmazonsGUI();
+        OurBoard board = new OurBoard(gui);
+		
+		gui.setVisible(true);
 
         minimaxSearch minimax = new minimaxSearch();
         
@@ -351,6 +362,7 @@ public class GameLogic implements GamePlayer
             end = System.currentTimeMillis() - start;
             
             board.makeMove(move);
+            board.updateGUI(move);
 
             System.out.println("Time: " + end/1000 + " seconds");
             System.out.println("move made: " + move);

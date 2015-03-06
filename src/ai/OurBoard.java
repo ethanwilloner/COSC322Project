@@ -1,5 +1,7 @@
 package ai;
 
+import gui.AmazonsGUI;
+
 import java.util.HashSet;
 
 import utils.GameRules;
@@ -14,6 +16,8 @@ import com.rits.cloning.Cloner;
  *
  */
 public class OurBoard implements Cloneable{
+	
+	static AmazonsGUI gui;
 	
 	static Cloner clone = new Cloner();
 	/**
@@ -83,7 +87,7 @@ public class OurBoard implements Cloneable{
 	 * @param rows the number of rows on the board
 	 * @param columns the number of columns on the board
 	 */
-	public OurBoard() {
+	public OurBoard(AmazonsGUI gui) {
 		//set rows and columns
 		this.rows = 10;
 		this.columns = 10;
@@ -92,7 +96,13 @@ public class OurBoard implements Cloneable{
 		whitePositions = new HashSet<OurPair>();
 		blackPositions = new HashSet<OurPair>();
 		
-		initialize();		
+		initialize();	
+		this.gui = gui;
+		
+		
+	
+			
+		
 	}
 	
 	/**
@@ -244,6 +254,8 @@ public class OurBoard implements Cloneable{
 			
 			//update queen in hashset
 			updateQueenPosition(action.getInitialQ().getX(), action.getInitialQ().getY(), action.getFinalQ().getX(), action.getFinalQ().getY(), side);
+			
+			
 			return true;
 		}
 		
@@ -344,5 +356,12 @@ public class OurBoard implements Cloneable{
 	public OurBoard clone()
 	{
 		return clone.deepClone(this);
+	}
+
+	public void updateGUI(Move action) {
+		// TODO Auto-generated method stub
+		//make move to gui
+		gui.makeMove(action.getInitialQ().getX(), action.getInitialQ().getY(), action.getFinalQ().getX(), action.getFinalQ().getY(), action.getArrow().getX(), action.getArrow().getY());
+		
 	}
 }
