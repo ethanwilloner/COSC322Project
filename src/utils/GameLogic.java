@@ -39,7 +39,7 @@ public class GameLogic implements GamePlayer
     {
 //        xmlParser = new XMLParser();
 //        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
-//
+
         samplePlay();
     }
 

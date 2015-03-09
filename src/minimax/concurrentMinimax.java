@@ -217,10 +217,11 @@ public class concurrentMinimax extends GameSearch
 		{
 			
 			// test for IDS cutoff and the cutoff function
-			if (board.cutoffTest(depth, startTime.get()))
+			if (isCutoff.get() == true || board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];				
+				return 0;
+				//return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];				
 			}
 			if (depth >= localMaxDepth.get())
 			{
@@ -249,6 +250,11 @@ public class concurrentMinimax extends GameSearch
 					break;
 				}
 				alpha = Math.max(alpha, v);
+				
+				//check if out of time
+				if (isCutoff.get() == true)
+					break;
+				
 			}
 			return v;
 		}
@@ -256,10 +262,11 @@ public class concurrentMinimax extends GameSearch
 		private int minValue (int alpha, int beta, int depth)
 		{
 			// test for IDS cutoff and the cutoff function
-			if (board.cutoffTest(depth, startTime.get()))
+			if (isCutoff.get() == true || board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
+				return 0;
+				//return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
 			}
 			if (depth >= localMaxDepth.get())
 			{
@@ -287,6 +294,11 @@ public class concurrentMinimax extends GameSearch
 					break;
 				}
 				beta = Math.min(beta, v);
+				
+				//check if out of time
+				if (isCutoff.get() == true)
+					break;
+				
 			}
 			return v;
 		}
