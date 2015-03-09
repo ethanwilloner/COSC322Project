@@ -174,12 +174,12 @@ public class concurrentMinimax extends GameSearch
 			if (board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
-				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer.get())[0], parentAction);
+				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0], parentAction);
 			}
 			//if we've gone too deep
 			if (depth > localMaxDepth.get())
 			{
-				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer.get())[0], parentAction);
+				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0], parentAction);
 			}
 			
 			Iterator<Move> it = GameRules.getLegalMoves(board, minPlayer.get()).iterator();
@@ -187,7 +187,7 @@ public class concurrentMinimax extends GameSearch
 			// we can end the search here if there are no successors
 			if (!it.hasNext())
 			{
-				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer.get())[0], parentAction);
+				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0], parentAction);
 			}
 			
 			Move action;
@@ -220,18 +220,18 @@ public class concurrentMinimax extends GameSearch
 			if (board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get())[0];				
+				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];				
 			}
 			if (depth >= localMaxDepth.get())
 			{
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get())[0];
+				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
 			}
 			// actions for MAX player
 			Iterator<Move> successors = GameRules.getLegalMoves(board, maxPlayer.get()).iterator();
 			// we can end the search here if there are no successors
 			if (!successors.hasNext())
 			{
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get())[0];
+				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
 			}
 			
 			Move action;
@@ -259,18 +259,18 @@ public class concurrentMinimax extends GameSearch
 			if (board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get())[0];
+				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
 			}
 			if (depth >= localMaxDepth.get())
 			{
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get())[0];
+				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
 			}
 			// actions for MIN player
 			Iterator<Move> successors = GameRules.getLegalMoves(board, minPlayer.get()).iterator();
 			// we can end the search here if there are no successors
 			if (!successors.hasNext())
 			{
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get())[0];
+				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
 			}
 			Move action;
 			int v = Integer.MAX_VALUE;

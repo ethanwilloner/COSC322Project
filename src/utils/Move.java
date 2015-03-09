@@ -112,9 +112,9 @@ public class Move
         System.out.println("move made: " + this);
         
         //print
-        OurEvaluation.evaluateBoardOutput(ourBoard, 1);
+        OurEvaluation.evaluateBoard(ourBoard, 1, true);
         
-        System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(ourBoard, 1)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1)[1]);
+        System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(ourBoard, 1, false)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1, false)[1]);
         System.out.println(ourBoard);
     }
 	

@@ -31,16 +31,16 @@ public class GameLogic implements GamePlayer
     static Action receivedAction;
     static Action sendAction;
 
-    static int threadCount = 5;
+    static int threadCount = 3;
     //static minimaxSearch minimaxSearch = new minimaxSearch();
     static concurrentMinimax minimaxSearch = new concurrentMinimax(threadCount);
 
     public static void main(String[] args) throws JAXBException
     {
-        xmlParser = new XMLParser();
-        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
-
-        //samplePlay();
+//        xmlParser = new XMLParser();
+//        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+//
+        samplePlay();
     }
 
     public GameLogic(String name, String passwd)
@@ -296,7 +296,7 @@ public class GameLogic implements GamePlayer
 
             //System.out.println("minimax score " + node.getValue());
 
-            System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(board, 1)[0] + "\t" + OurEvaluation.evaluateBoard(board, 1)[1]);
+            System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + OurEvaluation.evaluateBoard(board, 1, false)[1]);
 
             //OurEvaluation.evaluateBoardOutput(board, 1);
             
