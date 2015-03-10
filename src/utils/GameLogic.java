@@ -39,7 +39,7 @@ public class GameLogic implements GamePlayer
     static Action receivedAction;
     static Action sendAction;
 
-    static int threadCount = 3;
+    static int threadCount = 4;
     static Evaluation simpleEval = new SimpleEvaluation();
     static Evaluation eval = new OurEvaluation();
     
@@ -48,10 +48,10 @@ public class GameLogic implements GamePlayer
 
     public static void main(String[] args) throws JAXBException
     {
-//        xmlParser = new XMLParser();
-//        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+        xmlParser = new XMLParser();
+        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
 
-        samplePlay();
+//        samplePlay();
     }
 
     public GameLogic(String name, String passwd)
@@ -199,8 +199,11 @@ public class GameLogic implements GamePlayer
             // Print the opponents move
             System.out.println("\n\nOpponents Turn:");
             opponentMove.moveInfo(ourBoard);
+            
         }
-
+        
+        checkEndGame(ourBoard);
+        
         long start, end;
 
         start = System.currentTimeMillis();
