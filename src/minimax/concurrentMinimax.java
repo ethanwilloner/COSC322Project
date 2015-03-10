@@ -11,11 +11,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
 
 import utils.GameRules;
 import utils.Move;
-import utils.OurEvaluation;
+import AbstractClasses.Evaluation;
 import AbstractClasses.GameSearch;
 import ai.OurBoard;
 
@@ -29,14 +28,15 @@ public class concurrentMinimax extends GameSearch
 	
 	private AtomicInteger localMaxDepth = new AtomicInteger();
 	private AtomicBoolean isCutoff = new AtomicBoolean();
-
+	
 	/**
 	 * constructor
 	 * @param maxThreads number of threads to be used
 	 */
-	public concurrentMinimax (int maxThreads)
+	public concurrentMinimax (int maxThreads, Evaluation eval)
 	{
 		this.maxThreads = maxThreads;
+		this.eval = eval;
 	}
 	
 
@@ -174,12 +174,12 @@ public class concurrentMinimax extends GameSearch
 			if (board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
-				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0], parentAction);
+				return new minimaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
 			}
 			//if we've gone too deep
 			if (depth > localMaxDepth.get())
 			{
-				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0], parentAction);
+				return new minimaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
 			}
 			
 			Iterator<Move> it = GameRules.getLegalMoves(board, minPlayer.get()).iterator();
@@ -187,7 +187,7 @@ public class concurrentMinimax extends GameSearch
 			// we can end the search here if there are no successors
 			if (!it.hasNext())
 			{
-				return new minimaxNode(OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0], parentAction);
+				return new minimaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
 			}
 			
 			Move action;
@@ -225,14 +225,14 @@ public class concurrentMinimax extends GameSearch
 			}
 			if (depth >= localMaxDepth.get())
 			{
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
+				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			// actions for MAX player
 			Iterator<Move> successors = GameRules.getLegalMoves(board, maxPlayer.get()).iterator();
 			// we can end the search here if there are no successors
 			if (!successors.hasNext())
 			{
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
+				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			
 			Move action;
@@ -270,14 +270,14 @@ public class concurrentMinimax extends GameSearch
 			}
 			if (depth >= localMaxDepth.get())
 			{
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
+				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			// actions for MIN player
 			Iterator<Move> successors = GameRules.getLegalMoves(board, minPlayer.get()).iterator();
 			// we can end the search here if there are no successors
 			if (!successors.hasNext())
 			{
-				return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
+				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			Move action;
 			int v = Integer.MAX_VALUE;

@@ -1,18 +1,25 @@
 package utils;
 
-import AbstractClasses.GameSearch;
-import Messages.*;
-import ai.OurBoard;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import javax.xml.bind.JAXBException;
+
 import minimax.concurrentMinimax;
 import ubco.ai.GameRoom;
 import ubco.ai.connection.ServerMessage;
 import ubco.ai.games.GameClient;
 import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
-
-import javax.xml.bind.JAXBException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import AbstractClasses.Evaluation;
+import AbstractClasses.GameSearch;
+import Evaluations.SimpleEvaluation;
+import Messages.Action;
+import Messages.Arrow;
+import Messages.Queen;
+import Messages.User;
+import Messages.XMLParser;
+import ai.OurBoard;
 
 public class GameLogic implements GamePlayer
 {
@@ -32,8 +39,11 @@ public class GameLogic implements GamePlayer
     static Action sendAction;
 
     static int threadCount = 3;
+    static Evaluation simpleEval = new SimpleEvaluation();
+    static Evaluation eval = new OurEvaluation();
+    
     //static minimaxSearch minimaxSearch = new minimaxSearch();
-    static concurrentMinimax minimaxSearch = new concurrentMinimax(threadCount);
+    static concurrentMinimax minimaxSearch = new concurrentMinimax(threadCount, eval);
 
     public static void main(String[] args) throws JAXBException
     {
@@ -273,11 +283,22 @@ public class GameLogic implements GamePlayer
         GameSearch search = minimaxSearch;
 
         long start, end;
-
+        Evaluation e;
+        
         //while we are still playing
         //while (OurEvaluation.evaluateBoard(board, side)[1] == 0)
         while(GameRules.checkEndGame(board) == 0)
         {
+        	if (side == 1)
+        	{
+        		e = simpleEval;
+        	}
+        	else
+        		e = eval;
+        	
+        	search.setEvaluation(e);
+        	
+        	
             //time run
             start = System.currentTimeMillis();
 

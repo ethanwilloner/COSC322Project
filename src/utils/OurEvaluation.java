@@ -2,10 +2,11 @@ package utils;
 
 import java.util.HashSet;
 
+import AbstractClasses.Evaluation;
 import ai.OurBoard;
 import ai.OurPair;
 
-public class OurEvaluation 
+public class OurEvaluation extends Evaluation
 {
 	
 	/**evaluation function that computes a value for whose in a better spot;
@@ -199,6 +200,11 @@ public class OurEvaluation
 		
 		return s;
 		
+	}
+
+	@Override
+	public int evaluateBoard(OurBoard board, int side) {
+		return evaluateBoard(board, side, false)[0];
 	}
 	
 
