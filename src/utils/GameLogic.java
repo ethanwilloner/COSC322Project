@@ -13,6 +13,7 @@ import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
 import AbstractClasses.Evaluation;
 import AbstractClasses.GameSearch;
+import Evaluations.OurEvaluation;
 import Evaluations.SimpleEvaluation;
 import Messages.Action;
 import Messages.Arrow;
@@ -318,7 +319,8 @@ public class GameLogic implements GamePlayer
             //System.out.println("minimax score " + node.getValue());
 
             System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + OurEvaluation.evaluateBoard(board, 1, false)[1]);
-
+            System.out.println("Simple evaluation: "+ simpleEval.evaluateBoard(board, 1));
+            
             //OurEvaluation.evaluateBoardOutput(board, 1);
             
             System.out.println(board);

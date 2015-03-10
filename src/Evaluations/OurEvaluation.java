@@ -1,7 +1,8 @@
-package utils;
+package Evaluations;
 
 import java.util.HashSet;
 
+import utils.GameRules;
 import AbstractClasses.Evaluation;
 import ai.OurBoard;
 import ai.OurPair;
@@ -49,14 +50,12 @@ public class OurEvaluation extends Evaluation
 		for (OurPair queen : whitePositions)
 		{
 			tempBoard[queen.getX()][queen.getY()][0] = 0;
-			tempBoard[queen.getX()][queen.getY()][1] = 0;
 			
 			paintBoardWithQueen(board, tempBoard, queen, 1, 1);
 		}
 		for (OurPair queen : blackPositions)
 		{
 			tempBoard[queen.getX()][queen.getY()][1] = 0;
-			tempBoard[queen.getX()][queen.getY()][0] = 0;
 			
 			paintBoardWithQueen(board, tempBoard, queen, 2, 1);
 			

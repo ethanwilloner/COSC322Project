@@ -2,8 +2,8 @@ package minimax;
 
 import utils.GameRules;
 import utils.Move;
-import utils.OurEvaluation;
 import AbstractClasses.GameSearch;
+import Evaluations.OurEvaluation;
 import ai.OurBoard;
 
 
