@@ -25,7 +25,7 @@ import ai.OurBoard;
 public class GameLogic implements GamePlayer
 {
     static OurBoard ourBoard = new OurBoard();
-    static String TeamName = "Team Rocket1";
+    static String TeamName = "Team Rocket";
     static String TeamPassword = "password";
     static GameClient gameClient;
 
@@ -48,6 +48,24 @@ public class GameLogic implements GamePlayer
 
     public static void main(String[] args) throws JAXBException
     {
+        if(args.length > 1)
+        {
+            if(args.length == 2)
+            {
+                TeamName = args[0];
+                threadCount = Integer.parseInt(args[1]);
+            } else {
+                System.out.println("Usage:");
+                System.out.println("\tAmazonBot [Team Name] [Thread Count]");
+                System.exit(1);
+            }
+        }
+
+        System.out.println("Starting Amazons Bot with:");
+        System.out.println("\tTeam Name: " + TeamName);
+        System.out.println("\tThread Count: " + threadCount);
+        System.out.println();
+
         xmlParser = new XMLParser();
         GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
 
@@ -121,8 +139,8 @@ public class GameLogic implements GamePlayer
         else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START))
         {
             gameStarted = true;
-            //TODO add logging for start of game message
             System.out.println("\n\nGame has started");
+
             for(User user : receivedAction.getUserList().getUsers())
             {
                 // Determine if we are W, B, or Spectator
@@ -146,7 +164,6 @@ public class GameLogic implements GamePlayer
                     }
                 }
             }
-            //TODO add logging for what our side and purpose is
             System.out.println("Team name: " + TeamName);
             System.out.println("ID: " + TeamID);
             System.out.println("Team Role: " + TeamSide);
@@ -234,7 +251,7 @@ public class GameLogic implements GamePlayer
 
         // End of turn statistics
         System.out.println("\n\nOur Turn:");
-        System.out.println("Time: " + end/1000 + " seconds");
+        System.out.println("Time: " + end / 1000 + " seconds");
         move.moveInfo(ourBoard);
 
         //If it is the end of the game, print end game stats and then exit the application
@@ -244,7 +261,6 @@ public class GameLogic implements GamePlayer
         System.runFinalization();
         System.gc();
     }
-
 
     /**
      *
@@ -269,7 +285,6 @@ public class GameLogic implements GamePlayer
             System.out.println("All legal white moves: " + GameRules.getLegalMoves(ourBoard, 1));
             System.out.println("All legal black moves: " + GameRules.getLegalMoves(ourBoard, 2));
             System.out.println("\n\nGame over");
-            //TODO not sure what to do when game is actually over
             System.exit(0);
         }
     }
@@ -323,9 +338,6 @@ public class GameLogic implements GamePlayer
 
             System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + OurEvaluation.evaluateBoard(board, 1, false)[1]);
             System.out.println("Simple evaluation: "+ simpleEval.evaluateBoard(board, 1));
-            
-            //OurEvaluation.evaluateBoardOutput(board, 1);
-            
             System.out.println(board);
 
             side = (side==1)?2:1;
