@@ -31,7 +31,7 @@ public class minimaxSearch  extends GameSearch
 		int evaluation = eval.evaluateBoard(board, side);
 		
 		//if we have run out of depth or one side has pretty much won
-		if (depth >= maxDepth || GameRules.checkEndGame(board) != 0/*eval[1] != 0*/)
+		if (depth > maxDepth || GameRules.checkEndGame(board) != 0/*eval[1] != 0*/)
 		{
 			return new minimaxNode(evaluation, null);
 		}
@@ -71,6 +71,14 @@ public class minimaxSearch  extends GameSearch
 					break;
 				}
 				
+				//check if we can keep looking
+				//check if out of time
+				if (board.cutoffTest(depth, startTime) == true)
+				{
+					isCutoff = true;
+					break;
+				}
+				
 			}
 			
 			return new minimaxNode(bestValue, bestMove);
@@ -102,6 +110,14 @@ public class minimaxSearch  extends GameSearch
 					//System.out.println("pruned from min");
 					break;
 				}
+				
+				//check if we can keep looking
+				//check if out of time
+				if (board.cutoffTest(depth, startTime) == true)
+				{
+					isCutoff = true;
+					break;
+				}
 			}
 			
 			return new minimaxNode(bestValue, bestMove);
@@ -113,7 +129,7 @@ public class minimaxSearch  extends GameSearch
 	public Move getMove(OurBoard board, int side) {
 		
 		//use iterative deepening
-		int depth = 2;
+		int depth = 1;
 		
 		startTime = System.currentTimeMillis();
 		isCutoff = false;
@@ -125,6 +141,7 @@ public class minimaxSearch  extends GameSearch
 		//while we still have time, do iterative deepening
 		while (!isCutoff)
 		{
+			System.out.println("Scanning depth: " + depth);
 			minimaxNode node = minimax(board, 1, depth, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			//update best so far only if we aren't cut off or we don't have any best so far
 			if (!isCutoff || bestMoveSoFar == null)
