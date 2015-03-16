@@ -48,28 +48,28 @@ public class GameLogic implements GamePlayer
 
     public static void main(String[] args) throws JAXBException
     {
-        if(args.length > 1)
-        {
-            if(args.length == 2)
-            {
-                TeamName = args[0];
-                threadCount = Integer.parseInt(args[1]);
-            } else {
-                System.out.println("Usage:");
-                System.out.println("\tAmazonBot [Team Name] [Thread Count]");
-                System.exit(1);
-            }
-        }
+//        if(args.length > 1)
+//        {
+//            if(args.length == 2)
+//            {
+//                TeamName = args[0];
+//                threadCount = Integer.parseInt(args[1]);
+//            } else {
+//                System.out.println("Usage:");
+//                System.out.println("\tAmazonBot [Team Name] [Thread Count]");
+//                System.exit(1);
+//            }
+//        }
+//
+//        System.out.println("Starting Amazons Bot with:");
+//        System.out.println("\tTeam Name: " + TeamName);
+//        System.out.println("\tThread Count: " + threadCount);
+//        System.out.println();
+//
+//        xmlParser = new XMLParser();
+//        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
 
-        System.out.println("Starting Amazons Bot with:");
-        System.out.println("\tTeam Name: " + TeamName);
-        System.out.println("\tThread Count: " + threadCount);
-        System.out.println();
-
-        xmlParser = new XMLParser();
-        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
-
-//        samplePlay();
+        samplePlay();
     }
 
     public GameLogic(String name, String passwd)
@@ -302,18 +302,18 @@ public class GameLogic implements GamePlayer
         GameSearch search = minimaxSearch;
 
         long start, end;
-        Evaluation e;
+        Evaluation e = eval;
         
         //while we are still playing
         //while (OurEvaluation.evaluateBoard(board, side)[1] == 0)
         while(GameRules.checkEndGame(board) == 0)
         {
-        	if (side == 1)
-        	{
-        		e = simpleEval;
-        	}
-        	else
-        		e = eval;
+//        	if (side == 1)
+//        	{
+//        		e = simpleEval;
+//        	}
+//        	else
+//        		e = eval;
         	
         	search.setEvaluation(e);
         	

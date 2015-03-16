@@ -1,5 +1,6 @@
 package minimax;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,7 @@ import ai.OurBoard;
 
 public class concurrentMinimax extends GameSearch
 {
-	private int maxThreads;
+	private AtomicInteger maxThreads = new AtomicInteger();
 	private AtomicLong startTime = new AtomicLong();
 	
 	private AtomicInteger maxPlayer = new AtomicInteger();
@@ -29,13 +30,15 @@ public class concurrentMinimax extends GameSearch
 	private AtomicInteger localMaxDepth = new AtomicInteger();
 	private AtomicBoolean isCutoff = new AtomicBoolean();
 	
+
+	
 	/**
 	 * constructor
 	 * @param maxThreads number of threads to be used
 	 */
-	public concurrentMinimax (int maxThreads, Evaluation eval)
+	public concurrentMinimax (int m, Evaluation eval)
 	{
-		this.maxThreads = maxThreads;
+		this.maxThreads.set(m);
 		this.eval = eval;
 	}
 	
@@ -89,8 +92,10 @@ public class concurrentMinimax extends GameSearch
 		// begin iterative deepening search		
 		do
 		{
-
-			executor= Executors.newFixedThreadPool(maxThreads);
+			System.out.println("Scanning depth " + localMaxDepth.get());
+			
+			
+			executor= Executors.newFixedThreadPool(maxThreads.get());
 			results.clear();
 			
 			// give each thread to pool
@@ -131,7 +136,7 @@ public class concurrentMinimax extends GameSearch
 				globalBest.max(localBest);
 			}
 			
-			localMaxDepth.set(localMaxDepth.get()+1);;
+			localMaxDepth.set(localMaxDepth.get()+1);
 		}
 		// if we didn't make the target depth then we won't make a deeper target depth next iteration; end the search
 		while (!isCutoff.get());
@@ -182,7 +187,10 @@ public class concurrentMinimax extends GameSearch
 				return new minimaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
 			}
 			
-			Iterator<Move> it = GameRules.getLegalMoves(board, minPlayer.get()).iterator();
+			//moves available from this node
+			HashSet<Move> moves = GameRules.getLegalMoves(board, minPlayer.get());
+			
+			Iterator<Move> it = moves.iterator();
 
 			// we can end the search here if there are no successors
 			if (!it.hasNext())
@@ -207,7 +215,9 @@ public class concurrentMinimax extends GameSearch
 					break;
 				}
 				beta = Math.min(beta, v);
+				
 			}
+			
 			result.setValue(v);
 			return result;
 		}
@@ -223,7 +233,7 @@ public class concurrentMinimax extends GameSearch
 				return 0;
 				//return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];				
 			}
-			if (depth >= localMaxDepth.get())
+			if (depth > localMaxDepth.get())
 			{
 				return eval.evaluateBoard(board, maxPlayer.get());
 			}
@@ -268,7 +278,7 @@ public class concurrentMinimax extends GameSearch
 				return 0;
 				//return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
 			}
-			if (depth >= localMaxDepth.get())
+			if (depth > localMaxDepth.get())
 			{
 				return eval.evaluateBoard(board, maxPlayer.get());
 			}
