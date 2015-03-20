@@ -16,7 +16,7 @@ public class minimaxSearch  extends GameSearch
 	
 	private static long startTime;
 	private static boolean isCutoff;
-	
+	private static long leafCount;
 	
 
 	public minimaxNode minimax(OurBoard board, int depth, int maxDepth, boolean maximizingPlayer, int side, int alpha, int beta)
@@ -33,6 +33,7 @@ public class minimaxSearch  extends GameSearch
 		//if we have run out of depth or one side has pretty much won
 		if (depth > maxDepth || GameRules.checkEndGame(board) != 0/*eval[1] != 0*/)
 		{
+			leafCount++;
 			return new minimaxNode(evaluation, null);
 		}
 		
@@ -141,6 +142,7 @@ public class minimaxSearch  extends GameSearch
 		//while we still have time, do iterative deepening
 		while (!isCutoff)
 		{
+			leafCount = 0;
 			System.out.println("Scanning depth: " + depth);
 			minimaxNode node = minimax(board, 1, depth, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			//update best so far only if we aren't cut off or we don't have any best so far
@@ -152,6 +154,8 @@ public class minimaxSearch  extends GameSearch
 					bestValSoFar = node.getValue();
 				}
 			}
+			
+			System.out.println("Depth " + depth + " terminated" + ((isCutoff)?" unsuccessfully ":" successfully ") + "with " + leafCount + " leaf nodes");
 			depth++;
 		}
 		System.out.println("Got to depth " + (depth-1) + " in sequential search");

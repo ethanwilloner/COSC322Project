@@ -30,7 +30,9 @@ public class concurrentMinimax extends GameSearch
 	private AtomicInteger localMaxDepth = new AtomicInteger();
 	private AtomicBoolean isCutoff = new AtomicBoolean();
 	
-
+	private AtomicInteger alpha = new AtomicInteger();
+	private AtomicInteger beta = new AtomicInteger();
+	
 	
 	/**
 	 * constructor
@@ -94,6 +96,9 @@ public class concurrentMinimax extends GameSearch
 		{
 			System.out.println("Scanning depth " + localMaxDepth.get());
 			
+			//reset alpha beta
+			alpha.set(Integer.MIN_VALUE);
+			beta.set(Integer.MAX_VALUE);
 			
 			executor= Executors.newFixedThreadPool(maxThreads.get());
 			results.clear();

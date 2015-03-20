@@ -25,7 +25,7 @@ import ai.OurBoard;
 public class GameLogic implements GamePlayer
 {
     static OurBoard ourBoard = new OurBoard();
-    static String TeamName = "Team Rocket1";
+    static String TeamName = "Team Rocket";
     static String TeamPassword = "password";
     static GameClient gameClient;
 

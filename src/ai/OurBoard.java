@@ -335,7 +335,7 @@ public class OurBoard implements Cloneable{
 		
 		// watch the time
 		long time = System.currentTimeMillis() - startTime;
-		if (time >= 25000)
+		if (time >= 5000)
 		{
 			return true;
 		}
