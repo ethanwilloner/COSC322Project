@@ -25,7 +25,7 @@ import ai.OurBoard;
 public class GameLogic implements GamePlayer
 {
     static OurBoard ourBoard = new OurBoard();
-    static String TeamName = "Team Rocket";
+    static String TeamName = "Team Rocket1";
     static String TeamPassword = "password";
     static GameClient gameClient;
 
@@ -46,30 +46,36 @@ public class GameLogic implements GamePlayer
 //    static GameSearch minimaxSearch = new minimaxSearch();
     static GameSearch minimaxSearch = new concurrentMinimax(threadCount, eval);
 
+    //set the evaluation
+    static
+    {
+    	minimaxSearch.setEvaluation(eval);
+    }
+    
     public static void main(String[] args) throws JAXBException
     {
-//        if(args.length > 1)
-//        {
-//            if(args.length == 2)
-//            {
-//                TeamName = args[0];
-//                threadCount = Integer.parseInt(args[1]);
-//            } else {
-//                System.out.println("Usage:");
-//                System.out.println("\tAmazonBot [Team Name] [Thread Count]");
-//                System.exit(1);
-//            }
-//        }
-//
-//        System.out.println("Starting Amazons Bot with:");
-//        System.out.println("\tTeam Name: " + TeamName);
-//        System.out.println("\tThread Count: " + threadCount);
-//        System.out.println();
-//
-//        xmlParser = new XMLParser();
-//        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+        if(args.length > 1)
+        {
+            if(args.length == 2)
+            {
+                TeamName = args[0];
+                threadCount = Integer.parseInt(args[1]);
+            } else {
+                System.out.println("Usage:");
+                System.out.println("\tAmazonBot [Team Name] [Thread Count]");
+                System.exit(1);
+            }
+        }
 
-        samplePlay();
+        System.out.println("Starting Amazons Bot with:");
+        System.out.println("\tTeam Name: " + TeamName);
+        System.out.println("\tThread Count: " + threadCount);
+        System.out.println();
+
+        xmlParser = new XMLParser();
+        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+
+//        samplePlay();
     }
 
     public GameLogic(String name, String passwd)
