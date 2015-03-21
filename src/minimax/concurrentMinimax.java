@@ -33,6 +33,7 @@ public class concurrentMinimax extends GameSearch
 	private AtomicInteger alpha = new AtomicInteger();
 	private AtomicInteger beta = new AtomicInteger();
 	
+	private AtomicLong leafCount = new AtomicLong();
 	
 	/**
 	 * constructor
@@ -113,6 +114,9 @@ public class concurrentMinimax extends GameSearch
 			minimaxNode localBest = new minimaxNode(Integer.MIN_VALUE, null);
 			try
 			{
+				//reset leaf count
+				leafCount.set(0);
+				
 				// close the pool and wait for execution completion
 				executor.shutdown();
 				// we'll assume the timeout occurs naturally from the search cutoff test
@@ -140,7 +144,7 @@ public class concurrentMinimax extends GameSearch
 			{
 				globalBest.max(localBest);
 			}
-			
+			System.out.println("Depth " + localMaxDepth.get() + " terminated" + ((isCutoff.get())?" unsuccessfully ":" successfully ") + "with " + leafCount.get() + " leaf nodes");
 			localMaxDepth.set(localMaxDepth.get()+1);
 		}
 		// if we didn't make the target depth then we won't make a deeper target depth next iteration; end the search
@@ -189,6 +193,8 @@ public class concurrentMinimax extends GameSearch
 			//if we've gone too deep
 			if (depth > localMaxDepth.get())
 			{
+				//increment leaf count
+				leafCount.set(leafCount.get() + 1);
 				return new minimaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
 			}
 			
@@ -221,6 +227,10 @@ public class concurrentMinimax extends GameSearch
 				}
 				beta = Math.min(beta, v);
 				
+				//check if out of time
+				if (isCutoff.get() == true)
+					break;
+				
 			}
 			
 			result.setValue(v);
@@ -234,12 +244,15 @@ public class concurrentMinimax extends GameSearch
 			// test for IDS cutoff and the cutoff function
 			if (isCutoff.get() == true || board.cutoffTest(depth, startTime.get()))
 			{
+				//return infinity
 				isCutoff.set(true);
-				return 0;
-				//return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];				
+//				return Integer.MAX_VALUE; 
+				return eval.evaluateBoard(board, maxPlayer.get());				
 			}
 			if (depth > localMaxDepth.get())
 			{
+				//increment leaf count
+				leafCount.set(leafCount.get() + 1);
 				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			// actions for MAX player
@@ -279,12 +292,15 @@ public class concurrentMinimax extends GameSearch
 			// test for IDS cutoff and the cutoff function
 			if (isCutoff.get() == true || board.cutoffTest(depth, startTime.get()))
 			{
+				//return -infinity
 				isCutoff.set(true);
-				return 0;
-				//return OurEvaluation.evaluateBoard(board, maxPlayer.get(), false)[0];
+//				return Integer.MIN_VALUE;
+				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			if (depth > localMaxDepth.get())
 			{
+				//increment leaf count
+				leafCount.set(leafCount.get() + 1);
 				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			// actions for MIN player

@@ -43,33 +43,33 @@ public class GameLogic implements GamePlayer
     static Evaluation simpleEval = new SimpleEvaluation();
     static Evaluation eval = new OurEvaluation();
     
-//    static minimaxSearch minimaxSearch = new minimaxSearch();
-    static concurrentMinimax minimaxSearch = new concurrentMinimax(threadCount, eval);
+//    static GameSearch minimaxSearch = new minimaxSearch();
+    static GameSearch minimaxSearch = new concurrentMinimax(threadCount, eval);
 
     public static void main(String[] args) throws JAXBException
     {
-        if(args.length > 1)
-        {
-            if(args.length == 2)
-            {
-                TeamName = args[0];
-                threadCount = Integer.parseInt(args[1]);
-            } else {
-                System.out.println("Usage:");
-                System.out.println("\tAmazonBot [Team Name] [Thread Count]");
-                System.exit(1);
-            }
-        }
+//        if(args.length > 1)
+//        {
+//            if(args.length == 2)
+//            {
+//                TeamName = args[0];
+//                threadCount = Integer.parseInt(args[1]);
+//            } else {
+//                System.out.println("Usage:");
+//                System.out.println("\tAmazonBot [Team Name] [Thread Count]");
+//                System.exit(1);
+//            }
+//        }
+//
+//        System.out.println("Starting Amazons Bot with:");
+//        System.out.println("\tTeam Name: " + TeamName);
+//        System.out.println("\tThread Count: " + threadCount);
+//        System.out.println();
+//
+//        xmlParser = new XMLParser();
+//        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
 
-        System.out.println("Starting Amazons Bot with:");
-        System.out.println("\tTeam Name: " + TeamName);
-        System.out.println("\tThread Count: " + threadCount);
-        System.out.println();
-
-        xmlParser = new XMLParser();
-        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
-
-//        samplePlay();
+        samplePlay();
     }
 
     public GameLogic(String name, String passwd)
