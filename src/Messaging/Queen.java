@@ -20,10 +20,12 @@ public class Queen {
 //    @XmlValue
 //    String content = "";
 
-    public Queen(){};
+    public Queen() {
+    }
 
-    public Queen(Position InitialQ, Position FinalQ)
-    {
+    ;
+
+    public Queen(Position InitialQ, Position FinalQ) {
         // Take our internal representation of the game board and transform it into the alphanumeric representation that the server expects
         String s1 = new StringBuilder().append(Character.toChars(InitialQ.getX() + 'a')).append(Integer.toString(InitialQ.getY())).toString();
         String s2 = new StringBuilder().append(Character.toChars(FinalQ.getX() + 'a')).append(Integer.toString(FinalQ.getY())).toString();
@@ -46,16 +48,14 @@ public class Queen {
      * @return The location that the queen moved to
      */
 
-    public Position getInitialQ()
-    {
+    public Position getInitialQ() {
         String[] str = this.move.toLowerCase().split("-");
 
         Position initialQ = new Position(str[0].charAt(0) - 'a', str[0].charAt(1) - '0');
         return initialQ;
     }
 
-    public Position getFinalQ()
-    {
+    public Position getFinalQ() {
         String[] str = this.move.toLowerCase().split("-");
         Position finalQ = new Position(str[1].charAt(0) - 'a', str[1].charAt(1) - '0');
         return finalQ;

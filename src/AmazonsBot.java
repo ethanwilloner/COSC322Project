@@ -20,42 +20,43 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class AmazonsBot implements GamePlayer
-{
+public class AmazonsBot implements GamePlayer {
     static GameBoard gameBoard = new GameBoard();
     static String TeamName = "Team Rocket";
     static String TeamPassword = "password";
     static GameClient gameClient;
-
+    static XMLParser xmlParser;
+    static int threadCount = 4;
+    static Evaluation simpleEval = new SimpleEvaluation();
+    static Evaluation eval = new MullerTegosEvaluation();
+    //  static GameSearch minimaxSearch = new minimaxSearch();
+    static GameSearch minimaxSearch = new ConcurrentMiniMax(threadCount, eval);
+    //set the evaluation
+    static {
+        minimaxSearch.setEvaluation(eval);
+    }
     ArrayList<GameRoom> roomList;
     int TeamID;
     int TeamSide;
     int roomId;
     boolean gameStarted;
-
-    static XMLParser xmlParser;
     Action receivedAction;
     Action sendAction;
 
-    static int threadCount = 4;
-    static Evaluation simpleEval = new SimpleEvaluation();
-    static Evaluation eval = new MullerTegosEvaluation();
-    
-//  static GameSearch minimaxSearch = new minimaxSearch();
-    static GameSearch minimaxSearch = new ConcurrentMiniMax(threadCount, eval);
+    public AmazonsBot(String name, String password) {
+        gameClient = new GameClient(name, password, this);
+        do {
+            getOurRooms();
+            Scanner scanner = new Scanner(System.in, Charset.defaultCharset().toString());
+            System.out.print("Input roomID to join: ");
+            roomId = scanner.nextInt();
 
-    //set the evaluation
-    static
-    {
-    	minimaxSearch.setEvaluation(eval);
+        } while (joinRoom(roomId) == false);
     }
-    
-    public static void main(String[] args) throws JAXBException
-    {
-        if(args.length > 1)
-        {
-            if(args.length == 2)
-            {
+
+    public static void main(String[] args) throws JAXBException {
+        if (args.length > 1) {
+            if (args.length == 2) {
                 TeamName = args[0];
                 threadCount = Integer.parseInt(args[1]);
             } else {
@@ -71,42 +72,114 @@ public class AmazonsBot implements GamePlayer
         System.out.println();
 
         xmlParser = new XMLParser();
-        new AmazonsBot(TeamName,TeamPassword);
+        new AmazonsBot(TeamName, TeamPassword);
 
 //        samplePlay();
     }
 
-    public AmazonsBot(String name, String password)
-    {
-        gameClient = new GameClient(name, password, this);
-        do {
-            getOurRooms();
-            Scanner scanner = new Scanner(System.in, Charset.defaultCharset().toString());
-            System.out.print("Input roomID to join: ");
-            roomId = scanner.nextInt();
+    /**
+     * @param action
+     * @param roomID
+     * @throws JAXBException Takes in an Action object, marshals it into XML, and then uses the built in
+     *                       compileGameMessage to convert to server format and sends with gameClient.sendToServer
+     */
+    public static void sendToServer(Action action, int roomID) throws JAXBException, UnsupportedEncodingException {
+        String actionMsg = xmlParser.marshal(action);
+        String compiledGameMessage = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomID, actionMsg);
+        gameClient.sendToServer(compiledGameMessage, true);
+    }
 
-        }while (joinRoom(roomId) == false);
+    public static void checkEndGame(GameBoard board) {
+        if (GameBoardRules.checkEndGame(gameBoard) != 0) {
+            System.out.println(GameBoardRules.checkEndGame(gameBoard));
+            System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(gameBoard, 1));
+            System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(gameBoard, 2));
+            System.out.println("\n\nGame over");
+            System.exit(0);
+        }
+    }
+
+    public static void sendToChat(String msg, int roomID) throws JAXBException {
+
+    }
+
+    public static void samplePlay() throws IllegalMoveException {
+        int side = 1;
+
+        GameBoard board = new GameBoard();
+
+        GameSearch search = minimaxSearch;
+
+        long start, end;
+        Evaluation e = eval;
+
+        //while we are still playing
+        //while (MullerTegosEvaluation.evaluateBoard(board, side)[1] == 0)
+        while (GameBoardRules.checkEndGame(board) == 0) {
+//        	if (side == 1)
+//        	{
+//        		e = simpleEval;
+//        	}
+//        	else
+//        		e = eval;
+
+            search.setEvaluation(e);
+
+
+            //time run
+            start = System.currentTimeMillis();
+
+            //minimaxNode node = MiniMax.MiniMax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+            GameMove gameMove = search.getMove(board, side);
+
+            //GameMove gameMove = MiniMax.getDecision(board, side, 2);
+
+            end = System.currentTimeMillis() - start;
+
+            try {
+                board.makeMove(gameMove);
+            } catch (IllegalMoveException e1) {
+                System.out.println("Illegal GameMove made: ");
+                e1.printStackTrace();
+                System.exit(0);
+            }
+
+            System.out.println("Time: " + end / 1000 + " seconds");
+            System.out.println("gameMove made: " + gameMove);
+
+            //System.out.println("MiniMax score " + node.getValue());
+
+            System.out.println("Current evaluation: " + MullerTegosEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(board, 1, false)[1]);
+            System.out.println("Simple evaluation: " + simpleEval.evaluateBoard(board, 1));
+            System.out.println(board);
+
+            side = (side == 1) ? 2 : 1;
+
+        }
+
+        System.out.println(GameBoardRules.checkEndGame(board));
+
+        System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(board, 1));
+
+        System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(board, 2));
     }
 
     //Prints the id, name, and user count of all available game rooms in the game client
     private void getOurRooms() {
         roomList = gameClient.getRoomLists();
         System.out.println("Available Game Rooms:");
-        for(GameRoom room : roomList)
-        {
-            System.out.println("Room ID: "+room.roomID + "\tRoom Name: "+room.roomName+ "\tUser Count: "+room.userCount);
+        for (GameRoom room : roomList) {
+            System.out.println("Room ID: " + room.roomID + "\tRoom Name: " + room.roomName + "\tUser Count: " + room.userCount);
         }
 
     }
 
-    public boolean joinRoom(int roomId)
-    {
+    public boolean joinRoom(int roomId) {
         roomList = gameClient.getRoomLists();
         try {
-            for(GameRoom r : roomList)
-            {
-                if(r.roomID == roomId)
-                {
+            for (GameRoom r : roomList) {
+                if (r.roomID == roomId) {
                     gameClient.joinGameRoom(r.roomName);
                     System.out.println("Joined room: " + roomId);
                     return true;
@@ -130,29 +203,22 @@ public class AmazonsBot implements GamePlayer
         // unmarshal message into object
         receivedAction = xmlParser.unmarshal(arg0.toString());
 
-        if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_ROOM_JOINED))
-        {
+        if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_ROOM_JOINED)) {
             System.out.println("Users in the current room:");
             // Print list of users in the room
-            for(User user : receivedAction.getUserList().getUsers())
-            {
+            for (User user : receivedAction.getUserList().getUsers()) {
                 System.out.println("\tName: " + user.getName() + ", ID: " + user.getId());
             }
 
-        }
-        else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START))
-        {
+        } else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START)) {
             gameStarted = true;
             System.out.println("\n\nGame has started");
 
-            for(User user : receivedAction.getUserList().getUsers())
-            {
+            for (User user : receivedAction.getUserList().getUsers()) {
                 // Determine if we are W, B, or Spectator
-                if(user.name.equalsIgnoreCase(TeamName))
-                {
+                if (user.name.equalsIgnoreCase(TeamName)) {
                     TeamID = user.getId();
-                    switch (user.getRole())
-                    {
+                    switch (user.getRole()) {
                         case "W":
                             TeamSide = 1;
                             break;
@@ -172,13 +238,10 @@ public class AmazonsBot implements GamePlayer
             System.out.println("ID: " + TeamID);
             System.out.println("Team Role: " + TeamSide);
 
-            if(TeamSide == 1)
-            {
+            if (TeamSide == 1) {
                 handleMove(true);
             }
-        }
-        else if(receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE))
-        {
+        } else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE)) {
             System.out.println("Received action");
             handleMove(false);
         }
@@ -186,11 +249,10 @@ public class AmazonsBot implements GamePlayer
     }
 
     private void handleMove(boolean makeFirstMove) throws JAXBException, UnsupportedEncodingException {
-        if(!gameStarted){
+        if (!gameStarted) {
             return;
         }
-        if(TeamSide == -1)
-        {
+        if (TeamSide == -1) {
             System.out.println("We are a spectator, no moves can be made");
             return;
         }
@@ -199,18 +261,16 @@ public class AmazonsBot implements GamePlayer
         checkEndGame(gameBoard);
 
         // if we are not the ones making the first gameMove in the game, we can start parsing the first action message we get
-        if(makeFirstMove == false)
-        {
+        if (makeFirstMove == false) {
             //Get initialQ, finalQ and arrow from the gameMove that the opponent made, and make it on our board
             GameMove opponentGameMove = new GameMove(receivedAction.getQueen().getInitialQ(),
-                                            receivedAction.getQueen().getFinalQ(),
-                                            receivedAction.getArrow().getArrow());
+                    receivedAction.getQueen().getFinalQ(),
+                    receivedAction.getArrow().getArrow());
 
             // Checks to make sure that the opponents gameMove was legal
             try {
                 gameBoard.makeMove(opponentGameMove);
-            }catch (IllegalMoveException e)
-            {
+            } catch (IllegalMoveException e) {
                 System.out.println("Opponent made an illegal gameMove: ");
                 opponentGameMove.moveInfo(gameBoard);
                 e.printStackTrace();
@@ -220,9 +280,9 @@ public class AmazonsBot implements GamePlayer
             System.out.println("\n\nOpponents Turn:");
             opponentGameMove.moveInfo(gameBoard);
         }
-        
+
         checkEndGame(gameBoard);
-        
+
         long start, end;
 
         start = System.currentTimeMillis();
@@ -239,11 +299,9 @@ public class AmazonsBot implements GamePlayer
         }
 
         //Make the gameMove on our board
-        try
-        {
+        try {
             gameBoard.makeMove(gameMove);
-        } catch (IllegalMoveException e)
-        {
+        } catch (IllegalMoveException e) {
             System.out.println("Illegal GameMove made: ");
             e.printStackTrace();
             System.exit(0);
@@ -271,99 +329,5 @@ public class AmazonsBot implements GamePlayer
         // Call the garbage collector when we are done each turn
         System.runFinalization();
         System.gc();
-    }
-
-    /**
-     *
-     * @param action
-     * @param roomID
-     * @throws JAXBException
-     *
-     * Takes in an Action object, marshals it into XML, and then uses the built in
-     * compileGameMessage to convert to server format and sends with gameClient.sendToServer
-     */
-    public static void sendToServer(Action action, int roomID) throws JAXBException, UnsupportedEncodingException {
-        String actionMsg = xmlParser.marshal(action);
-        String compiledGameMessage = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomID, actionMsg);
-        gameClient.sendToServer(compiledGameMessage, true);
-    }
-
-    public static void checkEndGame(GameBoard board)
-    {
-        if (GameBoardRules.checkEndGame(gameBoard) != 0)
-        {
-            System.out.println(GameBoardRules.checkEndGame(gameBoard));
-            System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(gameBoard, 1));
-            System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(gameBoard, 2));
-            System.out.println("\n\nGame over");
-            System.exit(0);
-        }
-    }
-
-    public static void sendToChat(String msg, int roomID) throws JAXBException {
-
-    }
-
-    public static void samplePlay() throws IllegalMoveException {
-        int side = 1;
-
-        GameBoard board = new GameBoard();
-
-        GameSearch search = minimaxSearch;
-
-        long start, end;
-        Evaluation e = eval;
-        
-        //while we are still playing
-        //while (MullerTegosEvaluation.evaluateBoard(board, side)[1] == 0)
-        while(GameBoardRules.checkEndGame(board) == 0)
-        {
-//        	if (side == 1)
-//        	{
-//        		e = simpleEval;
-//        	}
-//        	else
-//        		e = eval;
-        	
-        	search.setEvaluation(e);
-        	
-        	
-            //time run
-            start = System.currentTimeMillis();
-
-            //minimaxNode node = MiniMax.MiniMax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
-
-            GameMove gameMove = search.getMove(board, side);
-
-            //GameMove gameMove = MiniMax.getDecision(board, side, 2);
-
-            end = System.currentTimeMillis() - start;
-
-            try {
-                board.makeMove(gameMove);
-            } catch (IllegalMoveException e1) {
-                System.out.println("Illegal GameMove made: ");
-                e1.printStackTrace();
-                System.exit(0);
-            }
-
-            System.out.println("Time: " + end/1000 + " seconds");
-            System.out.println("gameMove made: " + gameMove);
-
-            //System.out.println("MiniMax score " + node.getValue());
-
-            System.out.println("Current evaluation: "+ MullerTegosEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(board, 1, false)[1]);
-            System.out.println("Simple evaluation: "+ simpleEval.evaluateBoard(board, 1));
-            System.out.println(board);
-
-            side = (side==1)?2:1;
-
-        }
-
-        System.out.println(GameBoardRules.checkEndGame(board));
-
-        System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(board, 1));
-
-        System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(board, 2));
     }
 }

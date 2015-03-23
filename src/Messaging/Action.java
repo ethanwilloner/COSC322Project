@@ -17,9 +17,12 @@ public class Action {
     @XmlElement(name = "arrow")
     public Arrow arrow;
 
-    public Action(){}
+    public Action() {
+    }
 
-    public Action(String type) { this.type = type; }
+    public Action(String type) {
+        this.type = type;
+    }
 
     public String getType() {
         return type;

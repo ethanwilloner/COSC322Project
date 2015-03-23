@@ -18,10 +18,10 @@ public class Arrow {
 //    @XmlValue
 //    String content = "";
 
-    public Arrow(){}
+    public Arrow() {
+    }
 
-    public Arrow(Position arrow)
-    {
+    public Arrow(Position arrow) {
         // Transform our internal arrow position into the external alphanumeric representation
         this.arrow = new StringBuilder().append(Character.toChars(arrow.getX() + 'a')).append(Character.toChars(arrow.getY() + '0')).toString();
     }
