@@ -1,20 +1,24 @@
 package MiniMax;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 import AbstractClasses.Evaluation;
 import AbstractClasses.GameSearch;
 import AmazonBoard.GameBoard;
 import AmazonBoard.GameBoardRules;
 import AmazonBoard.GameMove;
 import AmazonBoard.IllegalMoveException;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class ConcurrentMiniMax extends GameSearch {
     private AtomicInteger maxThreads = new AtomicInteger();
@@ -127,7 +131,8 @@ public class ConcurrentMiniMax extends GameSearch {
             }
             System.out.println("Depth " + localMaxDepth.get() + " terminated" + ((isCutoff.get()) ? " unsuccessfully " : " successfully ") + "with " + leafCount.get() + " leaf nodes");
             localMaxDepth.set(localMaxDepth.get() + 1);
-            if(leafCount.get() == 0)
+            //stop when we run out of leaf nodes or can't explore past
+            if(leafCount.get() == 0 || AmazonsBot.AmazonsBot.moveCount < 20)
             {
                 break;
             }

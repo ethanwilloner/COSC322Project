@@ -1,3 +1,4 @@
+package AmazonsBot;
 import AbstractClasses.Evaluation;
 import AbstractClasses.GameSearch;
 import AmazonBoard.GameBoard;
@@ -43,7 +44,7 @@ public class AmazonsBot implements GamePlayer {
     int TeamSide;
     String TeamRole;
     int roomId;
-    int moveCount = 0;
+    public static int moveCount = 0;
     boolean gameStarted;
     Action receivedAction;
     Action sendAction;
@@ -294,7 +295,10 @@ public class AmazonsBot implements GamePlayer {
         //while we are still playing
         //while (MullerTegosEvaluation.evaluateBoard(board, side)[1] == 0)
         while (GameBoardRules.checkEndGame(board) == 0) {
-            search.setEvaluation(e);
+            //increment move count
+        	moveCount++;
+        	
+        	search.setEvaluation(e);
 
             start = System.currentTimeMillis();
 
