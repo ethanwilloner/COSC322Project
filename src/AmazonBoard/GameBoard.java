@@ -26,6 +26,9 @@ public class GameBoard implements Cloneable {
      * free space code
      */
     public static final int FREE = -1;
+
+    // TimeLimit in milliseconds
+    public static int TimeLimit = 25000;
     static Cloner clone = new Cloner();
     HashSet<Position> whitePositions;
     HashSet<Position> blackPositions;
@@ -311,7 +314,7 @@ public class GameBoard implements Cloneable {
 
         // watch the time
         long time = System.currentTimeMillis() - startTime;
-        if (time >= 25000) {
+        if (time >= TimeLimit) {
             return true;
         }
 
