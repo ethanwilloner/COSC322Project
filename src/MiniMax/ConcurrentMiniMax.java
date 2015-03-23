@@ -127,11 +127,13 @@ public class ConcurrentMiniMax extends GameSearch {
             }
             System.out.println("Depth " + localMaxDepth.get() + " terminated" + ((isCutoff.get()) ? " unsuccessfully " : " successfully ") + "with " + leafCount.get() + " leaf nodes");
             localMaxDepth.set(localMaxDepth.get() + 1);
+            if(leafCount.get() == 0)
+            {
+                break;
+            }
         }
         // if we didn't make the target depth then we won't make a deeper target depth next iteration; end the search
         while (!isCutoff.get());
-
-        System.out.println("Parallel got to depth: " + (localMaxDepth.get() - 1));
 
         return globalBest.getGameMove();
     }

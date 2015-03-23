@@ -38,21 +38,12 @@ public class AmazonsBot implements GamePlayer {
     ArrayList<GameRoom> roomList;
     int TeamID;
     int TeamSide;
+    String TeamRole;
     int roomId;
+    int moveCount = 0;
     boolean gameStarted;
     Action receivedAction;
     Action sendAction;
-
-    public AmazonsBot(String name, String password) {
-        gameClient = new GameClient(name, password, this);
-        do {
-            getOurRooms();
-            Scanner scanner = new Scanner(System.in, Charset.defaultCharset().toString());
-            System.out.print("Input roomID to join: ");
-            roomId = scanner.nextInt();
-
-        } while (joinRoom(roomId) == false);
-    }
 
     public static void main(String[] args) throws JAXBException {
         if (args.length > 1) {
@@ -76,26 +67,15 @@ public class AmazonsBot implements GamePlayer {
         //localPlay();
     }
 
-    /**
-     * @param action
-     * @param roomID
-     * @throws JAXBException Takes in an Action object, marshals it into XML, and then uses the built in
-     *                       compileGameMessage to convert to server format and sends with gameClient.sendToServer
-     */
-    public static void sendToServer(Action action, int roomID) throws JAXBException, UnsupportedEncodingException {
-        String actionMsg = xmlParser.marshal(action);
-        String compiledGameMessage = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomID, actionMsg);
-        gameClient.sendToServer(compiledGameMessage, true);
-    }
+    public AmazonsBot(String name, String password) {
+        gameClient = new GameClient(name, password, this);
+        do {
+            getOurRooms();
+            Scanner scanner = new Scanner(System.in, Charset.defaultCharset().toString());
+            System.out.print("Input roomID to join: ");
+            roomId = scanner.nextInt();
 
-    public static void checkEndGame(GameBoard board) {
-        if (GameBoardRules.checkEndGame(gameBoard) != 0) {
-            System.out.println(GameBoardRules.checkEndGame(gameBoard));
-            System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(gameBoard, 1));
-            System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(gameBoard, 2));
-            System.out.println("\n\nGame over");
-            System.exit(0);
-        }
+        } while (joinRoom(roomId) == false);
     }
 
     public static void sendToChat(String msg, int roomID) throws JAXBException {
@@ -135,7 +115,7 @@ public class AmazonsBot implements GamePlayer {
     }
 
     public boolean handleMessage(GameMessage arg0) throws Exception {
-        System.out.println("[SimplePlayer: The server said =]  " + arg0.toString());
+        //System.out.println("[SimplePlayer: The server said =]  " + arg0.toString());
 
         // unmarshal message into object
         receivedAction = xmlParser.unmarshal(arg0.toString());
@@ -155,6 +135,7 @@ public class AmazonsBot implements GamePlayer {
                 // Determine if we are W, B, or Spectator
                 if (user.name.equalsIgnoreCase(TeamName)) {
                     TeamID = user.getId();
+                    TeamRole = user.getRole().equals("W")?"White":"Black";
                     switch (user.getRole()) {
                         case "W":
                             TeamSide = 1;
@@ -173,13 +154,12 @@ public class AmazonsBot implements GamePlayer {
             }
             System.out.println("Team name: " + TeamName);
             System.out.println("ID: " + TeamID);
-            System.out.println("Team Role: " + TeamSide);
+            System.out.println("Team Role: " + TeamRole);
 
             if (TeamSide == 1) {
                 handleMove(true);
             }
         } else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_MOVE)) {
-            System.out.println("Received action");
             handleMove(false);
         }
         return true;
@@ -215,6 +195,7 @@ public class AmazonsBot implements GamePlayer {
 
             // Print the opponents gameMove
             System.out.println("\n\nOpponents Turn:");
+            System.out.println("Move Number: " + ++moveCount);
             opponentGameMove.moveInfo(gameBoard);
         }
 
@@ -257,6 +238,7 @@ public class AmazonsBot implements GamePlayer {
 
         // End of turn statistics
         System.out.println("\n\nOur Turn:");
+        System.out.println("Move Number: " + ++moveCount);
         System.out.println("Time: " + end / 1000 + " seconds");
         gameMove.moveInfo(gameBoard);
 
@@ -266,6 +248,28 @@ public class AmazonsBot implements GamePlayer {
         // Call the garbage collector when we are done each turn
         System.runFinalization();
         System.gc();
+    }
+    
+    /**
+     * @param action
+     * @param roomID
+     * @throws JAXBException Takes in an Action object, marshals it into XML, and then uses the built in
+     *                       compileGameMessage to convert to server format and sends with gameClient.sendToServer
+     */
+    public static void sendToServer(Action action, int roomID) throws JAXBException, UnsupportedEncodingException {
+        String actionMsg = xmlParser.marshal(action);
+        String compiledGameMessage = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomID, actionMsg);
+        gameClient.sendToServer(compiledGameMessage, true);
+    }
+
+    public static void checkEndGame(GameBoard board) {
+        if (GameBoardRules.checkEndGame(gameBoard) != 0) {
+            System.out.println(GameBoardRules.checkEndGame(gameBoard));
+            System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(gameBoard, 1));
+            System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(gameBoard, 2));
+            System.out.println("\n\nGame over");
+            System.exit(0);
+        }
     }
 
     /**

@@ -138,9 +138,12 @@ public class MiniMaxSearch extends GameSearch {
 
             System.out.println("Depth " + depth + " terminated" + ((isCutoff) ? " unsuccessfully " : " successfully ") + "with " + leafCount + " leaf nodes");
             depth++;
-        }
-        System.out.println("Got to depth " + (depth - 1) + " in sequential search");
 
+            if(leafCount == 0)
+            {
+                break;
+            }
+        }
         return bestGameMoveSoFar;
     }
 }

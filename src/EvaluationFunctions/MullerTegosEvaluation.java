@@ -117,9 +117,9 @@ public class MullerTegosEvaluation extends Evaluation {
             rtn[1] = -rtn[1];
         }
 
-        if (output)
-            //print output
-            System.out.println(toString(temporaryGameBoard));
+//        if (output)
+//            //print output
+//            System.out.println(toString(temporaryGameBoard));
 
 
         return rtn;
