@@ -85,7 +85,7 @@ public class ConcurrentMiniMax extends GameSearch {
 
         // begin iterative deepening search
         do {
-            System.out.println("Scanning depth " + localMaxDepth.get());
+            //System.out.println("Scanning depth " + localMaxDepth.get());
 
             //reset alpha beta
             alpha.set(Integer.MIN_VALUE);

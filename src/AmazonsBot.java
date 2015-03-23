@@ -155,6 +155,7 @@ public class AmazonsBot implements GamePlayer {
             System.out.println("Team name: " + TeamName);
             System.out.println("ID: " + TeamID);
             System.out.println("Team Role: " + TeamRole);
+            System.out.println();
 
             if (TeamSide == 1) {
                 handleMove(true);
@@ -194,7 +195,7 @@ public class AmazonsBot implements GamePlayer {
             }
 
             // Print the opponents gameMove
-            System.out.println("\n\nOpponents Turn:");
+            System.out.println("\n\nOpponents Move:");
             System.out.println("Move Number: " + ++moveCount);
             opponentGameMove.moveInfo(gameBoard);
         }
@@ -202,6 +203,9 @@ public class AmazonsBot implements GamePlayer {
         checkEndGame(gameBoard);
 
         long start, end;
+
+        System.out.println("\nOur Move:");
+        System.out.println("Move Number: " + ++moveCount);
 
         start = System.currentTimeMillis();
 
@@ -237,9 +241,8 @@ public class AmazonsBot implements GamePlayer {
         end = System.currentTimeMillis() - start;
 
         // End of turn statistics
-        System.out.println("\n\nOur Turn:");
-        System.out.println("Move Number: " + ++moveCount);
         System.out.println("Time: " + end / 1000 + " seconds");
+        System.out.println("Marshalled XML Message: " + xmlParser.marshal(sendAction));
         gameMove.moveInfo(gameBoard);
 
         //If it is the end of the game, print end game stats and then exit the application
@@ -249,7 +252,7 @@ public class AmazonsBot implements GamePlayer {
         System.runFinalization();
         System.gc();
     }
-    
+
     /**
      * @param action
      * @param roomID

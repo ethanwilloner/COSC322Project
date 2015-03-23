@@ -40,7 +40,6 @@ public class XMLParser {
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
         marshaller.marshal(action, os);
-        System.out.println("Marshalled XML Message: " + os.toString(Charset.defaultCharset().toString()));
         return os.toString(Charset.defaultCharset().toString());
     }
 
