@@ -26,8 +26,7 @@ public class MullerTegosEvaluation extends Evaluation {
 
         //mark up this board with minimum moves to each tile for black and for white (represented in the last dimension)
         //USE STATIC VAR SO DON"T HAVE TO ALLOCATE MEM DURING RUN
-        int[][][] tempBoard = new int[10][10][2];
-
+        int[][][] temporaryGameBoard = new int[10][10][2];
 
         //keep track if we need to check for end of game
         boolean isEnd = true;
@@ -35,27 +34,25 @@ public class MullerTegosEvaluation extends Evaluation {
         //fill board with max values
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
-                tempBoard[x][y][0] = Integer.MAX_VALUE;
-                tempBoard[x][y][1] = Integer.MAX_VALUE;
+                temporaryGameBoard[x][y][0] = Integer.MAX_VALUE;
+                temporaryGameBoard[x][y][1] = Integer.MAX_VALUE;
 
             }
         }
 
-
         //evaluate board for each queen (white)
         //while all queens haven't explored the places they can
         for (Position queen : whitePositions) {
-            tempBoard[queen.getX()][queen.getY()][0] = 0;
+            temporaryGameBoard[queen.getX()][queen.getY()][0] = 0;
 
-            paintBoardWithQueen(board, tempBoard, queen, 1, 1);
+            paintBoardWithQueen(board, temporaryGameBoard, queen, 1, 1);
         }
         for (Position queen : blackPositions) {
-            tempBoard[queen.getX()][queen.getY()][1] = 0;
+            temporaryGameBoard[queen.getX()][queen.getY()][1] = 0;
 
-            paintBoardWithQueen(board, tempBoard, queen, 2, 1);
+            paintBoardWithQueen(board, temporaryGameBoard, queen, 2, 1);
 
         }
-
 
         int white = 0;
         int black = 0;
@@ -68,17 +65,13 @@ public class MullerTegosEvaluation extends Evaluation {
 
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
-                whiteTemp = tempBoard[x][y][0];
-                blackTemp = tempBoard[x][y][1];
+                whiteTemp = temporaryGameBoard[x][y][0];
+                blackTemp = temporaryGameBoard[x][y][1];
 
                 //is this space not free? or if both black and white can reach in same number of moves,
                 if (!board.isFree(x, y) || whiteTemp == blackTemp) {
-//					//can both get to the same tile in the same moves? then the game isn't over
-//					if (whiteTemp == blackTemp && whiteTemp > 0)
-//						isEnd = false;
                     continue;
                 }
-
 
                 //if white's value is less than black's or blacks never reached this tile,
                 if (whiteTemp < blackTemp || blackTemp == Integer.MAX_VALUE) {
@@ -100,7 +93,6 @@ public class MullerTegosEvaluation extends Evaluation {
                 }
             }
         }
-
 
         //what we return
         int[] rtn = new int[2];
@@ -127,7 +119,7 @@ public class MullerTegosEvaluation extends Evaluation {
 
         if (output)
             //print output
-            System.out.println(toString(tempBoard));
+            System.out.println(toString(temporaryGameBoard));
 
 
         return rtn;

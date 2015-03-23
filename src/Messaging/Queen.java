@@ -17,13 +17,7 @@ public class Queen {
     @XmlAttribute(name = "move")
     public String move;
 
-//    @XmlValue
-//    String content = "";
-
-    public Queen() {
-    }
-
-    ;
+    public Queen() {}
 
     public Queen(Position InitialQ, Position FinalQ) {
         // Take our internal representation of the game board and transform it into the alphanumeric representation that the server expects

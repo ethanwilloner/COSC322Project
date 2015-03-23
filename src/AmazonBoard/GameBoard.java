@@ -10,8 +10,6 @@ import java.util.HashSet;
  * @author Yarko Senyuta
  */
 public class GameBoard implements Cloneable {
-
-
     /**
      * white queen code
      */
@@ -180,8 +178,6 @@ public class GameBoard implements Cloneable {
 
         HashSet<Position> positions;
 
-        //System.out.println(blackPositions+"\n"+whitePositions);
-
         if (queenCode == WQUEEN)
             positions = whitePositions;
         else
@@ -268,8 +264,6 @@ public class GameBoard implements Cloneable {
 
         //update queen in hashset
         updateQueenPosition(gameMove.getFinalQ().getX(), gameMove.getFinalQ().getY(), gameMove.getInitialQ().getX(), gameMove.getInitialQ().getY(), side);
-
-
     }
 
 
@@ -310,9 +304,6 @@ public class GameBoard implements Cloneable {
     }
 
     public boolean cutoffTest(int depth, long startTime) {
-//		if (depth > 4)
-//			return true;
-//		
         //  watch memory usage
         if (Runtime.getRuntime().freeMemory() <= 5000000) {
             return true;

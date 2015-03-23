@@ -71,11 +71,8 @@ public class ConcurrentMiniMax extends GameSearch {
             //add thread
             tempBoard = board.clone();
             tempGameMove = iterator.next();
-            //tempBoard.makeMove(tempGameMove);
-
             searchThreads.add(new MinimaxThread(tempBoard, tempGameMove));
         }
-
 
         // if this search was terminated by a cutoff test
         isCutoff.set(false);
@@ -112,9 +109,6 @@ public class ConcurrentMiniMax extends GameSearch {
                 executor.shutdown();
                 // we'll assume the timeout occurs naturally from the search cutoff test
                 executor.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
-
-//				if (isCutoff.get())
-//					break;
 
                 // find the best result for this search
                 MiniMaxNode search;
@@ -173,7 +167,6 @@ public class ConcurrentMiniMax extends GameSearch {
             // note depth 2, results from depth 1 are being collected in minimaxDecision
             int depth = 2;
 
-
             // test the cutoff function
             if (gameBoard.cutoffTest(depth, startTime.get())) {
                 isCutoff.set(true);
@@ -213,9 +206,9 @@ public class ConcurrentMiniMax extends GameSearch {
                 beta = Math.min(beta, v);
 
                 //check if out of time
-                if (isCutoff.get() == true)
+                if (isCutoff.get() == true) {
                     break;
-
+                }
             }
 
             result.setValue(v);
@@ -229,7 +222,6 @@ public class ConcurrentMiniMax extends GameSearch {
             if (isCutoff.get() == true || gameBoard.cutoffTest(depth, startTime.get())) {
                 //return infinity
                 isCutoff.set(true);
-//				return Integer.MAX_VALUE;
                 return eval.evaluateBoard(gameBoard, maxPlayer.get());
             }
             if (depth > localMaxDepth.get()) {
@@ -259,8 +251,9 @@ public class ConcurrentMiniMax extends GameSearch {
                 alpha = Math.max(alpha, v);
 
                 //check if out of time
-                if (isCutoff.get() == true)
+                if (isCutoff.get() == true) {
                     break;
+                }
 
             }
             return v;
@@ -300,9 +293,9 @@ public class ConcurrentMiniMax extends GameSearch {
                 beta = Math.min(beta, v);
 
                 //check if out of time
-                if (isCutoff.get() == true)
+                if (isCutoff.get() == true) {
                     break;
-
+                }
             }
             return v;
         }

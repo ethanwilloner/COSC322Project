@@ -15,11 +15,7 @@ public class Arrow {
     @XmlAttribute(name = "move")
     public String arrow;
 
-//    @XmlValue
-//    String content = "";
-
-    public Arrow() {
-    }
+    public Arrow() {}
 
     public Arrow(Position arrow) {
         // Transform our internal arrow position into the external alphanumeric representation

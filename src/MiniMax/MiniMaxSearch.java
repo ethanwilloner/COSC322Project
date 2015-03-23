@@ -60,7 +60,6 @@ public class MiniMaxSearch extends GameSearch {
                 alpha = Math.max(alpha, bestValue);
 
                 if (beta <= alpha) {
-                    //System.out.println("pruned from max");
                     break;
                 }
 
@@ -95,7 +94,6 @@ public class MiniMaxSearch extends GameSearch {
                 beta = Math.min(beta, bestValue);
 
                 if (beta <= alpha) {
-                    //System.out.println("pruned from min");
                     break;
                 }
 

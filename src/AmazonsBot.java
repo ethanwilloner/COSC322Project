@@ -73,8 +73,7 @@ public class AmazonsBot implements GamePlayer {
 
         xmlParser = new XMLParser();
         new AmazonsBot(TeamName, TeamPassword);
-
-//        samplePlay();
+        //localPlay();
     }
 
     /**
@@ -101,68 +100,6 @@ public class AmazonsBot implements GamePlayer {
 
     public static void sendToChat(String msg, int roomID) throws JAXBException {
 
-    }
-
-    public static void samplePlay() throws IllegalMoveException {
-        int side = 1;
-
-        GameBoard board = new GameBoard();
-
-        GameSearch search = minimaxSearch;
-
-        long start, end;
-        Evaluation e = eval;
-
-        //while we are still playing
-        //while (MullerTegosEvaluation.evaluateBoard(board, side)[1] == 0)
-        while (GameBoardRules.checkEndGame(board) == 0) {
-//        	if (side == 1)
-//        	{
-//        		e = simpleEval;
-//        	}
-//        	else
-//        		e = eval;
-
-            search.setEvaluation(e);
-
-
-            //time run
-            start = System.currentTimeMillis();
-
-            //minimaxNode node = MiniMax.MiniMax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
-
-            GameMove gameMove = search.getMove(board, side);
-
-            //GameMove gameMove = MiniMax.getDecision(board, side, 2);
-
-            end = System.currentTimeMillis() - start;
-
-            try {
-                board.makeMove(gameMove);
-            } catch (IllegalMoveException e1) {
-                System.out.println("Illegal GameMove made: ");
-                e1.printStackTrace();
-                System.exit(0);
-            }
-
-            System.out.println("Time: " + end / 1000 + " seconds");
-            System.out.println("gameMove made: " + gameMove);
-
-            //System.out.println("MiniMax score " + node.getValue());
-
-            System.out.println("Current evaluation: " + MullerTegosEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(board, 1, false)[1]);
-            System.out.println("Simple evaluation: " + simpleEval.evaluateBoard(board, 1));
-            System.out.println(board);
-
-            side = (side == 1) ? 2 : 1;
-
-        }
-
-        System.out.println(GameBoardRules.checkEndGame(board));
-
-        System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(board, 1));
-
-        System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(board, 2));
     }
 
     //Prints the id, name, and user count of all available game rooms in the game client
@@ -329,5 +266,57 @@ public class AmazonsBot implements GamePlayer {
         // Call the garbage collector when we are done each turn
         System.runFinalization();
         System.gc();
+    }
+
+    /**
+     * Method to test the bot by playing it against itself locally
+     * @throws IllegalMoveException
+     */
+    public static void localPlay() throws IllegalMoveException {
+        int side = 1;
+
+        GameBoard board = new GameBoard();
+
+        GameSearch search = minimaxSearch;
+
+        long start, end;
+        Evaluation e = eval;
+
+        //while we are still playing
+        //while (MullerTegosEvaluation.evaluateBoard(board, side)[1] == 0)
+        while (GameBoardRules.checkEndGame(board) == 0) {
+            search.setEvaluation(e);
+
+            start = System.currentTimeMillis();
+
+            GameMove gameMove = search.getMove(board, side);
+
+            end = System.currentTimeMillis() - start;
+
+            try {
+                board.makeMove(gameMove);
+            } catch (IllegalMoveException e1) {
+                System.out.println("Illegal GameMove made: ");
+                e1.printStackTrace();
+                System.exit(0);
+            }
+
+            System.out.println("Time: " + end / 1000 + " seconds");
+            System.out.println("gameMove made: " + gameMove);
+
+            //System.out.println("MiniMax score " + node.getValue());
+
+            System.out.println("Current evaluation: " + MullerTegosEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(board, 1, false)[1]);
+            System.out.println("Simple evaluation: " + simpleEval.evaluateBoard(board, 1));
+            System.out.println(board);
+
+            side = (side == 1) ? 2 : 1;
+        }
+
+        System.out.println(GameBoardRules.checkEndGame(board));
+
+        System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(board, 1));
+
+        System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(board, 2));
     }
 }
