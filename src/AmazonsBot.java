@@ -123,14 +123,7 @@ public class AmazonsBot implements GamePlayer {
         // unmarshal message into object
         receivedAction = xmlParser.unmarshal(arg0.toString());
 
-        if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_ROOM_JOINED)) {
-            System.out.println("Users in the current room:");
-            // Print list of users in the room
-            for (User user : receivedAction.getUserList().getUsers()) {
-                System.out.println("\tName: " + user.getName() + ", ID: " + user.getId());
-            }
-
-        } else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START)) {
+        if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START)) {
             gameStarted = true;
             System.out.println("\n\nGame has started");
             
