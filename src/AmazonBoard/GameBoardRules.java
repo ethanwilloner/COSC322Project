@@ -1,9 +1,6 @@
-package utils;
+package AmazonBoard;
 
 import java.util.HashSet;
-
-import ai.OurBoard;
-import ai.OurPair;
 
 /**
  * A class for the rules of the game
@@ -11,43 +8,18 @@ import ai.OurPair;
  * @author Yarko Senyuta
  *
  */
-public class GameRules 
+public class GameBoardRules
 {
 	/**
-	 * check if given move is legal for the given side
-	 * @param move move to check
+	 * check if given gameMove is legal for the given side
+	 * @param gameMove gameMove to check
 	 * @param side 1 for white queen, 2 for black queen
-	 * @return true if move is legal, false otherwise
+	 * @return true if gameMove is legal, false otherwise
 	 */
-	public static boolean isLegalMove(OurBoard board, Move move, int side)
+	public static boolean isLegalMove(GameBoard board, GameMove gameMove, int side)
 	{
-//		//check if initial queen is indeed a queen
-//		if (side == 1)
-//		{
-//			if (!board.getWhitePositions().contains(move.initialQ))
-//			{
-//				System.out.println(move.initialQ + "\thashcode: " + move.initialQ.hashCode());
-//				System.out.println("Is in white positions? " + board.getWhitePositions().contains(move.initialQ));
-//				System.out.println("White positions: " + board.getWhitePositions());
-//				
-//				for (OurPair p : board.getWhitePositions())
-//				{
-//					System.out.println(p + "\t" + p.hashCode());
-//				}
-//				
-//				throw new NullPointerException();
-//			}
-//		}	
-//		else
-//		{
-//			if (!board.getBlackPositions().contains(move.initialQ))
-//			{
-//				throw new NullPointerException();
-//			}
-//		}
-		
-		HashSet<Move> moves = getLegalMoves(board, side);
-		return (moves.contains(move));
+		HashSet<GameMove> gameMoves = getLegalMoves(board, side);
+		return (gameMoves.contains(gameMove));
 			
 	}
 	
@@ -57,9 +29,9 @@ public class GameRules
 	 * @param side 1 for white queen, 2 for black queen
 	 * @return a set of legal moves
 	 */
-	public static HashSet<Move> getLegalMoves(OurBoard board, int side)
+	public static HashSet<GameMove> getLegalMoves(GameBoard board, int side)
 	{
-		HashSet<Move> toReturn = new HashSet<Move>();
+		HashSet<GameMove> toReturn = new HashSet<GameMove>();
 		
 		
 		HashSet<OurPair> queens; 
@@ -96,15 +68,12 @@ public class GameRules
 				//add to moves
 				for (OurPair arrow : arrowToTiles)
 				{
-					toReturn.add(new Move(new OurPair(queen.getX(), queen.getY()), newQueen, arrow));
+					toReturn.add(new GameMove(new OurPair(queen.getX(), queen.getY()), newQueen, arrow));
 				}
 			}
 			
 			board.placeMarker(queen.getX(), queen.getY(), side);
 		}
-		
-//		System.out.println("Number of legal moves: " + toReturn.size());
-//		System.out.println("Our evaluation: " + OurEvaluation.evaluateBoard(board));
 		
 		return toReturn;
 	}
@@ -115,7 +84,7 @@ public class GameRules
 	 * @param tileToMove the tile we are interested in
 	 * @return tiles where the given one is allowed to move to
 	 */
-	private static HashSet<OurPair> getMoveCross(OurBoard board, OurPair tileToMove)
+	private static HashSet<OurPair> getMoveCross(GameBoard board, OurPair tileToMove)
 	{
 		HashSet<OurPair> toReturn = new HashSet<OurPair>();
 		
@@ -251,7 +220,7 @@ public class GameRules
 	 * @param board the game board
 	 * @return 0 if game still continues, 1 if white wins, 2 if black wins
 	 */
-	public static int checkEndGame(OurBoard board){
+	public static int checkEndGame(GameBoard board){
 		int rtn = 0;
 		
 		if(getLegalMoves(board,1).size() == 0){
@@ -270,7 +239,7 @@ public class GameRules
 	 * @param side 1 for white queen, 2 for black queen
 	 * @return a set of legal moves
 	 */
-	public static HashSet<OurPair> getLegalQueenMoves(OurBoard board, OurPair queen, int side)
+	public static HashSet<OurPair> getLegalQueenMoves(GameBoard board, OurPair queen, int side)
 	{
 		//get where the queen can move
 		return getMoveCross(board, queen);

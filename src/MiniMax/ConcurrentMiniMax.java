@@ -1,4 +1,4 @@
-package minimax;
+package MiniMax;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,14 +13,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import ai.IllegalMoveException;
-import utils.GameRules;
-import utils.Move;
+import AmazonBoard.GameMove;
+import AmazonBoard.IllegalMoveException;
+import AmazonBoard.GameBoardRules;
 import AbstractClasses.Evaluation;
 import AbstractClasses.GameSearch;
-import ai.OurBoard;
+import AmazonBoard.GameBoard;
 
-public class concurrentMinimax extends GameSearch
+public class ConcurrentMiniMax extends GameSearch
 {
 	private AtomicInteger maxThreads = new AtomicInteger();
 	private AtomicLong startTime = new AtomicLong();
@@ -40,21 +40,20 @@ public class concurrentMinimax extends GameSearch
 	 * constructor
 	 * @param maxThreads number of threads to be used
 	 */
-	public concurrentMinimax (int m, Evaluation eval)
+	public ConcurrentMiniMax(int m, Evaluation eval)
 	{
 		this.maxThreads.set(m);
 		this.eval = eval;
 	}
-	
 
 	/**
-	 * get next move
+	 * get next gameMove
 	 * @param board current board
 	 * @param side which side we maximize
-	 * @return best move to be found
+	 * @return best gameMove to be found
 	 */
 	@SuppressWarnings("unchecked")
-	public Move minimaxDecision (OurBoard board, int side) throws IllegalMoveException {
+	public GameMove minimaxDecision (GameBoard board, int side) throws IllegalMoveException {
 		//start the clock
 		startTime.set(System.currentTimeMillis());
 		//set the sides
@@ -62,24 +61,24 @@ public class concurrentMinimax extends GameSearch
 		this.minPlayer.set((side%2)+1);
 		
 		// the best result of any search
-		minimaxNode globalBest = new minimaxNode(Integer.MIN_VALUE, null);
+		MiniMaxNode globalBest = new MiniMaxNode(Integer.MIN_VALUE, null);
 		
 		//the threads to be used
 		List<MinimaxThread> searchThreads = new LinkedList<MinimaxThread>();
 		
-		//try each move
-		Iterator<Move> iterator = (Iterator<Move>) GameRules.getLegalMoves(board, maxPlayer.get()).iterator();
-		OurBoard tempBoard;
-		Move tempMove;
+		//try each gameMove
+		Iterator<GameMove> iterator = (Iterator<GameMove>) GameBoardRules.getLegalMoves(board, maxPlayer.get()).iterator();
+		GameBoard tempBoard;
+		GameMove tempGameMove;
 		
 		while(iterator.hasNext())
 		{
 			//add thread
 			tempBoard = board.clone();
-			tempMove = iterator.next();
-			//tempBoard.makeMove(tempMove);
+			tempGameMove = iterator.next();
+			//tempBoard.makeMove(tempGameMove);
 			
-			searchThreads.add(new MinimaxThread(tempBoard, tempMove));
+			searchThreads.add(new MinimaxThread(tempBoard, tempGameMove));
 		}
 		
 		
@@ -87,7 +86,7 @@ public class concurrentMinimax extends GameSearch
 		isCutoff.set(false);
 		// make thread pool
 		ExecutorService executor;
-		List<Future<minimaxNode>> results = new LinkedList<Future<minimaxNode>>();
+		List<Future<MiniMaxNode>> results = new LinkedList<Future<MiniMaxNode>>();
 
 		//the best depth achieved by this search
         localMaxDepth.set(1);
@@ -111,7 +110,7 @@ public class concurrentMinimax extends GameSearch
 			}
 			
 			//the best locally
-			minimaxNode localBest = new minimaxNode(Integer.MIN_VALUE, null);
+			MiniMaxNode localBest = new MiniMaxNode(Integer.MIN_VALUE, null);
 			try
 			{
 				//reset leaf count
@@ -126,8 +125,8 @@ public class concurrentMinimax extends GameSearch
 //					break;
 				
 				// find the best result for this search
-				minimaxNode search;
-				for (Future<minimaxNode> result : results)
+				MiniMaxNode search;
+				for (Future<MiniMaxNode> result : results)
 				{
 					search = result.get();
 					localBest.max(search);
@@ -140,7 +139,7 @@ public class concurrentMinimax extends GameSearch
 			// IMPORTANT: only update the global max if we have truly achieved a
 			// deeper search this iteration by not being cutoff.  This could produce
 			// a false positive if the search was cutoff with mixed depths.
-			if (!isCutoff.get() || globalBest.getMove() == null)
+			if (!isCutoff.get() || globalBest.getGameMove() == null)
 			{
 				globalBest.max(localBest);
 			}
@@ -152,7 +151,7 @@ public class concurrentMinimax extends GameSearch
 		
 		System.out.println("Parallel got to depth: " + (localMaxDepth.get()-1));
 	
-		return globalBest.getMove();
+		return globalBest.getGameMove();
 	}
 
 	/**
@@ -160,24 +159,24 @@ public class concurrentMinimax extends GameSearch
 	 * @author Yarko
 	 *
 	 */
-	private class MinimaxThread implements Callable<minimaxNode>
+	private class MinimaxThread implements Callable<MiniMaxNode>
 	{
-		private OurBoard board;
-		private Move parentAction;
+		private GameBoard board;
+		private GameMove parentAction;
 		
 		/**
 		 * constructor for thread
 		 * @param state initial board
-		 * @param action move to be made
+		 * @param action gameMove to be made
 		 */
-		public MinimaxThread(OurBoard state, Move action) throws IllegalMoveException {
+		public MinimaxThread(GameBoard state, GameMove action) throws IllegalMoveException {
 			this.board = state;
 			parentAction = action;
 			board.makeMove(action);
 		}
 
 		@Override
-		public minimaxNode call () throws Exception
+		public MiniMaxNode call () throws Exception
 		{
 			// note depth 2, results from depth 1 are being collected in minimaxDecision
 			int depth = 2;
@@ -187,29 +186,29 @@ public class concurrentMinimax extends GameSearch
 			if (board.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
-				return new minimaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
+				return new MiniMaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
 			}
 			//if we've gone too deep
 			if (depth > localMaxDepth.get())
 			{
 				//increment leaf count
 				leafCount.set(leafCount.get() + 1);
-				return new minimaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
+				return new MiniMaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
 			}
 			
-			//moves available from this node
-			HashSet<Move> moves = GameRules.getLegalMoves(board, minPlayer.get());
+			//gameMoves available from this node
+			HashSet<GameMove> gameMoves = GameBoardRules.getLegalMoves(board, minPlayer.get());
 			
-			Iterator<Move> it = moves.iterator();
+			Iterator<GameMove> it = gameMoves.iterator();
 
 			// we can end the search here if there are no successors
 			if (!it.hasNext())
 			{
-				return new minimaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
+				return new MiniMaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
 			}
 			
-			Move action;
-			minimaxNode result = new minimaxNode(Integer.MIN_VALUE, parentAction);
+			GameMove action;
+			MiniMaxNode result = new MiniMaxNode(Integer.MIN_VALUE, parentAction);
 			
 			int v = Integer.MAX_VALUE;
 			int alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
@@ -254,14 +253,14 @@ public class concurrentMinimax extends GameSearch
 				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			// actions for MAX player
-			Iterator<Move> successors = GameRules.getLegalMoves(board, maxPlayer.get()).iterator();
+			Iterator<GameMove> successors = GameBoardRules.getLegalMoves(board, maxPlayer.get()).iterator();
 			// we can end the search here if there are no successors
 			if (!successors.hasNext())
 			{
 				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			
-			Move action;
+			GameMove action;
 			int v = Integer.MIN_VALUE;
 			// standard alpha-beta search
 			while (successors.hasNext())
@@ -301,13 +300,13 @@ public class concurrentMinimax extends GameSearch
 				return eval.evaluateBoard(board, maxPlayer.get());
 			}
 			// actions for MIN player
-			Iterator<Move> successors = GameRules.getLegalMoves(board, minPlayer.get()).iterator();
+			Iterator<GameMove> successors = GameBoardRules.getLegalMoves(board, minPlayer.get()).iterator();
 			// we can end the search here if there are no successors
 			if (!successors.hasNext())
 			{
 				return eval.evaluateBoard(board, maxPlayer.get());
 			}
-			Move action;
+			GameMove action;
 			int v = Integer.MAX_VALUE;
 			// standard alpha-beta search
 			while (successors.hasNext())
@@ -333,7 +332,7 @@ public class concurrentMinimax extends GameSearch
 	}
 
 	@Override
-	public Move getMove(OurBoard board, int side) throws IllegalMoveException {
+	public GameMove getMove(GameBoard board, int side) throws IllegalMoveException {
 		return minimaxDecision(board, side);
 	}
 }

@@ -1,9 +1,6 @@
-package ai;
+package AmazonBoard;
 
 import java.util.HashSet;
-
-import utils.GameRules;
-import utils.Move;
 
 import com.rits.cloning.Cloner;
 
@@ -13,7 +10,7 @@ import com.rits.cloning.Cloner;
  * @author Yarko Senyuta
  *
  */
-public class OurBoard implements Cloneable{
+public class GameBoard implements Cloneable{
 	
 	
 	static Cloner clone = new Cloner();
@@ -84,7 +81,7 @@ public class OurBoard implements Cloneable{
 	 * @param rows the number of rows on the board
 	 * @param columns the number of columns on the board
 	 */
-	public OurBoard() {
+	public GameBoard() {
 		
 		
 		//set rows and columns
@@ -226,12 +223,12 @@ public class OurBoard implements Cloneable{
 	 * @param side which side is making the move
 	 * @return
 	 */
-	public boolean makeMove(Move action) throws IllegalMoveException {
+	public boolean makeMove(GameMove action) throws IllegalMoveException {
 		//get code of queen
 		int side = board[action.getInitialQ().getX()][action.getInitialQ().getY()];
 
 		//check if this move is legal
-		if (GameRules.isLegalMove(this, action, side))
+		if (GameBoardRules.isLegalMove(this, action, side))
 		{	
 			//free old queen position
 			placeMarker(action.getInitialQ().getX(), action.getInitialQ().getY(), FREE);
@@ -251,24 +248,24 @@ public class OurBoard implements Cloneable{
 	}
 	
 	
-	public void undoMove(Move move)
+	public void undoMove(GameMove gameMove)
 	{
 		//get rid of arrow
-		board[move.getArrow().getX()][move.getArrow().getY()] = FREE;
+		board[gameMove.getArrow().getX()][gameMove.getArrow().getY()] = FREE;
 		
 		//figure out side
-		int side = board[move.getFinalQ().getX()][move.getFinalQ().getY()];
+		int side = board[gameMove.getFinalQ().getX()][gameMove.getFinalQ().getY()];
 		
 		
 		//place old queen position
-		placeMarker(move.getInitialQ().getX(), move.getInitialQ().getY(), side);
+		placeMarker(gameMove.getInitialQ().getX(), gameMove.getInitialQ().getY(), side);
 		
 		//free new queen
-		placeMarker(move.getFinalQ().getX(), move.getFinalQ().getY(), FREE);
+		placeMarker(gameMove.getFinalQ().getX(), gameMove.getFinalQ().getY(), FREE);
 		
 		
 		//update queen in hashset
-		updateQueenPosition(move.getFinalQ().getX(), move.getFinalQ().getY(), move.getInitialQ().getX(), move.getInitialQ().getY(), side);
+		updateQueenPosition(gameMove.getFinalQ().getX(), gameMove.getFinalQ().getY(), gameMove.getInitialQ().getX(), gameMove.getInitialQ().getY(), side);
 		
 		
 	}
@@ -338,7 +335,7 @@ public class OurBoard implements Cloneable{
 	}
 	
 	@Override
-	public OurBoard clone()
+	public GameBoard clone()
 	{
 		return clone.deepClone(this);
 	}

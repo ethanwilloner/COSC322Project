@@ -1,4 +1,4 @@
-package ai;
+package AmazonBoard;
 
 /**
  * Created by ethan on 22/03/15.

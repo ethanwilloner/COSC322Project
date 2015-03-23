@@ -1,13 +1,13 @@
-package Evaluations;
+package EvaluationFunctions;
 
 import java.util.HashSet;
 
-import utils.GameRules;
+import AmazonBoard.GameBoardRules;
 import AbstractClasses.Evaluation;
-import ai.OurBoard;
-import ai.OurPair;
+import AmazonBoard.GameBoard;
+import AmazonBoard.OurPair;
 
-public class OurEvaluation extends Evaluation
+public class MullerTegosEvaluation extends Evaluation
 {
 	
 	/**evaluation function that computes a value for whose in a better spot;
@@ -19,7 +19,7 @@ public class OurEvaluation extends Evaluation
 	 * @param board the board evaluated
 	 * @return
 	 */
-	public static int[] evaluateBoard(OurBoard board, int side, boolean output)
+	public static int[] evaluateBoard(GameBoard board, int side, boolean output)
 	{
 		HashSet<OurPair> whitePositions = board.getWhitePositions();
 		HashSet<OurPair> blackPositions = board.getBlackPositions();
@@ -147,10 +147,10 @@ public class OurEvaluation extends Evaluation
 		return rtn;
 	}
 	
-	private static void paintBoardWithQueen(OurBoard board, int[][][] tempBoard, OurPair queen, int side, int depth)
+	private static void paintBoardWithQueen(GameBoard board, int[][][] tempBoard, OurPair queen, int side, int depth)
 	{
 		//get positions the queen can move now
-		HashSet<OurPair> moves = GameRules.getLegalQueenMoves(board, queen, side);
+		HashSet<OurPair> moves = GameBoardRules.getLegalQueenMoves(board, queen, side);
 		
 	
 		int old;
@@ -202,7 +202,7 @@ public class OurEvaluation extends Evaluation
 	}
 
 	@Override
-	public int evaluateBoard(OurBoard board, int side) {
+	public int evaluateBoard(GameBoard board, int side) {
 		return evaluateBoard(board, side, false)[0];
 	}
 	

@@ -1,18 +1,18 @@
-package minimax;
+package MiniMax;
 
-import ai.IllegalMoveException;
-import utils.GameRules;
-import utils.Move;
+import AmazonBoard.GameMove;
+import AmazonBoard.IllegalMoveException;
+import AmazonBoard.GameBoardRules;
 import AbstractClasses.GameSearch;
-import ai.OurBoard;
+import AmazonBoard.GameBoard;
 
 
 /**
- * a sequential minimax search
+ * a sequential MiniMax search
  * @author Yarko Senyuta
  *
  */
-public class minimaxSearch  extends GameSearch
+public class MiniMaxSearch extends GameSearch
 {
 	
 	private static long startTime;
@@ -20,33 +20,33 @@ public class minimaxSearch  extends GameSearch
 	private static long leafCount;
 	
 
-	public minimaxNode minimax(OurBoard board, int depth, int maxDepth, boolean maximizingPlayer, int side, int alpha, int beta) throws IllegalMoveException {
+	public MiniMaxNode minimax(GameBoard board, int depth, int maxDepth, boolean maximizingPlayer, int side, int alpha, int beta) throws IllegalMoveException {
         if (board.cutoffTest(depth, startTime))
         {
             isCutoff = true;
-            return new minimaxNode(eval.evaluateBoard(board, side), null);
+            return new MiniMaxNode(eval.evaluateBoard(board, side), null);
         }
 
         //evaluation
 		int evaluation = eval.evaluateBoard(board, side);
 		
 		//if we have run out of depth or one side has pretty much won
-		if (depth > maxDepth || GameRules.checkEndGame(board) != 0/*eval[1] != 0*/)
+		if (depth > maxDepth || GameBoardRules.checkEndGame(board) != 0/*eval[1] != 0*/)
 		{
 			leafCount++;
-			return new minimaxNode(evaluation, null);
+			return new MiniMaxNode(evaluation, null);
 		}
 		
 		int bestValue;
-		Move bestMove = null;
+		GameMove bestGameMove = null;
 		int val;
-		minimaxNode node;
+		MiniMaxNode node;
 		
 		if (maximizingPlayer) 
 		{
 			bestValue = Integer.MIN_VALUE;
 			//maximizing our moves
-			for (Move m: GameRules.getLegalMoves(board, side)) 
+			for (GameMove m: GameBoardRules.getLegalMoves(board, side))
 			{
 				board.makeMove(m);
 				
@@ -57,10 +57,10 @@ public class minimaxSearch  extends GameSearch
 				if (bestValue < val)
 				{
 					bestValue = val;
-					bestMove = m;
+					bestGameMove = m;
 				}
 				
-				//undo move
+				//undo gameMove
 				board.undoMove(m);
 				
 				//alpha check
@@ -82,13 +82,13 @@ public class minimaxSearch  extends GameSearch
 				
 			}
 			
-			return new minimaxNode(bestValue, bestMove);
+			return new MiniMaxNode(bestValue, bestGameMove);
 			
 		}
 		else {
 			bestValue = Integer.MAX_VALUE;
 			//minimizing other player's moves
-			for (Move m : GameRules.getLegalMoves(board, side)) 
+			for (GameMove m : GameBoardRules.getLegalMoves(board, side))
 			{
 				board.makeMove(m);
 				node = minimax(board, depth+1, maxDepth, true, side /*(side==1)?2:1*/, alpha, beta);
@@ -98,9 +98,9 @@ public class minimaxSearch  extends GameSearch
 				if (bestValue > val)
 				{
 					bestValue = val;
-					bestMove = m;
+					bestGameMove = m;
 				}
-				//undo move
+				//undo gameMove
 				board.undoMove(m);
 				
 				//alpha beta check
@@ -121,13 +121,13 @@ public class minimaxSearch  extends GameSearch
 				}
 			}
 			
-			return new minimaxNode(bestValue, bestMove);
+			return new MiniMaxNode(bestValue, bestGameMove);
 		}
 		
 	}
 
 	@Override
-	public Move getMove(OurBoard board, int side) throws IllegalMoveException {
+	public GameMove getMove(GameBoard board, int side) throws IllegalMoveException {
 		
 		//use iterative deepening
 		int depth = 1;
@@ -135,7 +135,7 @@ public class minimaxSearch  extends GameSearch
 		startTime = System.currentTimeMillis();
 		isCutoff = false;
 		
-		Move bestMoveSoFar = null;
+		GameMove bestGameMoveSoFar = null;
 
 		int bestValSoFar = Integer.MIN_VALUE;
 		
@@ -144,13 +144,13 @@ public class minimaxSearch  extends GameSearch
 		{
 			leafCount = 0;
 			System.out.println("Scanning depth: " + depth);
-			minimaxNode node = minimax(board, 1, depth, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
+			MiniMaxNode node = minimax(board, 1, depth, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			//update best so far only if we aren't cut off or we don't have any best so far
-			if (!isCutoff || bestMoveSoFar == null)
+			if (!isCutoff || bestGameMoveSoFar == null)
 			{
 				if (bestValSoFar < node.getValue())
 				{
-					bestMoveSoFar = node.getMove();
+					bestGameMoveSoFar = node.getGameMove();
 					bestValSoFar = node.getValue();
 				}
 			}
@@ -160,7 +160,7 @@ public class minimaxSearch  extends GameSearch
 		}
 		System.out.println("Got to depth " + (depth-1) + " in sequential search");
 		
-		return bestMoveSoFar;
+		return bestGameMoveSoFar;
 		
 	}
 }

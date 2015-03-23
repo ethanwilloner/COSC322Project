@@ -1,6 +1,6 @@
-package Messages;
+package Messaging;
 
-import ai.OurPair;
+import AmazonBoard.OurPair;
 
 import javax.xml.bind.annotation.*;
 
@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.*;
  * Queen, stores a move in a string of the
  * format previous-current such as g7-a4.
  * Is not stored in our internal game board representation
- * See getMove for getter of the newest move
+ * See getGameMove for getter of the newest move
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Queen {

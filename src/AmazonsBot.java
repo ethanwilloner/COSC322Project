@@ -1,12 +1,13 @@
-package utils;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.xml.bind.JAXBException;
 
-import ai.IllegalMoveException;
-import minimax.concurrentMinimax;
+import AmazonBoard.GameBoardRules;
+import AmazonBoard.GameMove;
+import AmazonBoard.IllegalMoveException;
+import EvaluationFunctions.MullerTegosEvaluation;
+import MiniMax.ConcurrentMiniMax;
 import ubco.ai.GameRoom;
 import ubco.ai.connection.ServerMessage;
 import ubco.ai.games.GameClient;
@@ -14,18 +15,17 @@ import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
 import AbstractClasses.Evaluation;
 import AbstractClasses.GameSearch;
-import Evaluations.OurEvaluation;
-import Evaluations.SimpleEvaluation;
-import Messages.Action;
-import Messages.Arrow;
-import Messages.Queen;
-import Messages.User;
-import Messages.XMLParser;
-import ai.OurBoard;
+import EvaluationFunctions.SimpleEvaluation;
+import Messaging.Action;
+import Messaging.Arrow;
+import Messaging.Queen;
+import Messaging.User;
+import Messaging.XMLParser;
+import AmazonBoard.GameBoard;
 
-public class GameLogic implements GamePlayer
+public class AmazonsBot implements GamePlayer
 {
-    static OurBoard ourBoard = new OurBoard();
+    static GameBoard gameBoard = new GameBoard();
     static String TeamName = "Team Rocket1";
     static String TeamPassword = "password";
     static GameClient gameClient;
@@ -42,10 +42,10 @@ public class GameLogic implements GamePlayer
 
     static int threadCount = 4;
     static Evaluation simpleEval = new SimpleEvaluation();
-    static Evaluation eval = new OurEvaluation();
+    static Evaluation eval = new MullerTegosEvaluation();
     
 //  static GameSearch minimaxSearch = new minimaxSearch();
-    static GameSearch minimaxSearch = new concurrentMinimax(threadCount, eval);
+    static GameSearch minimaxSearch = new ConcurrentMiniMax(threadCount, eval);
 
     //set the evaluation
     static
@@ -74,14 +74,14 @@ public class GameLogic implements GamePlayer
         System.out.println();
 
         xmlParser = new XMLParser();
-        GameLogic gamelogic = new GameLogic(TeamName,TeamPassword);
+        AmazonsBot amazonsBot = new AmazonsBot(TeamName,TeamPassword);
 
 //        samplePlay();
     }
 
-    public GameLogic(String name, String passwd)
+    public AmazonsBot(String name, String password)
     {
-        gameClient = new GameClient(TeamName, TeamPassword, this);
+        gameClient = new GameClient(name, password, this);
         do {
             getOurRooms();
             Scanner scanner = new Scanner(System.in);
@@ -199,65 +199,65 @@ public class GameLogic implements GamePlayer
         }
 
         //If it is the end of the game, print end game stats and then exit the application
-        checkEndGame(ourBoard);
+        checkEndGame(gameBoard);
 
-        // if we are not the ones making the first move in the game, we can start parsing the first action message we get
+        // if we are not the ones making the first gameMove in the game, we can start parsing the first action message we get
         if(makeFirstMove == false)
         {
-            //Get initialQ, finalQ and arrow from the move that the opponent made, and make it on our board
-            Move opponentMove = new Move(receivedAction.getQueen().getInitialQ(),
+            //Get initialQ, finalQ and arrow from the gameMove that the opponent made, and make it on our board
+            GameMove opponentGameMove = new GameMove(receivedAction.getQueen().getInitialQ(),
                                             receivedAction.getQueen().getFinalQ(),
                                             receivedAction.getArrow().getArrow());
 
-            // Checks to make sure that the opponents move was legal
+            // Checks to make sure that the opponents gameMove was legal
             try {
-                ourBoard.makeMove(opponentMove);
+                gameBoard.makeMove(opponentGameMove);
             }catch (IllegalMoveException e)
             {
-                System.out.println("Opponent made an illegal move: ");
-                opponentMove.moveInfo(ourBoard);
+                System.out.println("Opponent made an illegal gameMove: ");
+                opponentGameMove.moveInfo(gameBoard);
                 e.printStackTrace();
                 System.exit(0);
             }
 
-            // Print the opponents move
+            // Print the opponents gameMove
             System.out.println("\n\nOpponents Turn:");
-            opponentMove.moveInfo(ourBoard);
+            opponentGameMove.moveInfo(gameBoard);
             
         }
         
-        checkEndGame(ourBoard);
+        checkEndGame(gameBoard);
         
         long start, end;
 
         start = System.currentTimeMillis();
 
-        Move move = null;
+        GameMove gameMove = null;
         try {
-            // Get a move from the minimax search
-            move = minimaxSearch.getMove(ourBoard, TeamSide);
+            // Get a gameMove from the MiniMax search
+            gameMove = minimaxSearch.getMove(gameBoard, TeamSide);
         } catch (IllegalMoveException e) {
-            System.out.println("Failed to get move: ");
+            System.out.println("Failed to get gameMove: ");
             e.printStackTrace();
-            //TODO implement method for getting first available move incase concurrent search fails
+            //TODO implement method for getting first available gameMove incase concurrent search fails
             System.exit(1);
         }
 
-        //Make the move on our board
+        //Make the gameMove on our board
         try
         {
-            ourBoard.makeMove(move);
+            gameBoard.makeMove(gameMove);
         } catch (IllegalMoveException e)
         {
-            System.out.println("Illegal Move made: ");
+            System.out.println("Illegal GameMove made: ");
             e.printStackTrace();
             System.exit(0);
         }
 
         // Construct the new Action object that we will send to the server
         sendAction = new Action(GameMessage.ACTION_MOVE);
-        sendAction.setQueen(new Queen(move.getInitialQ(), move.getFinalQ()));
-        sendAction.setArrow(new Arrow(move.getArrow()));
+        sendAction.setQueen(new Queen(gameMove.getInitialQ(), gameMove.getFinalQ()));
+        sendAction.setArrow(new Arrow(gameMove.getArrow()));
 
         // Send message to server
         sendToServer(sendAction, roomId);
@@ -268,10 +268,10 @@ public class GameLogic implements GamePlayer
         // End of turn statistics
         System.out.println("\n\nOur Turn:");
         System.out.println("Time: " + end / 1000 + " seconds");
-        move.moveInfo(ourBoard);
+        gameMove.moveInfo(gameBoard);
 
         //If it is the end of the game, print end game stats and then exit the application
-        checkEndGame(ourBoard);
+        checkEndGame(gameBoard);
 
         // Call the garbage collector when we are done each turn
         System.runFinalization();
@@ -293,13 +293,13 @@ public class GameLogic implements GamePlayer
         gameClient.sendToServer(compiledGameMessage, true);
     }
 
-    public static void checkEndGame(OurBoard board)
+    public static void checkEndGame(GameBoard board)
     {
-        if (GameRules.checkEndGame(ourBoard) != 0)
+        if (GameBoardRules.checkEndGame(gameBoard) != 0)
         {
-            System.out.println(GameRules.checkEndGame(ourBoard));
-            System.out.println("All legal white moves: " + GameRules.getLegalMoves(ourBoard, 1));
-            System.out.println("All legal black moves: " + GameRules.getLegalMoves(ourBoard, 2));
+            System.out.println(GameBoardRules.checkEndGame(gameBoard));
+            System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(gameBoard, 1));
+            System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(gameBoard, 2));
             System.out.println("\n\nGame over");
             System.exit(0);
         }
@@ -312,7 +312,7 @@ public class GameLogic implements GamePlayer
     public static void samplePlay() throws IllegalMoveException {
         int side = 1;
 
-        OurBoard board = new OurBoard();
+        GameBoard board = new GameBoard();
 
         GameSearch search = minimaxSearch;
 
@@ -320,8 +320,8 @@ public class GameLogic implements GamePlayer
         Evaluation e = eval;
         
         //while we are still playing
-        //while (OurEvaluation.evaluateBoard(board, side)[1] == 0)
-        while(GameRules.checkEndGame(board) == 0)
+        //while (MullerTegosEvaluation.evaluateBoard(board, side)[1] == 0)
+        while(GameBoardRules.checkEndGame(board) == 0)
         {
 //        	if (side == 1)
 //        	{
@@ -336,28 +336,28 @@ public class GameLogic implements GamePlayer
             //time run
             start = System.currentTimeMillis();
 
-            //minimaxNode node = minimax.minimax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            //minimaxNode node = MiniMax.MiniMax(board, 2, true, side, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
-            Move move = search.getMove(board, side);
+            GameMove gameMove = search.getMove(board, side);
 
-            //Move move = minimax.getDecision(board, side, 2);
+            //GameMove gameMove = MiniMax.getDecision(board, side, 2);
 
             end = System.currentTimeMillis() - start;
 
             try {
-                board.makeMove(move);
+                board.makeMove(gameMove);
             } catch (IllegalMoveException e1) {
-                System.out.println("Illegal Move made: ");
+                System.out.println("Illegal GameMove made: ");
                 e1.printStackTrace();
                 System.exit(0);
             }
 
             System.out.println("Time: " + end/1000 + " seconds");
-            System.out.println("move made: " + move);
+            System.out.println("gameMove made: " + gameMove);
 
-            //System.out.println("minimax score " + node.getValue());
+            //System.out.println("MiniMax score " + node.getValue());
 
-            System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + OurEvaluation.evaluateBoard(board, 1, false)[1]);
+            System.out.println("Current evaluation: "+ MullerTegosEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(board, 1, false)[1]);
             System.out.println("Simple evaluation: "+ simpleEval.evaluateBoard(board, 1));
             System.out.println(board);
 
@@ -365,10 +365,10 @@ public class GameLogic implements GamePlayer
 
         }
 
-        System.out.println(GameRules.checkEndGame(board));
+        System.out.println(GameBoardRules.checkEndGame(board));
 
-        System.out.println("All legal white moves: " + GameRules.getLegalMoves(board, 1));
+        System.out.println("All legal white moves: " + GameBoardRules.getLegalMoves(board, 1));
 
-        System.out.println("All legal black moves: " + GameRules.getLegalMoves(board, 2));
+        System.out.println("All legal black moves: " + GameBoardRules.getLegalMoves(board, 2));
     }
 }

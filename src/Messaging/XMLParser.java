@@ -1,4 +1,4 @@
-package Messages;
+package Messaging;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -22,7 +22,6 @@ public class XMLParser {
      *            it into the object mappings
      * @throws javax.xml.bind.JAXBException
      */
-
     public static Action unmarshal(String msg) throws JAXBException {
         InputStream is = new ByteArrayInputStream(msg.getBytes());
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -40,7 +39,6 @@ public class XMLParser {
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
         marshaller.marshal(action, os);
-        System.out.println("Our marshalled xml: " + os.toString());
         return os.toString();
     }
 

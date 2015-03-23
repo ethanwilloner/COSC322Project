@@ -1,6 +1,6 @@
-package Messages;
+package Messaging;
 
-import ai.OurPair;
+import AmazonBoard.OurPair;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

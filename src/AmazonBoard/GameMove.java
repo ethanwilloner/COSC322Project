@@ -1,15 +1,13 @@
-package utils;
+package AmazonBoard;
 
-import Evaluations.OurEvaluation;
-import ai.OurBoard;
-import ai.OurPair;
+import EvaluationFunctions.MullerTegosEvaluation;
 
 /**
  * A move datatype
  * @author Yarko Senyuta
  *
  */
-public class Move 
+public class GameMove
 {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -29,7 +27,7 @@ public class Move
 	 */
 	@Override
 	public String toString() {
-		return "Move [initialQ=" + initialQ + ", FinalQ=" + FinalQ + ", arrow="
+		return "GameMove [initialQ=" + initialQ + ", FinalQ=" + FinalQ + ", arrow="
 				+ arrow + "]";
 	}
 	/* (non-Javadoc)
@@ -43,7 +41,7 @@ public class Move
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Move other = (Move) obj;
+		GameMove other = (GameMove) obj;
 		if (FinalQ == null) {
 			if (other.FinalQ != null)
 				return false;
@@ -100,25 +98,22 @@ public class Move
 	public void setArrow(OurPair arrow) {
 		this.arrow = arrow;
 	}
-	public Move(OurPair initialQ,
-			OurPair finalQ, OurPair arrow) {
+	public GameMove(OurPair initialQ,
+                    OurPair finalQ, OurPair arrow) {
 		super();
 		this.initialQ = initialQ;
 		FinalQ = finalQ;
 		this.arrow = arrow;
 	}
 	
-	public void moveInfo(OurBoard ourBoard)
+	public void moveInfo(GameBoard gameBoard)
     {
         System.out.println("move made: " + this);
         
         //print
-        OurEvaluation.evaluateBoard(ourBoard, 1, true);
+        MullerTegosEvaluation.evaluateBoard(gameBoard, 1, true);
         
-        System.out.println("Current evaluation: "+ OurEvaluation.evaluateBoard(ourBoard, 1, false)[0] + "\t" + OurEvaluation.evaluateBoard(ourBoard, 1, false)[1]);
-        System.out.println(ourBoard);
+        System.out.println("Current evaluation: "+ MullerTegosEvaluation.evaluateBoard(gameBoard, 1, false)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(gameBoard, 1, false)[1]);
+        System.out.println(gameBoard);
     }
-	
-	
-
 }

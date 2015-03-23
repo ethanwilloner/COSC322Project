@@ -1,3 +1,5 @@
+package GUI;
+
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Point;
@@ -12,9 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
-import ai.IllegalMoveException;
-import utils.Move;
-import ai.OurBoard;
+import AmazonBoard.GameMove;
+import AmazonBoard.IllegalMoveException;
+import AmazonBoard.GameBoard;
 
 
 
@@ -25,13 +27,13 @@ public class AmazonsGUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private OurBoard board;
+	private GameBoard board;
 	
 	private JPanel contentPane;
 	private int tileWidth;
 	private int tileCount;
 	private JPanel gridPanel;
-	private HashMap<Point,myTile> gridTiles;
+	private HashMap<Point, myTile> gridTiles;
 	private Timer timer;
 	private int seconds=0;
 	
@@ -50,7 +52,7 @@ public class AmazonsGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AmazonsGUI frame = new AmazonsGUI(new OurBoard());
+					AmazonsGUI frame = new AmazonsGUI(new GameBoard());
 					
 					frame.setVisible(true);
 					
@@ -65,7 +67,7 @@ public class AmazonsGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AmazonsGUI(OurBoard b) {
+	public AmazonsGUI(GameBoard b) {
 		
 		board = b;
 		highlightedInitialQueen = null;
@@ -118,9 +120,9 @@ public class AmazonsGUI extends JFrame {
 	 */
 	private void setImages() {
 		try{
-			whitequeen = ImageIO.read(this.getClass().getResourceAsStream("/rsz_wq.png"));
-			blackqueen = ImageIO.read(this.getClass().getResourceAsStream("/rsz_bq.png"));
-			arrow = ImageIO.read(this.getClass().getResourceAsStream("/rsz_arrow.png"));
+			whitequeen = ImageIO.read(this.getClass().getResourceAsStream("/GUI/rsz_wq.png"));
+			blackqueen = ImageIO.read(this.getClass().getResourceAsStream("/GUI/rsz_bq.png"));
+			arrow = ImageIO.read(this.getClass().getResourceAsStream("/GUI/rsz_arrow.png"));
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -132,7 +134,7 @@ public class AmazonsGUI extends JFrame {
 	 * Creates the gameboard, a 10x10 grid of myTiles
 	 */
 	private void createGrid(){
-		gridTiles = new HashMap<Point,myTile>();
+		gridTiles = new HashMap<Point, myTile>();
 		
 		boolean colored = true;
 		for(int i = 0;i<tileCount;i++){
@@ -162,10 +164,10 @@ public class AmazonsGUI extends JFrame {
 	}
 
 	public void moveQueen(myTile sourceTile, myTile targetTile, myTile arrowTile) throws IllegalMoveException {
-		Move move = new Move(sourceTile.getPosition(), targetTile.getPosition(), arrowTile.getPosition());
-		if (board.makeMove(move))
+		GameMove gameMove = new GameMove(sourceTile.getPosition(), targetTile.getPosition(), arrowTile.getPosition());
+		if (board.makeMove(gameMove))
 		{
-			System.out.println("This is a legal move.");
+			System.out.println("This is a legal gameMove.");
 			targetTile.setState(sourceTile.getState());
 			
 			sourceTile.setState(0);
@@ -174,7 +176,7 @@ public class AmazonsGUI extends JFrame {
 			arrowTile.repaint();
 		}
 		else
-			System.out.println("This is not a legal move.");
+			System.out.println("This is not a legal gameMove.");
 		
 		
 		
@@ -245,8 +247,4 @@ public class AmazonsGUI extends JFrame {
 			highlightedFinalQueen = null;
 		}
 	}
-	
-	
-	
-	
 }

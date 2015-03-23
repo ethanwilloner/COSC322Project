@@ -1,3 +1,5 @@
+package GUI;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -7,8 +9,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import ai.IllegalMoveException;
-import ai.OurPair;
+import AmazonBoard.IllegalMoveException;
+import AmazonBoard.OurPair;
 
 
 public class myTile extends JPanel {
@@ -114,11 +116,11 @@ public class myTile extends JPanel {
 //			        		 thisTile.toggleHighlight();
 //			        		 break;
 //		        		 case 1:
-//		        			 AmazonsGUI.moveQueen(gui.highlighted, thisTile);
+//		        			 GUI.AmazonsGUI.moveQueen(gui.highlighted, thisTile);
 //		        			 repaint();
 //		        			 break;
 //		        		 case 2:
-//		        			 AmazonsGUI.moveQueen(gui.highlighted, thisTile);
+//		        			 GUI.AmazonsGUI.moveQueen(gui.highlighted, thisTile);
 //		        			 repaint();
 //		        			 break;
 //		        		 case 3:
@@ -139,7 +141,7 @@ public class myTile extends JPanel {
 //			        	thisTile.toggleHighlight();
 //		        	}
 //		        	//check if the second tile clicked is a legal move
-//		        	Move move = new Move();
+//		        	GameMove move = new GameMove();
 //		        }
 		       
 		    }
