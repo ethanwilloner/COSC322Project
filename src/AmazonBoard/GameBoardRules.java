@@ -34,7 +34,7 @@ public class GameBoardRules
 		HashSet<GameMove> toReturn = new HashSet<GameMove>();
 		
 		
-		HashSet<OurPair> queens; 
+		HashSet<Position> queens;
 		//get queens
 		if (side == 1)
 			queens = board.getWhitePositions();
@@ -42,11 +42,11 @@ public class GameBoardRules
 			queens = board.getBlackPositions();
 		
 		
-		HashSet<OurPair> queenToTiles;
-		HashSet<OurPair> arrowToTiles;
+		HashSet<Position> queenToTiles;
+		HashSet<Position> arrowToTiles;
 		
 		//for every given queen,
-		for (OurPair queen : queens)
+		for (Position queen : queens)
 		{
 			//get where the queen can move
 			queenToTiles = getMoveCross(board, queen);
@@ -55,7 +55,7 @@ public class GameBoardRules
 			board.freeSquare(queen.getX(), queen.getY());
 			
 			//for every place the queen can move, get where arrow can be thrown
-			for (OurPair newQueen : queenToTiles)
+			for (Position newQueen : queenToTiles)
 			{
 				//add queen to future tile
 				board.placeMarker(newQueen.getX(), newQueen.getY(), side);
@@ -66,9 +66,9 @@ public class GameBoardRules
 				board.placeMarker(newQueen.getX(), newQueen.getY(), board.FREE);
 				
 				//add to moves
-				for (OurPair arrow : arrowToTiles)
+				for (Position arrow : arrowToTiles)
 				{
-					toReturn.add(new GameMove(new OurPair(queen.getX(), queen.getY()), newQueen, arrow));
+					toReturn.add(new GameMove(new Position(queen.getX(), queen.getY()), newQueen, arrow));
 				}
 			}
 			
@@ -84,9 +84,9 @@ public class GameBoardRules
 	 * @param tileToMove the tile we are interested in
 	 * @return tiles where the given one is allowed to move to
 	 */
-	private static HashSet<OurPair> getMoveCross(GameBoard board, OurPair tileToMove)
+	private static HashSet<Position> getMoveCross(GameBoard board, Position tileToMove)
 	{
-		HashSet<OurPair> toReturn = new HashSet<OurPair>();
+		HashSet<Position> toReturn = new HashSet<Position>();
 		
 		int x = tileToMove.getX();
 		int y = tileToMove.getY();
@@ -97,7 +97,7 @@ public class GameBoardRules
 			//is this a viable place to move tile, add it to hashset
 			if (board.isFree(tempX, y))
 			{
-				toReturn.add(new OurPair(tempX, y));
+				toReturn.add(new Position(tempX, y));
 			}
 			//do not need to check any further, cannot get past a blocked tile
 			else
@@ -109,7 +109,7 @@ public class GameBoardRules
 			//is this a viable place to move tile, add it to hashset
 			if (board.isFree(tempX, y))
 			{
-				toReturn.add(new OurPair(tempX, y));
+				toReturn.add(new Position(tempX, y));
 			}
 			//do not need to check any further, cannot get past a blocked tile
 			else
@@ -122,7 +122,7 @@ public class GameBoardRules
 			//is this a viable place to move tile, add it to hashset
 			if (board.isFree(x, tempY))
 			{
-				toReturn.add(new OurPair(x, tempY));
+				toReturn.add(new Position(x, tempY));
 			}
 			//do not need to check any further, cannot get past a blocked tile
 			else
@@ -134,7 +134,7 @@ public class GameBoardRules
 			//is this a viable place to move tile, add it to hashset
 			if (board.isFree(x, tempY))
 			{
-				toReturn.add(new OurPair(x, tempY));
+				toReturn.add(new Position(x, tempY));
 			}
 			//do not need to check any further, cannot get past a blocked tile
 			else
@@ -152,7 +152,7 @@ public class GameBoardRules
 		{
 			
 			if (board.isFree(tempX, tempY))
-				toReturn.add(new OurPair(tempX, tempY));
+				toReturn.add(new Position(tempX, tempY));
 			else
 				break;
 			
@@ -170,7 +170,7 @@ public class GameBoardRules
 		{
 			
 			if (board.isFree(tempX, tempY))
-				toReturn.add(new OurPair(tempX, tempY));
+				toReturn.add(new Position(tempX, tempY));
 			else
 				break;
 			
@@ -187,7 +187,7 @@ public class GameBoardRules
 		{
 			
 			if (board.isFree(tempX, tempY))
-				toReturn.add(new OurPair(tempX, tempY));
+				toReturn.add(new Position(tempX, tempY));
 			else
 				break;
 			
@@ -204,7 +204,7 @@ public class GameBoardRules
 		{
 			
 			if (board.isFree(tempX, tempY))
-				toReturn.add(new OurPair(tempX, tempY));
+				toReturn.add(new Position(tempX, tempY));
 			else
 				break;
 			
@@ -239,7 +239,7 @@ public class GameBoardRules
 	 * @param side 1 for white queen, 2 for black queen
 	 * @return a set of legal moves
 	 */
-	public static HashSet<OurPair> getLegalQueenMoves(GameBoard board, OurPair queen, int side)
+	public static HashSet<Position> getLegalQueenMoves(GameBoard board, Position queen, int side)
 	{
 		//get where the queen can move
 		return getMoveCross(board, queen);

@@ -59,47 +59,47 @@ public class GameMove
 			return false;
 		return true;
 	}
-	OurPair initialQ;
-	OurPair FinalQ;
-	OurPair arrow;
+	Position initialQ;
+	Position FinalQ;
+	Position arrow;
 	/**
 	 * @return the initialQ
 	 */
-	public OurPair getInitialQ() {
+	public Position getInitialQ() {
 		return initialQ;
 	}
 	/**
 	 * @param initialQ the initialQ to set
 	 */
-	public void setInitialQ(OurPair initialQ) {
+	public void setInitialQ(Position initialQ) {
 		this.initialQ = initialQ;
 	}
 	/**
 	 * @return the finalQ
 	 */
-	public OurPair getFinalQ() {
+	public Position getFinalQ() {
 		return FinalQ;
 	}
 	/**
 	 * @param finalQ the finalQ to set
 	 */
-	public void setFinalQ(OurPair finalQ) {
+	public void setFinalQ(Position finalQ) {
 		FinalQ = finalQ;
 	}
 	/**
 	 * @return the arrow
 	 */
-	public OurPair getArrow() {
+	public Position getArrow() {
 		return arrow;
 	}
 	/**
 	 * @param arrow the arrow to set
 	 */
-	public void setArrow(OurPair arrow) {
+	public void setArrow(Position arrow) {
 		this.arrow = arrow;
 	}
-	public GameMove(OurPair initialQ,
-                    OurPair finalQ, OurPair arrow) {
+	public GameMove(Position initialQ,
+                    Position finalQ, Position arrow) {
 		super();
 		this.initialQ = initialQ;
 		FinalQ = finalQ;

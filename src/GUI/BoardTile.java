@@ -1,7 +1,7 @@
 package GUI;
 
 import AmazonBoard.IllegalMoveException;
-import AmazonBoard.OurPair;
+import AmazonBoard.Position;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class BoardTile extends JPanel {
 	
 	public boolean colored;
 
-	private OurPair position;
+	private Position position;
 	private AmazonsGUI gui;
 	
 	private boolean highlighted;
@@ -39,7 +39,7 @@ public class BoardTile extends JPanel {
 		gui = g;
 		
 		
-		this.position = new OurPair(x/40, y/40);
+		this.position = new Position(x/40, y/40);
 		
 		this.highlighted=false;
 		this.setBounds(x, y, width, height);
@@ -56,14 +56,14 @@ public class BoardTile extends JPanel {
 	/**
 	 * @return the position
 	 */
-	public OurPair getPosition() {
+	public Position getPosition() {
 		return position;
 	}
 
 	/**
 	 * @param position the position to set
 	 */
-	public void setPosition(OurPair position) {
+	public void setPosition(Position position) {
 		this.position = position;
 	}
 

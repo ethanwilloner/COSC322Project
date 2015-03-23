@@ -18,7 +18,6 @@ public class MiniMaxSearch extends GameSearch
 	private long startTime;
 	private boolean isCutoff;
 	private long leafCount;
-	
 
 	public MiniMaxNode minimax(GameBoard board, int depth, int maxDepth, boolean maximizingPlayer, int side, int alpha, int beta) throws IllegalMoveException {
         if (board.cutoffTest(depth, startTime))
@@ -161,6 +160,5 @@ public class MiniMaxSearch extends GameSearch
 		System.out.println("Got to depth " + (depth-1) + " in sequential search");
 		
 		return bestGameMoveSoFar;
-		
 	}
 }

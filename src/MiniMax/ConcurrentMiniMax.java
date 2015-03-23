@@ -44,7 +44,7 @@ public class ConcurrentMiniMax extends GameSearch
 
 	/**
 	 * get next gameMove
-	 * @param board current board
+	 * @param board current gameBoard
 	 * @param side which side we maximize
 	 * @return best gameMove to be found
 	 */
@@ -157,18 +157,18 @@ public class ConcurrentMiniMax extends GameSearch
 	 */
 	private class MinimaxThread implements Callable<MiniMaxNode>
 	{
-		private GameBoard board;
+		private GameBoard gameBoard;
 		private GameMove parentAction;
 		
 		/**
 		 * constructor for thread
-		 * @param state initial board
+		 * @param state initial gameBoard
 		 * @param action gameMove to be made
 		 */
 		public MinimaxThread(GameBoard state, GameMove action) throws IllegalMoveException {
-			this.board = state;
+			this.gameBoard = state;
 			parentAction = action;
-			board.makeMove(action);
+			gameBoard.makeMove(action);
 		}
 
 		@Override
@@ -179,28 +179,28 @@ public class ConcurrentMiniMax extends GameSearch
 			
 			
 			// test the cutoff function
-			if (board.cutoffTest(depth, startTime.get()))
+			if (gameBoard.cutoffTest(depth, startTime.get()))
 			{
 				isCutoff.set(true);
-				return new MiniMaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
+				return new MiniMaxNode(eval.evaluateBoard(gameBoard, maxPlayer.get()), parentAction);
 			}
 			//if we've gone too deep
 			if (depth > localMaxDepth.get())
 			{
 				//increment leaf count
 				leafCount.set(leafCount.get() + 1);
-				return new MiniMaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
+				return new MiniMaxNode(eval.evaluateBoard(gameBoard, maxPlayer.get()), parentAction);
 			}
 			
 			//gameMoves available from this node
-			HashSet<GameMove> gameMoves = GameBoardRules.getLegalMoves(board, minPlayer.get());
+			HashSet<GameMove> gameMoves = GameBoardRules.getLegalMoves(gameBoard, minPlayer.get());
 			
 			Iterator<GameMove> it = gameMoves.iterator();
 
 			// we can end the search here if there are no successors
 			if (!it.hasNext())
 			{
-				return new MiniMaxNode(eval.evaluateBoard(board, maxPlayer.get()), parentAction);
+				return new MiniMaxNode(eval.evaluateBoard(gameBoard, maxPlayer.get()), parentAction);
 			}
 			
 			GameMove action;
@@ -211,10 +211,10 @@ public class ConcurrentMiniMax extends GameSearch
 			while (it.hasNext())
 			{
 				action = it.next();
-				board.makeMove(action);
+				gameBoard.makeMove(action);
 				v = Math.min(v, maxValue(alpha, beta, depth + 1));
 				// because we are using one state instance make sure to undo the action during back-tracking!
-				board.undoMove(action);
+				gameBoard.undoMove(action);
 				if (v <= alpha)
 				{
 					break;
@@ -235,25 +235,25 @@ public class ConcurrentMiniMax extends GameSearch
 		private int maxValue (int alpha, int beta, int depth) throws IllegalMoveException {
 			
 			// test for IDS cutoff and the cutoff function
-			if (isCutoff.get() == true || board.cutoffTest(depth, startTime.get()))
+			if (isCutoff.get() == true || gameBoard.cutoffTest(depth, startTime.get()))
 			{
 				//return infinity
 				isCutoff.set(true);
 //				return Integer.MAX_VALUE; 
-				return eval.evaluateBoard(board, maxPlayer.get());				
+				return eval.evaluateBoard(gameBoard, maxPlayer.get());
 			}
 			if (depth > localMaxDepth.get())
 			{
 				//increment leaf count
 				leafCount.set(leafCount.get() + 1);
-				return eval.evaluateBoard(board, maxPlayer.get());
+				return eval.evaluateBoard(gameBoard, maxPlayer.get());
 			}
 			// actions for MAX player
-			Iterator<GameMove> successors = GameBoardRules.getLegalMoves(board, maxPlayer.get()).iterator();
+			Iterator<GameMove> successors = GameBoardRules.getLegalMoves(gameBoard, maxPlayer.get()).iterator();
 			// we can end the search here if there are no successors
 			if (!successors.hasNext())
 			{
-				return eval.evaluateBoard(board, maxPlayer.get());
+				return eval.evaluateBoard(gameBoard, maxPlayer.get());
 			}
 			
 			GameMove action;
@@ -262,10 +262,10 @@ public class ConcurrentMiniMax extends GameSearch
 			while (successors.hasNext())
 			{
 				action = successors.next();
-				board.makeMove(action);
+				gameBoard.makeMove(action);
 				v = Math.max(v, minValue(alpha, beta, depth + 1));
 				// because we are using one state instance make sure to undo the action during back-tracking!
-				board.undoMove(action);
+				gameBoard.undoMove(action);
 				if (v >= beta)
 				{
 					break;
@@ -282,25 +282,25 @@ public class ConcurrentMiniMax extends GameSearch
 
 		private int minValue (int alpha, int beta, int depth) throws IllegalMoveException {
 			// test for IDS cutoff and the cutoff function
-			if (isCutoff.get() == true || board.cutoffTest(depth, startTime.get()))
+			if (isCutoff.get() == true || gameBoard.cutoffTest(depth, startTime.get()))
 			{
 				//return -infinity
 				isCutoff.set(true);
 //				return Integer.MIN_VALUE;
-				return eval.evaluateBoard(board, maxPlayer.get());
+				return eval.evaluateBoard(gameBoard, maxPlayer.get());
 			}
 			if (depth > localMaxDepth.get())
 			{
 				//increment leaf count
 				leafCount.set(leafCount.get() + 1);
-				return eval.evaluateBoard(board, maxPlayer.get());
+				return eval.evaluateBoard(gameBoard, maxPlayer.get());
 			}
 			// actions for MIN player
-			Iterator<GameMove> successors = GameBoardRules.getLegalMoves(board, minPlayer.get()).iterator();
+			Iterator<GameMove> successors = GameBoardRules.getLegalMoves(gameBoard, minPlayer.get()).iterator();
 			// we can end the search here if there are no successors
 			if (!successors.hasNext())
 			{
-				return eval.evaluateBoard(board, maxPlayer.get());
+				return eval.evaluateBoard(gameBoard, maxPlayer.get());
 			}
 			GameMove action;
 			int v = Integer.MAX_VALUE;
@@ -308,10 +308,10 @@ public class ConcurrentMiniMax extends GameSearch
 			while (successors.hasNext())
 			{
 				action = successors.next();
-				board.makeMove(action);
+				gameBoard.makeMove(action);
 				v = Math.min(v, maxValue(alpha, beta, depth + 1));
 				// because we are using one state instance make sure to undo the action during back-tracking!
-				board.undoMove(action);
+				gameBoard.undoMove(action);
 				if (v <= alpha)
 				{
 					break;

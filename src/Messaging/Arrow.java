@@ -1,6 +1,6 @@
 package Messaging;
 
-import AmazonBoard.OurPair;
+import AmazonBoard.Position;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,16 +20,16 @@ public class Arrow {
 
     public Arrow(){}
 
-    public Arrow(OurPair arrow)
+    public Arrow(Position arrow)
     {
         // Transform our internal arrow position into the external alphanumeric representation
         this.arrow = new StringBuilder().append(Character.toChars(arrow.getX() + 'a')).append(Character.toChars(arrow.getY() + '0')).toString();
     }
 
     /**
-     * @param arrow takes OurPair object for location that we placed our arrow
+     * @param arrow takes Position object for location that we placed our arrow
      */
-    public void setArrow(OurPair arrow) {
+    public void setArrow(Position arrow) {
         // Transform our internal arrow position into the external alphanumeric representation
         this.arrow = new StringBuilder().append(Character.toChars(arrow.getX() + 'a')).append(Character.toChars(arrow.getY() + '0')).toString();
     }
@@ -37,9 +37,9 @@ public class Arrow {
     /**
      * @return location that the arrow was placed
      */
-    public OurPair getArrow() {
+    public Position getArrow() {
         // Transform the stored alphanumeric representation into our internal representation
-        return new OurPair(this.arrow.toLowerCase().charAt(0) - 'a', this.arrow.toLowerCase().charAt(1) - '0');
+        return new Position(this.arrow.toLowerCase().charAt(0) - 'a', this.arrow.toLowerCase().charAt(1) - '0');
     }
 
     public void setArrow(String arrow) {

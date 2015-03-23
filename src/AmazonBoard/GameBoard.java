@@ -5,7 +5,7 @@ import com.rits.cloning.Cloner;
 import java.util.HashSet;
 
 /**
- * Board class that contains the instance of the board
+ * Board class that contains the instance of the gameBoard
  * 
  * @author Yarko Senyuta
  *
@@ -15,11 +15,11 @@ public class GameBoard implements Cloneable{
 	
 	static Cloner clone = new Cloner();
 	/**
-	 * store board as a 2D array
+	 * store gameBoard as a 2D array
 	 */
-	private int[][] board;
+	private int[][] gameBoard;
 	/**
-	 * number of rows on board
+	 * number of rows on gameBoard
 	 */
 	private int rows;
 	
@@ -52,7 +52,7 @@ public class GameBoard implements Cloneable{
 	}
 
 	/**
-	 * number of columns on the board
+	 * number of columns on the gameBoard
 	 */
 	private int columns;
 
@@ -73,13 +73,13 @@ public class GameBoard implements Cloneable{
 	 */
 	public static final int FREE = -1;
 	
-	HashSet<OurPair> whitePositions;
-	HashSet<OurPair> blackPositions;
+	HashSet<Position> whitePositions;
+	HashSet<Position> blackPositions;
 	
 	/**
-	 * constructor to initialize our board
-	 * @param rows the number of rows on the board
-	 * @param columns the number of columns on the board
+	 * constructor to initialize our gameBoard
+	 * @param rows the number of rows on the gameBoard
+	 * @param columns the number of columns on the gameBoard
 	 */
 	public GameBoard() {
 		
@@ -88,45 +88,45 @@ public class GameBoard implements Cloneable{
 		this.rows = 10;
 		this.columns = 10;
 		//instantiate 2D array
-		board = new int[rows][columns];
-		whitePositions = new HashSet<OurPair>();
-		blackPositions = new HashSet<OurPair>();
+		gameBoard = new int[rows][columns];
+		whitePositions = new HashSet<Position>();
+		blackPositions = new HashSet<Position>();
 		
 		initialize();		
 	}
 	
 	/**
-	 * initialize instance of the board
+	 * initialize instance of the gameBoard
 	 */
 	private void initialize(){
 		
-		//color the board free
+		//color the gameBoard free
 		for (int i = 0; i < rows; i++){
 			for (int j = 0; j < columns; j++){
-				board[i][j] = FREE;
+				gameBoard[i][j] = FREE;
 			}
 		}
 		
 		//set initial positions of the queens
-		board[0][3] = WQUEEN;
-		board[6][0] = WQUEEN;
-		board[3][0] = WQUEEN;
-		board[9][3] = WQUEEN;
+		gameBoard[0][3] = WQUEEN;
+		gameBoard[6][0] = WQUEEN;
+		gameBoard[3][0] = WQUEEN;
+		gameBoard[9][3] = WQUEEN;
 
-        whitePositions.add(new OurPair(0,3));
-        whitePositions.add(new OurPair(6,0));
-        whitePositions.add(new OurPair(3,0));
-        whitePositions.add(new OurPair(9,3));
+        whitePositions.add(new Position(0,3));
+        whitePositions.add(new Position(6,0));
+        whitePositions.add(new Position(3,0));
+        whitePositions.add(new Position(9,3));
 
-		board[0][6] = BQUEEN;
-		board[6][9] = BQUEEN;
-		board[3][9] = BQUEEN;
-		board[9][6] = BQUEEN;
+		gameBoard[0][6] = BQUEEN;
+		gameBoard[6][9] = BQUEEN;
+		gameBoard[3][9] = BQUEEN;
+		gameBoard[9][6] = BQUEEN;
 
-        blackPositions.add(new OurPair(0, 6));
-        blackPositions.add(new OurPair(6, 9));
-        blackPositions.add(new OurPair(3, 9));
-        blackPositions.add(new OurPair(9, 6));
+        blackPositions.add(new Position(0, 6));
+        blackPositions.add(new Position(6, 9));
+        blackPositions.add(new Position(3, 9));
+        blackPositions.add(new Position(9, 6));
 		
 	}
 	/**
@@ -135,11 +135,11 @@ public class GameBoard implements Cloneable{
 	 * @param y y-coordinate
 	 */
 	public void freeSquare(int x, int y){
-		board[x][y] = FREE;
+		gameBoard[x][y] = FREE;
 	}
 	
 	public boolean isFree(int x, int y){
-		return (board[x][y] == FREE);
+		return (gameBoard[x][y] == FREE);
 	}
 	
 	/**
@@ -149,7 +149,7 @@ public class GameBoard implements Cloneable{
 	 * @param piece piece to be placed
 	 */
 	public void placeMarker(int x, int y, int piece){
-		board[x][y] = piece;
+		gameBoard[x][y] = piece;
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public class GameBoard implements Cloneable{
 	 * @return true if space is occupied, false if free
 	 */
 	public boolean isMarked(int x, int y){
-		if (board[x][y] == FREE){
+		if (gameBoard[x][y] == FREE){
 			return false;
 		}
 		return true;
@@ -172,12 +172,12 @@ public class GameBoard implements Cloneable{
 	 * @return the code of space at location
 	 */
 	public int getPiece(int x, int y){
-		return board[x][y];
+		return gameBoard[x][y];
 	}
 
 	public void updateQueenPosition(int oldX, int oldY, int newX, int newY, int queenCode){
 		
-		HashSet<OurPair> positions;
+		HashSet<Position> positions;
 		
 		//System.out.println(blackPositions+"\n"+whitePositions);
 		
@@ -186,7 +186,7 @@ public class GameBoard implements Cloneable{
 		else
 			positions = blackPositions;
 			
-		for (OurPair p : positions){
+		for (Position p : positions){
 			
 			if (p.getX() == oldX && p.getY() == oldY){
 				p.setX(newX);
@@ -205,7 +205,7 @@ public class GameBoard implements Cloneable{
 	 * return the ArrayList of black positions
 	 * @return black positions
 	 */
-	public HashSet<OurPair > getBlackPositions(){
+	public HashSet<Position> getBlackPositions(){
 		return blackPositions;
 	}
 	
@@ -213,19 +213,19 @@ public class GameBoard implements Cloneable{
 	 * return the ArrayList of white positions
 	 * @return
 	 */
-	public HashSet<OurPair> getWhitePositions(){
+	public HashSet<Position> getWhitePositions(){
 		return whitePositions;
 	}
 	
 	/**
-	 * make given move to the board
+	 * make given move to the gameBoard
 	 * @param action move to be made
 	 * @param side which side is making the move
 	 * @return
 	 */
 	public boolean makeMove(GameMove action) throws IllegalMoveException {
 		//get code of queen
-		int side = board[action.getInitialQ().getX()][action.getInitialQ().getY()];
+		int side = gameBoard[action.getInitialQ().getX()][action.getInitialQ().getY()];
 
 		//check if this move is legal
 		if (GameBoardRules.isLegalMove(this, action, side))
@@ -251,10 +251,10 @@ public class GameBoard implements Cloneable{
 	public void undoMove(GameMove gameMove)
 	{
 		//get rid of arrow
-		board[gameMove.getArrow().getX()][gameMove.getArrow().getY()] = FREE;
+		gameBoard[gameMove.getArrow().getX()][gameMove.getArrow().getY()] = FREE;
 		
 		//figure out side
-		int side = board[gameMove.getFinalQ().getX()][gameMove.getFinalQ().getY()];
+		int side = gameBoard[gameMove.getFinalQ().getX()][gameMove.getFinalQ().getY()];
 		
 		
 		//place old queen position
@@ -279,7 +279,7 @@ public class GameBoard implements Cloneable{
 	 */
 	public boolean isQueen(int x, int y)
 	{
-		OurPair thisSpace = new OurPair(x, y);
+		Position thisSpace = new Position(x, y);
 		
 		if (blackPositions.contains(thisSpace) || whitePositions.contains(thisSpace))
 			return true;
@@ -299,7 +299,7 @@ public class GameBoard implements Cloneable{
 			for (int i = 0; i<10; i++)
 			{
 				stringBuffer.append(" ");
-                stringBuffer.append(board[i][j]);
+                stringBuffer.append(gameBoard[i][j]);
                 stringBuffer.append(" |");
 			}
 			stringBuffer.append("\n");

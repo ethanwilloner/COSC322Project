@@ -3,7 +3,7 @@ package EvaluationFunctions;
 import AbstractClasses.Evaluation;
 import AmazonBoard.GameBoard;
 import AmazonBoard.GameBoardRules;
-import AmazonBoard.OurPair;
+import AmazonBoard.Position;
 
 import java.util.HashSet;
 
@@ -21,8 +21,8 @@ public class MullerTegosEvaluation extends Evaluation
 	 */
 	public static int[] evaluateBoard(GameBoard board, int side, boolean output)
 	{
-		HashSet<OurPair> whitePositions = board.getWhitePositions();
-		HashSet<OurPair> blackPositions = board.getBlackPositions();
+		HashSet<Position> whitePositions = board.getWhitePositions();
+		HashSet<Position> blackPositions = board.getBlackPositions();
 	
 		
 		//mark up this board with minimum moves to each tile for black and for white (represented in the last dimension)
@@ -47,13 +47,13 @@ public class MullerTegosEvaluation extends Evaluation
 		
 		//evaluate board for each queen (white)
 		//while all queens haven't explored the places they can
-		for (OurPair queen : whitePositions)
+		for (Position queen : whitePositions)
 		{
 			tempBoard[queen.getX()][queen.getY()][0] = 0;
 			
 			paintBoardWithQueen(board, tempBoard, queen, 1, 1);
 		}
-		for (OurPair queen : blackPositions)
+		for (Position queen : blackPositions)
 		{
 			tempBoard[queen.getX()][queen.getY()][1] = 0;
 			
@@ -147,16 +147,16 @@ public class MullerTegosEvaluation extends Evaluation
 		return rtn;
 	}
 	
-	private static void paintBoardWithQueen(GameBoard board, int[][][] tempBoard, OurPair queen, int side, int depth)
+	private static void paintBoardWithQueen(GameBoard board, int[][][] tempBoard, Position queen, int side, int depth)
 	{
 		//get positions the queen can move now
-		HashSet<OurPair> moves = GameBoardRules.getLegalQueenMoves(board, queen, side);
+		HashSet<Position> moves = GameBoardRules.getLegalQueenMoves(board, queen, side);
 		
 	
 		int old;
 		
 		//for every move available to queen, see how expensive it is
-		for (OurPair move : moves)
+		for (Position move : moves)
 		{
 			//prune search
 			
@@ -200,6 +200,4 @@ public class MullerTegosEvaluation extends Evaluation
 	public int evaluateBoard(GameBoard board, int side) {
 		return evaluateBoard(board, side, false)[0];
 	}
-	
-
 }

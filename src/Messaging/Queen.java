@@ -1,6 +1,6 @@
 package Messaging;
 
-import AmazonBoard.OurPair;
+import AmazonBoard.Position;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,7 +22,7 @@ public class Queen {
 
     public Queen(){};
 
-    public Queen(OurPair InitialQ, OurPair FinalQ)
+    public Queen(Position InitialQ, Position FinalQ)
     {
         // Take our internal representation of the game board and transform it into the alphanumeric representation that the server expects
         String s1 = new StringBuilder().append(Character.toChars(InitialQ.getX() + 'a')).append(Integer.toString(InitialQ.getY())).toString();
@@ -34,7 +34,7 @@ public class Queen {
      * @param InitialQ Where the queen started in our turn
      * @param FinalQ   Where the queen was moved to in our turn
      */
-    public void setMove(OurPair InitialQ, OurPair FinalQ) {
+    public void setMove(Position InitialQ, Position FinalQ) {
         // Take our internal representation of the game board and transform it into the alphanumeric representation that the server expects
         String s1 = new StringBuilder().append(Character.toChars(InitialQ.getY() + 'a')).append(Integer.toString(InitialQ.getX())).toString();
         String s2 = new StringBuilder().append(Character.toChars(FinalQ.getY() + 'a')).append(Integer.toString(FinalQ.getX())).toString();
@@ -46,25 +46,25 @@ public class Queen {
      * @return The location that the queen moved to
      */
 
-    public OurPair getInitialQ()
+    public Position getInitialQ()
     {
         String[] str = this.move.toLowerCase().split("-");
 
-        OurPair initialQ = new OurPair(str[0].charAt(0) - 'a', str[0].charAt(1) - '0');
+        Position initialQ = new Position(str[0].charAt(0) - 'a', str[0].charAt(1) - '0');
         return initialQ;
     }
 
-    public OurPair getFinalQ()
+    public Position getFinalQ()
     {
         String[] str = this.move.toLowerCase().split("-");
-        OurPair finalQ = new OurPair(str[1].charAt(0) - 'a', str[1].charAt(1) - '0');
+        Position finalQ = new Position(str[1].charAt(0) - 'a', str[1].charAt(1) - '0');
         return finalQ;
     }
 
-    public OurPair getMove() {
+    public Position getMove() {
         String[] str = this.move.toLowerCase().split("-");
         // Transform the server-required alphanumeric position representation into our internal representation
-        return new OurPair(str[1].charAt(0) - 'a', str[1].charAt(1) - '0');
+        return new Position(str[1].charAt(0) - 'a', str[1].charAt(1) - '0');
     }
 
     public void setMove(String move) {

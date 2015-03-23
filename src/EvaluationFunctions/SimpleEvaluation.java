@@ -20,5 +20,4 @@ public class SimpleEvaluation extends Evaluation{
 		else
 			return blackSum - whiteSum;
 	}
-
 }
