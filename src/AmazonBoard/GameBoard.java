@@ -1,8 +1,8 @@
 package AmazonBoard;
 
-import java.util.HashSet;
-
 import com.rits.cloning.Cloner;
+
+import java.util.HashSet;
 
 /**
  * Board class that contains the instance of the board

@@ -1,11 +1,11 @@
 package EvaluationFunctions;
 
-import java.util.HashSet;
-
-import AmazonBoard.GameBoardRules;
 import AbstractClasses.Evaluation;
 import AmazonBoard.GameBoard;
+import AmazonBoard.GameBoardRules;
 import AmazonBoard.OurPair;
+
+import java.util.HashSet;
 
 public class MullerTegosEvaluation extends Evaluation
 {

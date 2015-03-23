@@ -1,8 +1,8 @@
 package AbstractClasses;
 
+import AmazonBoard.GameBoard;
 import AmazonBoard.GameMove;
 import AmazonBoard.IllegalMoveException;
-import AmazonBoard.GameBoard;
 
 public abstract class GameSearch {
 	

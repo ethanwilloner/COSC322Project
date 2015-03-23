@@ -1,22 +1,16 @@
 package GUI;
 
-import java.awt.EventQueue;
-import java.awt.Image;
-import java.awt.Point;
+import AmazonBoard.GameBoard;
+import AmazonBoard.GameMove;
+import AmazonBoard.IllegalMoveException;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
-
-import AmazonBoard.GameMove;
-import AmazonBoard.IllegalMoveException;
-import AmazonBoard.GameBoard;
 
 
 

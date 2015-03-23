@@ -2,7 +2,9 @@ package Messaging;
 
 import AmazonBoard.OurPair;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * Queen, stores a move in a string of the

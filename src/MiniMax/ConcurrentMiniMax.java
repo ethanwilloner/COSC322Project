@@ -1,24 +1,20 @@
 package MiniMax;
 
+import AbstractClasses.Evaluation;
+import AbstractClasses.GameSearch;
+import AmazonBoard.GameBoard;
+import AmazonBoard.GameBoardRules;
+import AmazonBoard.GameMove;
+import AmazonBoard.IllegalMoveException;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import AmazonBoard.GameMove;
-import AmazonBoard.IllegalMoveException;
-import AmazonBoard.GameBoardRules;
-import AbstractClasses.Evaluation;
-import AbstractClasses.GameSearch;
-import AmazonBoard.GameBoard;
 
 public class ConcurrentMiniMax extends GameSearch
 {

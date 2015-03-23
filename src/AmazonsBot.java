@@ -1,34 +1,29 @@
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Scanner;
-
-import javax.xml.bind.JAXBException;
-
+import AbstractClasses.Evaluation;
+import AbstractClasses.GameSearch;
+import AmazonBoard.GameBoard;
 import AmazonBoard.GameBoardRules;
 import AmazonBoard.GameMove;
 import AmazonBoard.IllegalMoveException;
 import EvaluationFunctions.MullerTegosEvaluation;
+import EvaluationFunctions.SimpleEvaluation;
+import Messaging.*;
 import MiniMax.ConcurrentMiniMax;
 import ubco.ai.GameRoom;
 import ubco.ai.connection.ServerMessage;
 import ubco.ai.games.GameClient;
 import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
-import AbstractClasses.Evaluation;
-import AbstractClasses.GameSearch;
-import EvaluationFunctions.SimpleEvaluation;
-import Messaging.Action;
-import Messaging.Arrow;
-import Messaging.Queen;
-import Messaging.User;
-import Messaging.XMLParser;
-import AmazonBoard.GameBoard;
+
+import javax.xml.bind.JAXBException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class AmazonsBot implements GamePlayer
 {
     static GameBoard gameBoard = new GameBoard();
-    static String TeamName = "Team Rocket1";
+    static String TeamName = "Team Rocket";
     static String TeamPassword = "password";
     static GameClient gameClient;
 
@@ -219,13 +214,11 @@ public class AmazonsBot implements GamePlayer
                 System.out.println("Opponent made an illegal gameMove: ");
                 opponentGameMove.moveInfo(gameBoard);
                 e.printStackTrace();
-                System.exit(1);
             }
 
             // Print the opponents gameMove
             System.out.println("\n\nOpponents Turn:");
             opponentGameMove.moveInfo(gameBoard);
-            
         }
         
         checkEndGame(gameBoard);

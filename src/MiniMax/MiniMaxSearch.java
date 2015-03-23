@@ -1,10 +1,10 @@
 package MiniMax;
 
-import AmazonBoard.GameMove;
-import AmazonBoard.IllegalMoveException;
-import AmazonBoard.GameBoardRules;
 import AbstractClasses.GameSearch;
 import AmazonBoard.GameBoard;
+import AmazonBoard.GameBoardRules;
+import AmazonBoard.GameMove;
+import AmazonBoard.IllegalMoveException;
 
 
 /**

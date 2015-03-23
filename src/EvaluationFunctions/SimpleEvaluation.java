@@ -1,8 +1,8 @@
 package EvaluationFunctions;
 
-import AmazonBoard.GameBoardRules;
 import AbstractClasses.Evaluation;
 import AmazonBoard.GameBoard;
+import AmazonBoard.GameBoardRules;
 
 public class SimpleEvaluation extends Evaluation{
 

@@ -1,16 +1,12 @@
 package GUI;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-
 import AmazonBoard.IllegalMoveException;
 import AmazonBoard.OurPair;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class BoardTile extends JPanel {
