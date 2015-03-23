@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import ai.IllegalMoveException;
 import ai.OurPair;
 
 
@@ -92,8 +93,12 @@ public class myTile extends JPanel {
 		        		gui.potentialMoveClick(thisTile);
 		        	}
 		        	else
-		        		gui.potentialArrowClick(thisTile);
-		        }
+                        try {
+                            gui.potentialArrowClick(thisTile);
+                        } catch (IllegalMoveException e1) {
+                            e1.printStackTrace();
+                        }
+                }
 		        
 		        	
 //		        	 if(gui.highlighted==thisTile){

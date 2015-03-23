@@ -1,5 +1,6 @@
 package minimax;
 
+import ai.IllegalMoveException;
 import utils.GameRules;
 import utils.Move;
 import AbstractClasses.GameSearch;
@@ -19,8 +20,7 @@ public class minimaxSearch  extends GameSearch
 	private static long leafCount;
 	
 
-	public minimaxNode minimax(OurBoard board, int depth, int maxDepth, boolean maximizingPlayer, int side, int alpha, int beta)
-	{
+	public minimaxNode minimax(OurBoard board, int depth, int maxDepth, boolean maximizingPlayer, int side, int alpha, int beta) throws IllegalMoveException {
         if (board.cutoffTest(depth, startTime))
         {
             isCutoff = true;
@@ -127,7 +127,7 @@ public class minimaxSearch  extends GameSearch
 	}
 
 	@Override
-	public Move getMove(OurBoard board, int side) {
+	public Move getMove(OurBoard board, int side) throws IllegalMoveException {
 		
 		//use iterative deepening
 		int depth = 1;
@@ -163,6 +163,4 @@ public class minimaxSearch  extends GameSearch
 		return bestMoveSoFar;
 		
 	}
-
-	
 }

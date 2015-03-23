@@ -1,5 +1,6 @@
 package AbstractClasses;
 
+import ai.IllegalMoveException;
 import utils.Move;
 import ai.OurBoard;
 
@@ -13,8 +14,8 @@ public abstract class GameSearch {
 	 * @param side side of player
 	 * @return the best move decided by search
 	 */
-	public abstract Move getMove(OurBoard board, int side);
-	
+	public abstract Move getMove(OurBoard board, int side) throws IllegalMoveException;
+
 	public void setEvaluation(Evaluation e)
 	{
 		eval = e;

@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
+import ai.IllegalMoveException;
 import utils.Move;
 import ai.OurBoard;
 
@@ -160,7 +161,7 @@ public class AmazonsGUI extends JFrame {
 		gridTiles.get(new Point(9,6)).setState(myTile.WQ);
 	}
 
-	public void moveQueen(myTile sourceTile, myTile targetTile, myTile arrowTile) {
+	public void moveQueen(myTile sourceTile, myTile targetTile, myTile arrowTile) throws IllegalMoveException {
 		Move move = new Move(sourceTile.getPosition(), targetTile.getPosition(), arrowTile.getPosition());
 		if (board.makeMove(move))
 		{
@@ -221,8 +222,7 @@ public class AmazonsGUI extends JFrame {
 		}
 	}
 	
-	public void potentialArrowClick(myTile thisTile)
-	{
+	public void potentialArrowClick(myTile thisTile) throws IllegalMoveException {
 		//check if the space is empty
 		if (board.isFree(thisTile.getPosition().getX(), thisTile.getPosition().getY()))
 		{

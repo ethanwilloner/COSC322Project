@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import ai.IllegalMoveException;
 import utils.GameRules;
 import utils.Move;
 import AbstractClasses.Evaluation;
@@ -53,8 +54,7 @@ public class concurrentMinimax extends GameSearch
 	 * @return best move to be found
 	 */
 	@SuppressWarnings("unchecked")
-	public Move minimaxDecision (OurBoard board, int side)
-	{
+	public Move minimaxDecision (OurBoard board, int side) throws IllegalMoveException {
 		//start the clock
 		startTime.set(System.currentTimeMillis());
 		//set the sides
@@ -170,8 +170,7 @@ public class concurrentMinimax extends GameSearch
 		 * @param state initial board
 		 * @param action move to be made
 		 */
-		public MinimaxThread(OurBoard state, Move action)
-		{
+		public MinimaxThread(OurBoard state, Move action) throws IllegalMoveException {
 			this.board = state;
 			parentAction = action;
 			board.makeMove(action);
@@ -238,8 +237,7 @@ public class concurrentMinimax extends GameSearch
 		}
 		
 
-		private int maxValue (int alpha, int beta, int depth)
-		{
+		private int maxValue (int alpha, int beta, int depth) throws IllegalMoveException {
 			
 			// test for IDS cutoff and the cutoff function
 			if (isCutoff.get() == true || board.cutoffTest(depth, startTime.get()))
@@ -287,8 +285,7 @@ public class concurrentMinimax extends GameSearch
 			return v;
 		}
 
-		private int minValue (int alpha, int beta, int depth)
-		{
+		private int minValue (int alpha, int beta, int depth) throws IllegalMoveException {
 			// test for IDS cutoff and the cutoff function
 			if (isCutoff.get() == true || board.cutoffTest(depth, startTime.get()))
 			{
@@ -336,7 +333,7 @@ public class concurrentMinimax extends GameSearch
 	}
 
 	@Override
-	public Move getMove(OurBoard board, int side) {
+	public Move getMove(OurBoard board, int side) throws IllegalMoveException {
 		return minimaxDecision(board, side);
 	}
 }

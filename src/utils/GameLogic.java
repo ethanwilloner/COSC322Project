@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import javax.xml.bind.JAXBException;
 
+import ai.IllegalMoveException;
 import minimax.concurrentMinimax;
 import ubco.ai.GameRoom;
 import ubco.ai.connection.ServerMessage;
@@ -43,7 +44,7 @@ public class GameLogic implements GamePlayer
     static Evaluation simpleEval = new SimpleEvaluation();
     static Evaluation eval = new OurEvaluation();
     
-//    static GameSearch minimaxSearch = new minimaxSearch();
+//  static GameSearch minimaxSearch = new minimaxSearch();
     static GameSearch minimaxSearch = new concurrentMinimax(threadCount, eval);
 
     //set the evaluation
@@ -211,7 +212,7 @@ public class GameLogic implements GamePlayer
             // Checks to make sure that the opponents move was legal
             try {
                 ourBoard.makeMove(opponentMove);
-            }catch (NullPointerException e)
+            }catch (IllegalMoveException e)
             {
                 System.out.println("Opponent made an illegal move: ");
                 opponentMove.moveInfo(ourBoard);
@@ -231,17 +232,26 @@ public class GameLogic implements GamePlayer
 
         start = System.currentTimeMillis();
 
-        // Get a move from the concurrent minimax
-        Move move = minimaxSearch.getMove(ourBoard, TeamSide);
-        //Move move = cMinimax.getMove(ourBoard, TeamID);
+        Move move = null;
+        try {
+            // Get a move from the minimax search
+            move = minimaxSearch.getMove(ourBoard, TeamSide);
+        } catch (IllegalMoveException e) {
+            System.out.println("Failed to get move: ");
+            e.printStackTrace();
+            //TODO implement method for getting first available move incase concurrent search fails
+            System.exit(1);
+        }
 
         //Make the move on our board
         try
         {
             ourBoard.makeMove(move);
-        } catch (NullPointerException e)
+        } catch (IllegalMoveException e)
         {
+            System.out.println("Illegal Move made: ");
             e.printStackTrace();
+            System.exit(0);
         }
 
         // Construct the new Action object that we will send to the server
@@ -299,8 +309,7 @@ public class GameLogic implements GamePlayer
 
     }
 
-    public static void samplePlay()
-    {
+    public static void samplePlay() throws IllegalMoveException {
         int side = 1;
 
         OurBoard board = new OurBoard();
@@ -335,7 +344,13 @@ public class GameLogic implements GamePlayer
 
             end = System.currentTimeMillis() - start;
 
-            board.makeMove(move);
+            try {
+                board.makeMove(move);
+            } catch (IllegalMoveException e1) {
+                System.out.println("Illegal Move made: ");
+                e1.printStackTrace();
+                System.exit(0);
+            }
 
             System.out.println("Time: " + end/1000 + " seconds");
             System.out.println("move made: " + move);

@@ -226,12 +226,10 @@ public class OurBoard implements Cloneable{
 	 * @param side which side is making the move
 	 * @return
 	 */
-	public boolean makeMove(Move action)
-	{
+	public boolean makeMove(Move action) throws IllegalMoveException {
 		//get code of queen
 		int side = board[action.getInitialQ().getX()][action.getInitialQ().getY()];
-		
-		
+
 		//check if this move is legal
 		if (GameRules.isLegalMove(this, action, side))
 		{	
@@ -243,17 +241,13 @@ public class OurBoard implements Cloneable{
 			
 			//place arrow
 			placeMarker(action.getArrow().getX(), action.getArrow().getY(), ARROW);
-			
-			
+
 			//update queen in hashset
 			updateQueenPosition(action.getInitialQ().getX(), action.getInitialQ().getY(), action.getFinalQ().getX(), action.getFinalQ().getY(), side);
 			return true;
-		}
-		
-		System.out.println(action + " is illegal");
-		
-		throw new NullPointerException();
-		
+		} else {
+            throw new IllegalMoveException(action.toString());
+        }
 	}
 	
 	
