@@ -15,8 +15,11 @@ import ubco.ai.games.GameMessage;
 import ubco.ai.games.GamePlayer;
 
 import javax.xml.bind.JAXBException;
+
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -45,7 +48,7 @@ public class AmazonsBot implements GamePlayer {
     Action receivedAction;
     Action sendAction;
 
-    public static void main(String[] args) throws JAXBException {
+    public static void main(String[] args) throws JAXBException, IllegalMoveException {
         if (args.length > 1) {
             if (args.length == 2) {
                 TeamName = args[0];
@@ -64,7 +67,7 @@ public class AmazonsBot implements GamePlayer {
 
         xmlParser = new XMLParser();
         new AmazonsBot(TeamName, TeamPassword);
-        //localPlay();
+//        localPlay();
     }
 
     public AmazonsBot(String name, String password) {
@@ -197,6 +200,7 @@ public class AmazonsBot implements GamePlayer {
                 System.out.println("Opponent made an illegal gameMove: ");
                 opponentGameMove.moveInfo(gameBoard);
                 e.printStackTrace();
+                System.exit(1);
             }
 
             // Print the opponents gameMove
@@ -317,7 +321,6 @@ public class AmazonsBot implements GamePlayer {
             System.out.println("gameMove made: " + gameMove);
 
             //System.out.println("MiniMax score " + node.getValue());
-
             System.out.println("Current evaluation: " + MullerTegosEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(board, 1, false)[1]);
             System.out.println("Simple evaluation: " + simpleEval.evaluateBoard(board, 1));
             System.out.println(board);
