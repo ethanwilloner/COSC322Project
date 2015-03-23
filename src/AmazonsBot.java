@@ -130,7 +130,12 @@ public class AmazonsBot implements GamePlayer {
         } else if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START)) {
             gameStarted = true;
             System.out.println("\n\nGame has started");
-
+            
+            // Print list of users in the room
+            for (User user : receivedAction.getUserList().getUsers()) {
+                System.out.println("\tName: " + user.getName() + ", ID: " + user.getId());
+            }
+            
             for (User user : receivedAction.getUserList().getUsers()) {
                 // Determine if we are W, B, or Spectator
                 if (user.name.equalsIgnoreCase(TeamName)) {

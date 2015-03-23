@@ -118,7 +118,7 @@ public class GameMove {
     public void moveInfo(GameBoard gameBoard) {
         System.out.println("Move made: " + this);
 
-        MullerTegosEvaluation.evaluateBoard(gameBoard, 1, true);
+        MullerTegosEvaluation.evaluateBoard(gameBoard, 1, false);
 
         System.out.println("Current evaluation: " + MullerTegosEvaluation.evaluateBoard(gameBoard, 1, false)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(gameBoard, 1, false)[1]);
         System.out.println(gameBoard);
