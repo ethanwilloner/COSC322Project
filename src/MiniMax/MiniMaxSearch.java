@@ -15,9 +15,9 @@ import AmazonBoard.GameBoard;
 public class MiniMaxSearch extends GameSearch
 {
 	
-	private static long startTime;
-	private static boolean isCutoff;
-	private static long leafCount;
+	private long startTime;
+	private boolean isCutoff;
+	private long leafCount;
 	
 
 	public MiniMaxNode minimax(GameBoard board, int depth, int maxDepth, boolean maximizingPlayer, int side, int alpha, int beta) throws IllegalMoveException {

@@ -178,27 +178,22 @@ public class MullerTegosEvaluation extends Evaluation
 	
 	public static String toString(int[][][] board)
 	{
-		String s = "";
+		StringBuffer stringBuffer = new StringBuffer();
 		
 		for (int j = 9; j >= 0; j--)
 		{
-			s+="-------------------------------------------------------------\n";
-			s+="|";
+			stringBuffer.append("-------------------------------------------------------------\n");
+			stringBuffer.append("|");
 			for (int i = 0; i<10; i++)
 			{
-				s += " " + board[i][j][0] + " " + board[i][j][1] + " |";
+				stringBuffer.append(" " + board[i][j][0] + " " + board[i][j][1] + " |");
 			}
-			s+= "\n";
+			stringBuffer.append("\n");
 		}
 		
-		s+="-------------------------------------------------------------\n";
+		stringBuffer.append("-------------------------------------------------------------\n");
 		
-		s = s.replaceAll("-1", " ");
-		s = s.replaceAll("2147483647", "X");
-		
-		
-		return s;
-		
+		return stringBuffer.toString().replaceAll("-1", " ").replaceAll("2147483647", "X");
 	}
 
 	@Override

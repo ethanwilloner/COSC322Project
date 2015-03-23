@@ -59,19 +59,19 @@ public class GameBoard implements Cloneable{
 	/**
 	 * white queen code
 	 */
-	public final int WQUEEN = 1;
+	public static final int WQUEEN = 1;
 	/**
 	 * black queen code
 	 */
-	public final int BQUEEN = 2;
+	public static final int BQUEEN = 2;
 	/**
 	 * arrow code
 	 */
-	public final int ARROW = 3;
+	public static final int ARROW = 3;
 	/**
 	 * free space code
 	 */
-	public final int FREE = -1;
+	public static final int FREE = -1;
 	
 	HashSet<OurPair> whitePositions;
 	HashSet<OurPair> blackPositions;
@@ -290,27 +290,24 @@ public class GameBoard implements Cloneable{
 	@Override
 	public String toString()
 	{
-		String s = "";
+        StringBuffer stringBuffer = new StringBuffer();
 		
 		for (int j = 9; j >= 0; j--)
 		{
-			s+="-----------------------------------------\n";
-			s+="|";
+			stringBuffer.append("-----------------------------------------\n");
+			stringBuffer.append("|");
 			for (int i = 0; i<10; i++)
 			{
-				s += " " + board[i][j] + " |";
+				stringBuffer.append(" ");
+                stringBuffer.append(board[i][j]);
+                stringBuffer.append(" |");
 			}
-			s+= "\n";
+			stringBuffer.append("\n");
 		}
 		
-		s+="-----------------------------------------\n";
+		stringBuffer.append("-----------------------------------------\n");
 		
-		s = s.replaceAll("-1", " ");
-		s = s.replaceAll("3", "X");
-		
-		
-		return s;
-		
+		return stringBuffer.toString().replaceAll("-1", " ").replaceAll("3", "X");
 	}
 	
 	public boolean cutoffTest(int depth, long startTime)

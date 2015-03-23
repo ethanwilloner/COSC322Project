@@ -13,7 +13,7 @@ import AmazonBoard.IllegalMoveException;
 import AmazonBoard.OurPair;
 
 
-public class myTile extends JPanel {
+public class BoardTile extends JPanel {
 	
 	/**
 	 * 
@@ -34,10 +34,10 @@ public class myTile extends JPanel {
 	
 	public boolean whiteTurn = true; //will keep track of whose turn it is
 	
-	private myTile thisTile = this; //stored for use in addMouse()
+	private BoardTile thisTile = this; //stored for use in addMouse()
 	
 	
-	public myTile(int x, int y, int width, int height, boolean colored, AmazonsGUI g){
+	public BoardTile(int x, int y, int width, int height, boolean colored, AmazonsGUI g){
 		super();
 		//set gui
 		gui = g;

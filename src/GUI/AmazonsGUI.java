@@ -33,15 +33,15 @@ public class AmazonsGUI extends JFrame {
 	private int tileWidth;
 	private int tileCount;
 	private JPanel gridPanel;
-	private HashMap<Point, myTile> gridTiles;
+	private HashMap<Point, BoardTile> gridTiles;
 	private Timer timer;
 	private int seconds=0;
 	
 	public Image blackqueen;
 	public Image whitequeen;
 	public Image arrow;
-	public myTile highlightedInitialQueen;
-	public myTile highlightedFinalQueen;
+	public BoardTile highlightedInitialQueen;
+	public BoardTile highlightedFinalQueen;
 
 	private JLabel lblTimer;
 	
@@ -134,12 +134,12 @@ public class AmazonsGUI extends JFrame {
 	 * Creates the gameboard, a 10x10 grid of myTiles
 	 */
 	private void createGrid(){
-		gridTiles = new HashMap<Point, myTile>();
+		gridTiles = new HashMap<Point, BoardTile>();
 		
 		boolean colored = true;
 		for(int i = 0;i<tileCount;i++){
 			for(int j = 0;j<tileCount;j++){
-				myTile grid = new myTile(i*40, j*40, tileWidth, tileWidth,colored, this);
+				BoardTile grid = new BoardTile(i*40, j*40, tileWidth, tileWidth,colored, this);
 				colored = !colored;
 				gridTiles.put(new Point(i,j),grid);
 				gridPanel.add(grid);
@@ -152,18 +152,18 @@ public class AmazonsGUI extends JFrame {
 	 * Adds the queens to the initial gameboard
 	 */
 	private void addQueens(){
-		gridTiles.get(new Point(3,0)).setState(myTile.BQ);
-		gridTiles.get(new Point(6,0)).setState(myTile.BQ);
-		gridTiles.get(new Point(0,3)).setState(myTile.BQ);
-		gridTiles.get(new Point(9,3)).setState(myTile.BQ);
+		gridTiles.get(new Point(3,0)).setState(BoardTile.BQ);
+		gridTiles.get(new Point(6,0)).setState(BoardTile.BQ);
+		gridTiles.get(new Point(0,3)).setState(BoardTile.BQ);
+		gridTiles.get(new Point(9,3)).setState(BoardTile.BQ);
 		
-		gridTiles.get(new Point(0,6)).setState(myTile.WQ);
-		gridTiles.get(new Point(3,9)).setState(myTile.WQ);
-		gridTiles.get(new Point(6,9)).setState(myTile.WQ);
-		gridTiles.get(new Point(9,6)).setState(myTile.WQ);
+		gridTiles.get(new Point(0,6)).setState(BoardTile.WQ);
+		gridTiles.get(new Point(3,9)).setState(BoardTile.WQ);
+		gridTiles.get(new Point(6,9)).setState(BoardTile.WQ);
+		gridTiles.get(new Point(9,6)).setState(BoardTile.WQ);
 	}
 
-	public void moveQueen(myTile sourceTile, myTile targetTile, myTile arrowTile) throws IllegalMoveException {
+	public void moveQueen(BoardTile sourceTile, BoardTile targetTile, BoardTile arrowTile) throws IllegalMoveException {
 		GameMove gameMove = new GameMove(sourceTile.getPosition(), targetTile.getPosition(), arrowTile.getPosition());
 		if (board.makeMove(gameMove))
 		{
@@ -186,7 +186,7 @@ public class AmazonsGUI extends JFrame {
 	 * check if the tile clicked is a queen and highlight it as such
 	 * @param queenTile tile clicked
 	 */
-	public void queenClick(myTile queenTile)
+	public void queenClick(BoardTile queenTile)
 	{
 		
 		//queen position not being updated
@@ -205,7 +205,7 @@ public class AmazonsGUI extends JFrame {
 		}
 	}
 	
-	public void potentialMoveClick(myTile thisTile)
+	public void potentialMoveClick(BoardTile thisTile)
 	{
 		//check if the space is empty
 		if (board.isFree(thisTile.getPosition().getX(), thisTile.getPosition().getY()))
@@ -220,11 +220,15 @@ public class AmazonsGUI extends JFrame {
 			highlightedFinalQueen = null;
 			thisTile.toggleHighlight();
 			highlightedInitialQueen = null;
-			highlightedInitialQueen.toggleHighlight();
+            try {
+                highlightedInitialQueen.toggleHighlight();
+            } catch(NullPointerException npe) {
+                npe.printStackTrace();
+            }
 		}
 	}
 	
-	public void potentialArrowClick(myTile thisTile) throws IllegalMoveException {
+	public void potentialArrowClick(BoardTile thisTile) throws IllegalMoveException {
 		//check if the space is empty
 		if (board.isFree(thisTile.getPosition().getX(), thisTile.getPosition().getY()))
 		{

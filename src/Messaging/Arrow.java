@@ -16,8 +16,8 @@ public class Arrow {
     @XmlAttribute(name = "move")
     public String arrow;
 
-    @XmlValue
-    String content = "";
+//    @XmlValue
+//    String content = "";
 
     public Arrow(){}
 

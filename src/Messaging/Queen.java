@@ -15,8 +15,8 @@ public class Queen {
     @XmlAttribute(name = "move")
     public String move;
 
-    @XmlValue
-    String content = "";
+//    @XmlValue
+//    String content = "";
 
     public Queen(){};
 

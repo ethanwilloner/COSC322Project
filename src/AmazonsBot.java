@@ -1,3 +1,5 @@
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -30,15 +32,15 @@ public class AmazonsBot implements GamePlayer
     static String TeamPassword = "password";
     static GameClient gameClient;
 
-    static ArrayList<GameRoom> roomList;
-    static int TeamID;
-    static int TeamSide;
-    static int roomId;
-    static boolean gameStarted;
+    ArrayList<GameRoom> roomList;
+    int TeamID;
+    int TeamSide;
+    int roomId;
+    boolean gameStarted;
 
     static XMLParser xmlParser;
-    static Action receivedAction;
-    static Action sendAction;
+    Action receivedAction;
+    Action sendAction;
 
     static int threadCount = 4;
     static Evaluation simpleEval = new SimpleEvaluation();
@@ -74,7 +76,7 @@ public class AmazonsBot implements GamePlayer
         System.out.println();
 
         xmlParser = new XMLParser();
-        AmazonsBot amazonsBot = new AmazonsBot(TeamName,TeamPassword);
+        new AmazonsBot(TeamName,TeamPassword);
 
 //        samplePlay();
     }
@@ -84,7 +86,7 @@ public class AmazonsBot implements GamePlayer
         gameClient = new GameClient(name, password, this);
         do {
             getOurRooms();
-            Scanner scanner = new Scanner(System.in);
+            Scanner scanner = new Scanner(System.in, Charset.defaultCharset().toString());
             System.out.print("Input roomID to join: ");
             roomId = scanner.nextInt();
 
@@ -92,7 +94,7 @@ public class AmazonsBot implements GamePlayer
     }
 
     //Prints the id, name, and user count of all available game rooms in the game client
-    private static void getOurRooms() {
+    private void getOurRooms() {
         roomList = gameClient.getRoomLists();
         System.out.println("Available Game Rooms:");
         for(GameRoom room : roomList)
@@ -102,7 +104,7 @@ public class AmazonsBot implements GamePlayer
 
     }
 
-    public static boolean joinRoom(int roomId)
+    public boolean joinRoom(int roomId)
     {
         roomList = gameClient.getRoomLists();
         try {
@@ -188,7 +190,7 @@ public class AmazonsBot implements GamePlayer
         return true;
     }
 
-    private static void handleMove(boolean makeFirstMove) throws JAXBException {
+    private void handleMove(boolean makeFirstMove) throws JAXBException, UnsupportedEncodingException {
         if(!gameStarted){
             return;
         }
@@ -217,7 +219,7 @@ public class AmazonsBot implements GamePlayer
                 System.out.println("Opponent made an illegal gameMove: ");
                 opponentGameMove.moveInfo(gameBoard);
                 e.printStackTrace();
-                System.exit(0);
+                System.exit(1);
             }
 
             // Print the opponents gameMove
@@ -287,7 +289,7 @@ public class AmazonsBot implements GamePlayer
      * Takes in an Action object, marshals it into XML, and then uses the built in
      * compileGameMessage to convert to server format and sends with gameClient.sendToServer
      */
-    public static void sendToServer(Action action, int roomID) throws JAXBException {
+    public static void sendToServer(Action action, int roomID) throws JAXBException, UnsupportedEncodingException {
         String actionMsg = xmlParser.marshal(action);
         String compiledGameMessage = ServerMessage.compileGameMessage(GameMessage.MSG_GAME, roomID, actionMsg);
         gameClient.sendToServer(compiledGameMessage, true);
