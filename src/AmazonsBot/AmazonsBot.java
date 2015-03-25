@@ -68,7 +68,8 @@ public class AmazonsBot implements GamePlayer {
         } else {
             System.out.println("Starting Amazons Bot with:");
             System.out.println("\tTeam Name: " + TeamName);
-            System.out.println("\tThread Count: " + threadCount);
+            System.out.println("\tNumber of Threads Used: " + threadCount);
+            System.out.println("\tNumber of Processors Available: " + Runtime.getRuntime().availableProcessors());
             System.out.println();
 
             xmlParser = new XMLParser();
