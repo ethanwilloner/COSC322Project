@@ -49,8 +49,14 @@ public class AmazonsBot implements GamePlayer {
     Action receivedAction;
     Action sendAction;
 
+    static boolean doLocalPlay = false;
+
     public static void main(String[] args) throws JAXBException, IllegalMoveException {
-        if (args.length > 1) {
+        if(doLocalPlay){
+            System.out.println("Starting game locally.");
+            localPlay();
+        }
+        else if (args.length > 1) {
             if (args.length == 2) {
                 TeamName = args[0];
                 threadCount = Integer.parseInt(args[1]);
@@ -59,16 +65,15 @@ public class AmazonsBot implements GamePlayer {
                 System.out.println("\tAmazonBot [Team Name] [Thread Count]");
                 System.exit(1);
             }
+        } else {
+            System.out.println("Starting Amazons Bot with:");
+            System.out.println("\tTeam Name: " + TeamName);
+            System.out.println("\tThread Count: " + threadCount);
+            System.out.println();
+
+            xmlParser = new XMLParser();
+            new AmazonsBot(TeamName, TeamPassword);
         }
-
-        System.out.println("Starting Amazons Bot with:");
-        System.out.println("\tTeam Name: " + TeamName);
-        System.out.println("\tThread Count: " + threadCount);
-        System.out.println();
-
-        xmlParser = new XMLParser();
-        new AmazonsBot(TeamName, TeamPassword);
-//        localPlay();
     }
 
     public AmazonsBot(String name, String password) {
