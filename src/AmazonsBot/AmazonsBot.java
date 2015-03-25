@@ -323,7 +323,7 @@ public class AmazonsBot implements GamePlayer {
             System.out.println("gameMove made: " + gameMove);
 
             //System.out.println("MiniMax score " + node.getValue());
-            System.out.println("Current evaluation: " + MullerTegosEvaluation.evaluateBoard(board, 1, true)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(board, 1, false)[1]);
+            System.out.println("Current evaluation: " + MullerTegosEvaluation.evaluateBoard(board, 1, false)[0] + "\t" + MullerTegosEvaluation.evaluateBoard(board, 1, false)[1]);
             System.out.println("Simple evaluation: " + simpleEval.evaluateBoard(board, 1));
             System.out.println(board);
 
