@@ -1,5 +1,7 @@
 package AmazonBoard;
 
+import GUI.AmazonsGUI;
+
 import com.rits.cloning.Cloner;
 
 import java.util.HashSet;
@@ -10,6 +12,7 @@ import java.util.HashSet;
  * @author Yarko Senyuta
  */
 public class GameBoard implements Cloneable {
+	public static AmazonsGUI gui;
     /**
      * white queen code
      */
@@ -50,9 +53,9 @@ public class GameBoard implements Cloneable {
      * @param rows    the number of rows on the gameBoard
      * @param columns the number of columns on the gameBoard
      */
-    public GameBoard() {
+    public GameBoard(AmazonsGUI gui) {
 
-
+    	this.gui = gui;
         //set rows and columns
         this.rows = 10;
         this.columns = 10;
@@ -325,4 +328,12 @@ public class GameBoard implements Cloneable {
     public GameBoard clone() {
         return clone.deepClone(this);
     }
+    
+    public void updateGUI(GameMove action) {
+		// TODO Auto-generated method stub
+		//make move to gui
+		gui.makeMove(action.getInitialQ().getX(), action.getInitialQ().getY(), action.getFinalQ().getX(), action.getFinalQ().getY(), action.getArrow().getX(), action.getArrow().getY());
+		
+	}
+    
 }

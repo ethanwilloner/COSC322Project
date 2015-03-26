@@ -7,6 +7,7 @@ import AmazonBoard.GameMove;
 import AmazonBoard.IllegalMoveException;
 import EvaluationFunctions.MullerTegosEvaluation;
 import EvaluationFunctions.SimpleEvaluation;
+import GUI.AmazonsGUI;
 import Messaging.*;
 import MiniMax.ConcurrentMiniMax;
 import ubco.ai.GameRoom;
@@ -25,7 +26,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AmazonsBot implements GamePlayer {
-    static GameBoard gameBoard = new GameBoard();
+	static AmazonsGUI gui = new AmazonsGUI();
+    static GameBoard gameBoard = new GameBoard(gui);
     static String TeamName = "Team Rocket";
     static String TeamPassword = "password";
     static GameClient gameClient;
@@ -49,7 +51,7 @@ public class AmazonsBot implements GamePlayer {
     Action receivedAction;
     Action sendAction;
 
-    static boolean doLocalPlay = false;
+    static boolean doLocalPlay = true;
 
     public static void main(String[] args) throws JAXBException, IllegalMoveException {
         if(doLocalPlay){
@@ -290,8 +292,9 @@ public class AmazonsBot implements GamePlayer {
     public static void localPlay() throws IllegalMoveException {
         int side = 1;
 
-        GameBoard board = new GameBoard();
-
+        
+        GameBoard board = new GameBoard(gui);
+        gui.setVisible(true);
         GameSearch search = minimaxSearch;
 
         long start, end;
@@ -308,11 +311,12 @@ public class AmazonsBot implements GamePlayer {
             start = System.currentTimeMillis();
 
             GameMove gameMove = search.getMove(board, side);
-
+            
             end = System.currentTimeMillis() - start;
 
             try {
                 board.makeMove(gameMove);
+                board.updateGUI(gameMove);
             } catch (IllegalMoveException e1) {
                 System.out.println("Illegal GameMove made: ");
                 e1.printStackTrace();

@@ -44,7 +44,7 @@ public class BoardTile extends JPanel {
         } else {
             this.setBackground(Color.DARK_GRAY);
         }
-        addMouse();
+        //addMouse();
     }
 
     /**
@@ -60,7 +60,7 @@ public class BoardTile extends JPanel {
     public void setPosition(Position position) {
         this.position = position;
     }
-
+/*
     public void addMouse() {
         addMouseListener(new MouseAdapter() {
             @Override
@@ -133,7 +133,7 @@ public class BoardTile extends JPanel {
 
         });
     }
-
+*/
     @Override
     protected void paintComponent(Graphics g) {
 
