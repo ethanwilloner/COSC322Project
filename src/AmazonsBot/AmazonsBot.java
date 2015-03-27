@@ -27,7 +27,7 @@ import java.util.Scanner;
 
 public class AmazonsBot implements GamePlayer {
 	static AmazonsGUI gui = new AmazonsGUI();
-    static GameBoard gameBoard = new GameBoard(gui);
+    static GameBoard gameBoard = new GameBoard();
     static String TeamName = "Team Rocket";
     static String TeamPassword = "password";
     static GameClient gameClient;
@@ -51,7 +51,8 @@ public class AmazonsBot implements GamePlayer {
     Action receivedAction;
     Action sendAction;
 
-    static boolean doLocalPlay = true;
+    static boolean doLocalPlay = false;
+    static boolean showGui = true;
 
     public static void main(String[] args) throws JAXBException, IllegalMoveException {
         if(doLocalPlay){
@@ -62,21 +63,21 @@ public class AmazonsBot implements GamePlayer {
             if (args.length == 2) {
                 TeamName = args[0];
                 threadCount = Integer.parseInt(args[1]);
+                showGui = false;
             } else {
                 System.out.println("Usage:");
                 System.out.println("\tAmazonBot [Team Name] [Thread Count]");
                 System.exit(1);
             }
-        } else {
-            System.out.println("Starting Amazons Bot with:");
-            System.out.println("\tTeam Name: " + TeamName);
-            System.out.println("\tNumber of Threads Used: " + threadCount);
-            System.out.println("\tNumber of Processors Available: " + Runtime.getRuntime().availableProcessors());
-            System.out.println();
-
-            xmlParser = new XMLParser();
-            new AmazonsBot(TeamName, TeamPassword);
         }
+        System.out.println("Starting Amazons Bot with:");
+        System.out.println("\tTeam Name: " + TeamName);
+        System.out.println("\tNumber of Threads Used: " + threadCount);
+        System.out.println("\tNumber of Processors Available: " + Runtime.getRuntime().availableProcessors());
+        System.out.println();
+
+        xmlParser = new XMLParser();
+        new AmazonsBot(TeamName, TeamPassword);
     }
 
     public AmazonsBot(String name, String password) {
@@ -135,6 +136,11 @@ public class AmazonsBot implements GamePlayer {
         if (receivedAction.type.toString().equalsIgnoreCase(GameMessage.ACTION_GAME_START)) {
             gameStarted = true;
             System.out.println("\n\nGame has started");
+
+            if(showGui) {
+                gameBoard = new GameBoard(gui);
+                gui.setVisible(true);
+            }
             
             // Print list of users in the room
             for (User user : receivedAction.getUserList().getUsers()) {
@@ -198,6 +204,9 @@ public class AmazonsBot implements GamePlayer {
             // Checks to make sure that the opponents gameMove was legal
             try {
                 gameBoard.makeMove(opponentGameMove);
+                if(showGui) {
+                    gameBoard.updateGUI(opponentGameMove);
+                }
             } catch (IllegalMoveException e) {
                 System.out.println("Opponent made an illegal gameMove: ");
                 opponentGameMove.moveInfo(gameBoard);
@@ -234,6 +243,9 @@ public class AmazonsBot implements GamePlayer {
         //Make the gameMove on our board
         try {
             gameBoard.makeMove(gameMove);
+            if(showGui) {
+                gameBoard.updateGUI(gameMove);
+            }
         } catch (IllegalMoveException e) {
             System.out.println("Illegal GameMove made: ");
             e.printStackTrace();

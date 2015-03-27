@@ -67,6 +67,18 @@ public class GameBoard implements Cloneable {
         initialize();
     }
 
+    public GameBoard() {
+        //set rows and columns
+        this.rows = 10;
+        this.columns = 10;
+        //instantiate 2D array
+        gameBoard = new int[rows][columns];
+        whitePositions = new HashSet<Position>();
+        blackPositions = new HashSet<Position>();
+
+        initialize();
+    }
+
     /**
      * @return the rows
      */
